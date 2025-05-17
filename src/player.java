@@ -56,7 +56,7 @@ public class player extends JFrame {
 		JButton btnNewButton = new JButton("나의 정보");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myInfo().setVisible(true); dispose();
+				new player_myInfo(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton, BorderLayout.CENTER);
@@ -101,7 +101,7 @@ public class player extends JFrame {
 		JButton btnNewButton_5 = new JButton("경기 기록");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewGames().setVisible(true); dispose();
+				new player_viewGames(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_5);
