@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -12,6 +12,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -74,6 +77,46 @@ public class staff_playerSearchPerform extends JFrame {
 		JButton btnNewButton_1 = new JButton("검색");
 		btnNewButton_1.setBounds(362, 80, 56, 29);
 		contentPane.add(btnNewButton_1);
+		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String input = textField.getText().trim();
+					if (input.isEmpty()) {
+						return;
+					}
+					int minPerformance = Integer.parseInt(input);
+
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0); // 기존 데이터 초기화
+
+					String query = "SELECT idPlayer, playerName, performance, position, birthday, ableToPlay, playerAction " +
+					               "FROM DB2025_Player WHERE performance >= ?";
+
+					try (Connection conn = DBUtil.getConnection();
+					     PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+						pstmt.setInt(1, minPerformance);
+						ResultSet rs = pstmt.executeQuery();
+
+						while (rs.next()) {
+							Object[] row = {
+								rs.getInt("idPlayer"),
+								rs.getString("playerName"),
+								rs.getInt("performance"),
+								rs.getString("position"),
+								rs.getDate("birthday"),
+								rs.getInt("ableToPlay") == 1 ? "가능" : "불가능",
+								rs.getString("playerAction")
+							};
+							model.addRow(row);
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 118, 438, 148);
