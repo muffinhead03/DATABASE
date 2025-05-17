@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -13,6 +13,8 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -22,6 +24,7 @@ public class player_viewPlayers extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int iDplayer;
 
 	/**
 	 * Launch the application.
@@ -60,7 +63,7 @@ public class player_viewPlayers extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(iDplayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -112,5 +115,33 @@ public class player_viewPlayers extends JFrame {
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_4.setBounds(288, 6, 156, 16);
 		contentPane.add(lblNewLabel_4);
+		
+		loadPlayerData();
+	}
+	
+	private void loadPlayerData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0);
+
+	    String query = "SELECT idPlayer AS id, playerName AS name, position, performance " +
+	                   "FROM db2025_player";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         java.sql.Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+
+	        while (rs.next()) {
+	            Object[] row = {
+	                rs.getInt("id"),
+	                rs.getString("name"),
+	                rs.getString("position"),
+	                rs.getInt("performance")
+	            };
+	            model.addRow(row); // ✅ 추가
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 예외 출력
+	    }
 	}
 }
