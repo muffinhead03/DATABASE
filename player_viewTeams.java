@@ -1,6 +1,7 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,6 +12,8 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -20,6 +23,7 @@ public class player_viewTeams extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int iDplayer;
 
 	/**
 	 * Launch the application.
@@ -72,10 +76,37 @@ public class player_viewTeams extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(iDplayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
+		
+		loadTeamData();
 	}
+	private void loadTeamData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 데이터 초기화
+
+	    String query = "SELECT idTeam AS id, currName AS name, nation, FIFArank FROM db2025_team";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         java.sql.Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+
+	        while (rs.next()) {
+	            Object[] row = {
+	                rs.getInt("id"),
+	                rs.getString("name"),
+	                rs.getString("nation"),
+	                rs.getInt("FIFArank")
+	            };
+	            model.addRow(row);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 }
