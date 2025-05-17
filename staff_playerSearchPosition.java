@@ -1,12 +1,14 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -51,6 +53,15 @@ public class staff_playerSearchPosition extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JTextField positionField = new JTextField();
+		positionField.setBounds(240, 110, 178, 26);
+		contentPane.add(positionField);
+		positionField.setColumns(10);
+
+		JLabel lblPosition = new JLabel("포지션");
+		lblPosition.setBounds(190, 110, 50, 26);
+		contentPane.add(lblPosition);
+		
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -75,6 +86,53 @@ public class staff_playerSearchPosition extends JFrame {
 		btnNewButton_1.setBounds(362, 80, 56, 29);
 		contentPane.add(btnNewButton_1);
 		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String perfInput = textField.getText().trim(); // 실적
+					String positionInput = positionField.getText().trim(); // 포지션
+
+					int minPerformance = perfInput.isEmpty() ? 0 : Integer.parseInt(perfInput);
+
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0); // 초기화
+
+					// 조건 조립
+					String query = "SELECT idPlayer, playerName, performance, position, birthday, ableToPlay, playerAction " +
+					               "FROM DB2025_Player WHERE performance >= ?";
+					boolean hasPosition = !positionInput.isEmpty();
+					if (hasPosition) {
+						query += " AND position = ?";
+					}
+
+					try (Connection conn = DBUtil.getConnection();
+					     PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+						pstmt.setInt(1, minPerformance);
+						if (hasPosition) {
+							pstmt.setString(2, positionInput);
+						}
+
+						ResultSet rs = pstmt.executeQuery();
+						while (rs.next()) {
+							Object[] row = {
+								rs.getInt("idPlayer"),
+								rs.getString("playerName"),
+								rs.getInt("performance"),
+								rs.getString("position"),
+								rs.getDate("birthday"),
+								rs.getInt("ableToPlay") == 1 ? "가능" : "불가능",
+								rs.getString("playerAction")
+							};
+							model.addRow(row);
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 118, 438, 148);
 		contentPane.add(scrollPane);
@@ -88,5 +146,8 @@ public class staff_playerSearchPosition extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table);
+		
+
 	}
+	
 }
