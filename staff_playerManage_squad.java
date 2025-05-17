@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -7,8 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JScrollPane;
@@ -125,6 +129,9 @@ public class staff_playerManage_squad extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 		
+		JButton btnNewButton_4 = new JButton("조회");
+		panel_1.add(btnNewButton_4);		
+		
 		JButton btnNewButton_3 = new JButton("수정");
 		panel_1.add(btnNewButton_3);
 		
@@ -133,5 +140,161 @@ public class staff_playerManage_squad extends JFrame {
 		
 		JButton btnNewButton_1 = new JButton("신규추가");
 		panel_1.add(btnNewButton_1);
+		
+		btnNewButton_4.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        loadSquadData();
+		    }
+		});
+		
+		btnNewButton_1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            int idPlayer = (int) comboBox.getSelectedItem();
+		            int playTime = Integer.parseInt(textField_3.getText());
+		            int idGame = Integer.parseInt(  // 추후 변경 가능
+		                javax.swing.JOptionPane.showInputDialog("경기 ID를 입력하세요:")
+		            );
+
+		            String query = "INSERT INTO DB2025_Squad (idGame, idPlayer, playTime) VALUES (?, ?, ?)";
+
+		            try (Connection conn = DBUtil.getConnection();
+		                 PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+		                pstmt.setInt(1, idGame);
+		                pstmt.setInt(2, idPlayer);
+		                pstmt.setInt(3, playTime);
+
+		                int result = pstmt.executeUpdate();
+
+		                if (result > 0) {
+		                    JOptionPane.showMessageDialog(null, "스쿼드 추가 성공!");
+		                    loadSquadData();
+		                } else {
+		                    JOptionPane.showMessageDialog(null, "추가 실패");
+		                }
+		            }
+
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		            JOptionPane.showMessageDialog(null, "오류 발생: " + ex.getMessage());
+		        }
+		    }
+		});
+		
+		btnNewButton_2.addActionListener(e -> {
+		    try {
+		        int idPlayer = (int) comboBox.getSelectedItem();
+		        int idGame = Integer.parseInt(
+		            JOptionPane.showInputDialog("삭제할 경기 ID를 입력하세요:")
+		        );
+
+		        String query = "DELETE FROM DB2025_Squad WHERE idGame = ? AND idPlayer = ?";
+
+		        try (Connection conn = DBUtil.getConnection();
+		             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+		            pstmt.setInt(1, idGame);
+		            pstmt.setInt(2, idPlayer);
+
+		            int result = pstmt.executeUpdate();
+		            if (result > 0) {
+		                JOptionPane.showMessageDialog(null, "삭제 완료");
+		                loadSquadData();
+		            } else {
+		                JOptionPane.showMessageDialog(null, "삭제 실패");
+		            }
+
+		        }
+		    } catch (Exception ex) {
+		        ex.printStackTrace();
+		        JOptionPane.showMessageDialog(null, "오류 발생: " + ex.getMessage());
+		    }
+		});
+		
+		btnNewButton_3.addActionListener(e -> {
+		    try {
+		        int idPlayer = (int) comboBox.getSelectedItem();
+		        int playTime = Integer.parseInt(textField_3.getText());
+		        int idGame = Integer.parseInt(
+		            JOptionPane.showInputDialog("수정할 경기 ID를 입력하세요:")
+		        );
+
+		        String query = "UPDATE DB2025_Squad SET playTime = ? WHERE idGame = ? AND idPlayer = ?";
+
+		        try (Connection conn = DBUtil.getConnection();
+		             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+		            pstmt.setInt(1, playTime);
+		            pstmt.setInt(2, idGame);
+		            pstmt.setInt(3, idPlayer);
+
+		            int result = pstmt.executeUpdate();
+		            if (result > 0) {
+		                JOptionPane.showMessageDialog(null, "수정 완료");
+		                loadSquadData();
+		            } else {
+		                JOptionPane.showMessageDialog(null, "수정 실패");
+		            }
+
+		        }
+		    } catch (Exception ex) {
+		        ex.printStackTrace();
+		        JOptionPane.showMessageDialog(null, "오류 발생: " + ex.getMessage());
+		    }
+		});
+
+		
+		
+		
+		loadSquadData();
+		loadPlayerIdsToComboBox(comboBox);
 	}
+		
+		private void loadSquadData() {
+		    DefaultTableModel model = (DefaultTableModel) table.getModel();
+		    model.setRowCount(0);
+
+		    String query = "SELECT s.idPlayer, p.playerName, p.position, s.playTime " +
+		                   "FROM DB2025_Squad s " +
+		                   "JOIN DB2025_Player p ON s.idPlayer = p.idPlayer";
+
+		    try (Connection conn = DBUtil.getConnection();
+		         java.sql.Statement stmt = conn.createStatement();
+		         ResultSet rs = stmt.executeQuery(query)) {
+
+		        while (rs.next()) {
+		            Object[] row = {
+		                rs.getInt("idPlayer"),
+		                rs.getString("playerName"),
+		                rs.getString("position"),
+		                rs.getInt("playTime")
+		            };
+		            model.addRow(row);
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		
+	
+		}
+		
+		private void loadPlayerIdsToComboBox(JComboBox comboBox) {
+		    String query = "SELECT idPlayer FROM DB2025_Player";
+
+		    try (Connection conn = DBUtil.getConnection();
+		         java.sql.Statement stmt = conn.createStatement();
+		         ResultSet rs = stmt.executeQuery(query)) {
+
+		        while (rs.next()) {
+		            comboBox.addItem(rs.getInt("idPlayer"));
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		
 }
