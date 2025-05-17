@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -7,9 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -137,6 +140,54 @@ public class staff_playerCreate extends JFrame {
 		JButton btnNewButton_1 = new JButton("생성");
 		btnNewButton_1.setBounds(6, 238, 438, 29);
 		contentPane.add(btnNewButton_1);
+
+		// 🔽 이 아래가 추가되어야 하는 부분!
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String name = textField.getText();
+					int idPlayer = Integer.parseInt(textField_1.getText());
+					int idTeam = Integer.parseInt(textField_2.getText());
+					String position = textField_3.getText();
+					String birthdayStr = textField_4.getText();
+					int ableToPlay = comboBox.getSelectedItem().equals("가능") ? 1 : 0;
+					int performance = Integer.parseInt(textField_6.getText());
+					String action = textField_7.getText();
+
+					java.sql.Date birthday = java.sql.Date.valueOf(birthdayStr);
+
+					String query = "INSERT INTO DB2025_Player " +
+						"(idPlayer, playerName, position, birthday, idTeam, ableToPlay, performance, playerAction) " +
+						"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+					try (Connection conn = DBUtil.getConnection();
+					     PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+						pstmt.setInt(1, idPlayer);
+						pstmt.setString(2, name);
+						pstmt.setString(3, position);
+						pstmt.setDate(4, birthday);
+						pstmt.setInt(5, idTeam);
+						pstmt.setInt(6, ableToPlay);
+						pstmt.setInt(7, performance);
+						pstmt.setString(8, action);
+
+						int result = pstmt.executeUpdate();
+
+						if (result > 0) {
+							JOptionPane.showMessageDialog(null, "선수 등록 완료!");
+							new staff_playerManage().setVisible(true);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "등록 실패");
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null, "오류 발생: " + ex.getMessage());
+				}
+			}
+		});
 		
 		JLabel lblNewLabel_8 = new JLabel("선수 생성");
 		lblNewLabel_8.setFont(new Font("Lucida Grande", Font.BOLD, 18));
