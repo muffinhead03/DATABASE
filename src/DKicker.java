@@ -130,7 +130,8 @@ public class DKicker extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 String selectedTeam = (String) comboBox.getSelectedItem();
-				new staff(selectedTeam).setVisible(true); dispose();
+				 int idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton_1.setBounds(232, 207, 117, 29);
