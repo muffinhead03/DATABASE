@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -15,11 +15,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.*;
 
 public class player_myTacticsTeam extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int iDplayer;
+	private int teamnum;
 
 	/**
 	 * Launch the application.
@@ -28,7 +31,7 @@ public class player_myTacticsTeam extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsTeam frame = new player_myTacticsTeam();
+					player_myTacticsTeam frame = new player_myTacticsTeam(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +43,12 @@ public class player_myTacticsTeam extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTacticsTeam() {
+	
+
+	
+	
+	public player_myTacticsTeam(int iDplayer) {
+		this.iDplayer=iDplayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -58,7 +66,7 @@ public class player_myTacticsTeam extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTactics().setVisible(true); dispose();
+				new player_myTactics(iDplayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -69,10 +77,12 @@ public class player_myTacticsTeam extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
+		
+		
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam_field().setVisible(true); dispose();
+				new player_myTacticsTeam_field(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -80,7 +90,7 @@ public class player_myTacticsTeam extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam_setpiece().setVisible(true); dispose();
+				new player_myTacticsTeam_setpiece(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
