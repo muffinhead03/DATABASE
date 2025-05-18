@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -19,6 +19,7 @@ public class player_viewTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int iDplayer;
 
 	/**
 	 * Launch the application.
@@ -27,7 +28,7 @@ public class player_viewTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewTactics frame = new player_viewTactics();
+					player_viewTactics frame = new player_viewTactics(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +40,8 @@ public class player_viewTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_viewTactics() {
+	public player_viewTactics(int iDplayer) {
+		this.iDplayer= iDplayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,7 +59,7 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(iDplayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -71,7 +73,7 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_fieldTactics().setVisible(true); dispose();
+				new player_fieldTactics(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -79,7 +81,7 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_setpieceTactics().setVisible(true); dispose();
+				new player_setpieceTactics(iDplayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
