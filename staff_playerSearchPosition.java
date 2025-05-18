@@ -52,15 +52,7 @@ public class staff_playerSearchPosition extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JTextField positionField = new JTextField();
-		positionField.setBounds(240, 110, 178, 26);
-		contentPane.add(positionField);
-		positionField.setColumns(10);
 
-		JLabel lblPosition = new JLabel("포지션");
-		lblPosition.setBounds(190, 110, 50, 26);
-		contentPane.add(lblPosition);
 		
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -89,10 +81,9 @@ public class staff_playerSearchPosition extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String perfInput = textField.getText().trim(); // 실적
-					String positionInput = positionField.getText().trim(); // 포지션
+					String positionInput = textField.getText().trim(); // 포지션
 
-					int minPerformance = perfInput.isEmpty() ? 0 : Integer.parseInt(perfInput);
+					int minPerformance = positionInput.isEmpty() ? 0 : Integer.parseInt(positionInput);
 
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
 					model.setRowCount(0); // 초기화
