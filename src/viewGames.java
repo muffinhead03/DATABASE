@@ -13,21 +13,24 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import java.sql.*;
 
-
-public class player_viewGames extends JFrame {
+public class viewGames extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lblNewLabel;
 	private JButton btnNewButton;
 	private JTable table;
-	private JComboBox comboBox;
-	private int iDplayer;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -36,13 +39,50 @@ public class player_viewGames extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewGames frame = new player_viewGames(0);
+					viewGames frame = new viewGames(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	private void loadTeamGames() {
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst\n"
+				+ "FROM DB2025_GameRec \n"
+				+ "WHERE idOurTeam = ? OR idAgainstTeam = ?";
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+		        pstmt.setInt(1, idTeam); // 바인딩
+		        pstmt.setInt(2, idTeam);
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+		            model.setRowCount(0); // 기존 데이터 삭제
+
+		        	while (rs.next()) {
+		            	int gameId = rs.getInt("idGame");
+		                Date date = rs.getDate("dateGame");
+		                int opponent = rs.getInt("idAgainstTeam");
+		                int goalFor = rs.getInt("goalFor");
+		                int goalAgainst = rs.getInt("goalAgainst");
+		                if (opponent == idTeam) {
+		                	opponent = rs.getInt("idOurTeam");
+		                	int temp = goalFor;
+		                	goalFor = goalAgainst;
+		                	goalAgainst = temp;
+		                }
+		                
+		               
+
+		                model.addRow(new Object[]{gameId, date.toString(), opponent, goalFor, goalAgainst});
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
 	}
 	
 	private void loadAllGames() {
@@ -71,50 +111,12 @@ public class player_viewGames extends JFrame {
 		        e.printStackTrace();
 		    }
 	}
-	
-	private void loadTeamGames() {
-		String sql = "SELECT GR.idGame, GR.dateGame,GR.idOurTeam, GR.idAgainstTeam, GR.goalFor, GR.goalAgainst, P.idTeam\n"
-				+ "FROM DB2025_GameRec GR\n"
-				+ "JOIN DB2025_Player P ON GR.idOurTeam = P.idTeam OR GR.idAgainstTeam = P.idTeam\n"
-				+ "WHERE P.idPlayer = ?";
-		try (Connection conn = DBUtil.getConnection();
-		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-		        pstmt.setInt(1, iDplayer); // 바인딩
-
-		        try (ResultSet rs = pstmt.executeQuery()) {
-		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
-		            model.setRowCount(0); // 기존 데이터 삭제
-
-		        	while (rs.next()) {
-		            	int gameId = rs.getInt("idGame");
-		                Date date = rs.getDate("dateGame");
-		                int opponent = rs.getInt("idAgainstTeam");
-		                int myteam = rs.getInt("idTeam");
-		                int goalFor = rs.getInt("goalFor");
-		                int goalAgainst = rs.getInt("goalAgainst");
-
-		                if(myteam == opponent) {
-		                	opponent = rs.getInt("idOurTeam"); 
-		                	int temp = goalFor;
-		                	goalFor = goalAgainst;
-		                	goalAgainst = temp;
-		                }
-		               
-		                model.addRow(new Object[]{gameId, date.toString(), opponent, goalFor, goalAgainst});
-		            }
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    }
-	}
-
 
 	/**
 	 * Create the frame.
 	 */
-	public player_viewGames(int iDplayer) {
-		this.iDplayer = iDplayer;
+	public viewGames(int idTeam) {
+		this.idTeam=idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -124,7 +126,7 @@ public class player_viewGames extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 107, 438, 159);
+		scrollPane.setBounds(6, 92, 438, 174);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -132,8 +134,7 @@ public class player_viewGames extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" 
-			}
+					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점"			}
 		));
 		scrollPane.setViewportView(table);
 		
@@ -146,17 +147,19 @@ public class player_viewGames extends JFrame {
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player(iDplayer).setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
 		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체 경기 조회", "우리 팀 경기 조회"}));
-		comboBox.setBounds(6, 68, 189, 27);
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체 경기 조회", "우리팀 경기 조회"}));
+		comboBox.setBounds(6, 64, 170, 27);
 		contentPane.add(comboBox);
+		
 		loadAllGames();
+		
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (comboBox.getSelectedIndex() == 1) { // "우리 팀 경기 조회" 선택 시
@@ -173,7 +176,5 @@ public class player_viewGames extends JFrame {
 				}
 			}
 		});
-
 	}
-
 }
