@@ -81,7 +81,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewSetpieceTactics().setVisible(true); dispose();
+				new viewSetpieceTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
