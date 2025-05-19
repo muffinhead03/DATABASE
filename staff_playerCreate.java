@@ -62,7 +62,7 @@ public class staff_playerCreate extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerManage().setVisible(true); dispose();
+				new staff_playerManage(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -176,7 +176,7 @@ public class staff_playerCreate extends JFrame {
 
 						if (result > 0) {
 							JOptionPane.showMessageDialog(null, "선수 등록 완료!");
-							new staff_playerManage().setVisible(true);
+							new staff_playerManage(DKicker.currentTeamId).setVisible(true);
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "등록 실패");
