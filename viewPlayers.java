@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -35,7 +35,7 @@ public class viewPlayers extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewPlayers frame = new viewPlayers();
+					viewPlayers frame = new viewPlayers(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +47,7 @@ public class viewPlayers extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewPlayers() {
+	public viewPlayers(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -65,7 +65,7 @@ public class viewPlayers extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -121,7 +121,7 @@ public class viewPlayers extends JFrame {
 		JButton btnNewButton_1 = new JButton("수정");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewPlayers_Edit().setVisible(true); dispose();
+				new viewPlayers_Edit(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
