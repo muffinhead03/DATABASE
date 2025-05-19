@@ -81,27 +81,23 @@ public class staff_playerSearchPosition extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String positionInput = textField.getText().trim(); // 포지션
-
-					int minPerformance = positionInput.isEmpty() ? 0 : Integer.parseInt(positionInput);
+					String positionInput = textField.getText().trim(); // 포지션 입력값
 
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
-					model.setRowCount(0); // 초기화
+					model.setRowCount(0); // 테이블 초기화
 
-					// 조건 조립
 					String query = "SELECT idPlayer, playerName, performance, position, birthday, ableToPlay, playerAction " +
-					               "FROM DB2025_Player WHERE performance >= ?";
+					               "FROM DB2025_Player";
 					boolean hasPosition = !positionInput.isEmpty();
 					if (hasPosition) {
-						query += " AND position = ?";
+						query += " WHERE position = ?";
 					}
 
 					try (Connection conn = DBUtil.getConnection();
 					     PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-						pstmt.setInt(1, minPerformance);
 						if (hasPosition) {
-							pstmt.setString(2, positionInput);
+							pstmt.setString(1, positionInput);
 						}
 
 						ResultSet rs = pstmt.executeQuery();
