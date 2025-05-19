@@ -161,7 +161,7 @@ public class staff_gameCreate extends JFrame {
 		panel.add(textField_12);
 		textField_12.setColumns(14);
 		
-		JLabel lblNewLabel_9 = new JLabel("acc 패스");
+		JLabel lblNewLabel_9 = new JLabel("정확한 패스");
 		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_9);
 		
@@ -169,7 +169,7 @@ public class staff_gameCreate extends JFrame {
 		panel.add(textField_8);
 		textField_8.setColumns(14);
 		
-		JLabel lblNewLabel_10 = new JLabel("attack 패스");
+		JLabel lblNewLabel_10 = new JLabel("공격지역 패스");
 		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_10);
 		
