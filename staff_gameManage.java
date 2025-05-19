@@ -39,6 +39,7 @@ public class staff_gameManage extends JFrame {
 	 * Create the frame.
 	 */
 	public staff_gameManage(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -87,7 +88,7 @@ public class staff_gameManage extends JFrame {
 		JButton btnNewButton_4 = new JButton("다른 팀과 치른 경기 요약");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameWithOtherTeams(DKicker.currentTeamId).setVisible(true); dispose();
+				new staff_gameWithOtherTeams(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_4);
