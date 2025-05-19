@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.DriverManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -30,6 +32,10 @@ public class staff_gameCreate extends JFrame {
 	private JTextField textField_7;
 	private JTextField textField_8;
 	private JTextField textField_9;
+	private JTextField textField_10;
+	private JTextField textField_11;
+	private JTextField textField_12;
+	
 	private int idTeam;
 
 	/**
@@ -54,7 +60,7 @@ public class staff_gameCreate extends JFrame {
 	public staff_gameCreate(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -96,7 +102,7 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_1 = new JTextField();
 		panel.add(textField_1);
-		textField_1.setColumns(10);
+		textField_1.setColumns(14);
 		
 		JLabel lblNewLabel_3 = new JLabel("상대 팀");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -104,7 +110,7 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_2 = new JTextField();
 		panel.add(textField_2);
-		textField_2.setColumns(10);
+		textField_2.setColumns(14);
 		
 		JLabel lblNewLabel_4 = new JLabel("사용 필드 전술");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
@@ -112,7 +118,7 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_3 = new JTextField();
 		panel.add(textField_3);
-		textField_3.setColumns(10);
+		textField_3.setColumns(14);
 		
 		JLabel lblNewLabel_5 = new JLabel("사용 세트피스 전술");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
@@ -120,7 +126,7 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_4 = new JTextField();
 		panel.add(textField_4);
-		textField_4.setColumns(10);
+		textField_4.setColumns(14);
 		
 		JLabel lblNewLabel_6 = new JLabel("득점");
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +134,7 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_5 = new JTextField();
 		panel.add(textField_5);
-		textField_5.setColumns(10);
+		textField_5.setColumns(14);
 		
 		JLabel lblNewLabel_7 = new JLabel("실점");
 		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
@@ -136,34 +142,60 @@ public class staff_gameCreate extends JFrame {
 		
 		textField_6 = new JTextField();
 		panel.add(textField_6);
-		textField_6.setColumns(10);
-		
+		textField_6.setColumns(14);
+	
 		JLabel lblNewLabel_8 = new JLabel("슛팅");
 		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_8);
 		
 		textField_7 = new JTextField();
 		panel.add(textField_7);
-		textField_7.setColumns(10);
+		textField_7.setColumns(14);
 		
-		JLabel lblNewLabel_9 = new JLabel("패스");
+		
+		JLabel lblNewLabel_13 = new JLabel("유효 슛팅");
+		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblNewLabel_13);
+		
+		textField_12 = new JTextField();
+		panel.add(textField_12);
+		textField_12.setColumns(14);
+		
+		JLabel lblNewLabel_9 = new JLabel("acc 패스");
 		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_9);
 		
 		textField_8 = new JTextField();
 		panel.add(textField_8);
-		textField_8.setColumns(10);
+		textField_8.setColumns(14);
 		
-		JLabel lblNewLabel_10 = new JLabel("수비");
+		JLabel lblNewLabel_10 = new JLabel("attack 패스");
 		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_10);
 		
 		textField_9 = new JTextField();
 		panel.add(textField_9);
-		textField_9.setColumns(10);
+		textField_9.setColumns(14);
+		
+		JLabel lblNewLabel_11 = new JLabel("인터셉트");
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblNewLabel_11);
+		
+		textField_10 = new JTextField();
+		panel.add(textField_10);
+		textField_10.setColumns(14);
+		
+		JLabel lblNewLabel_12 = new JLabel("블로킹");
+		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblNewLabel_12);
+		
+		textField_11 = new JTextField();
+		panel.add(textField_11);
+		textField_11.setColumns(14);
+		
 		
 		JButton btnNewButton_1 = new JButton("생성");
-		btnNewButton_1.setBounds(6, 237, 438, 29);
+		btnNewButton_1.setBounds(6, 277, 438, 29);
 		contentPane.add(btnNewButton_1);
 		
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -180,8 +212,14 @@ public class staff_gameCreate extends JFrame {
 					
 					int allShots = Integer.parseInt(textField_7.getText());
 					int accPass = Integer.parseInt(textField_8.getText());
-					int intercept = Integer.parseInt(textField_9.getText());
-
+					int attackPass = Integer.parseInt(textField_9.getText());
+					int intercept = Integer.parseInt(textField_10.getText());
+					int blocking = Integer.parseInt(textField_11.getText());
+					int shotOnTarget = Integer.parseInt(textField_12.getText());
+					
+					LocalDate localDate = LocalDate.parse(dateGame).plusDays(1);
+					LocalDateTime localDateTime = localDate.atStartOfDay();
+					Timestamp timestamp = Timestamp.valueOf(localDateTime);
 					// DB 연결
 					Connection conn = DBUtil.getConnection();
 
@@ -193,24 +231,29 @@ public class staff_gameCreate extends JFrame {
 					idGame = getNextGameId();
 					// 바인딩
 					pstmt1.setInt(1, idGame);
-					pstmt1.setDate(2, java.sql.Date.valueOf(dateGame));
+					pstmt1.setTimestamp(2, timestamp);
+
 					pstmt1.setInt(3, idTeam); // 생성자에서 전달된 우리 팀 ID
 					pstmt1.setInt(4, idAgainstTeam);
 					pstmt1.setInt(5, idField);
 					pstmt1.setInt(6, idSetpiece);
 					pstmt1.setInt(7, goalFor);
 					pstmt1.setInt(8, goalAgainst);
+					
 
 					pstmt1.executeUpdate();
 					
 					String sql2 = "INSERT INTO DB2025_GameStat " +
-							  "(idGame, allShots, accPass, intercept) " +
-							  "VALUES (?, ?, ?, ?)";
+							  "(idGame, allShots, accPass,attackPass, intercept,blocking, shotOnTarget) " +
+							  "VALUES (?, ?, ?, ?, ?, ?, ?)";
 				PreparedStatement pstmt2 = conn.prepareStatement(sql2);
 				pstmt2.setInt(1, idGame);
 				pstmt2.setInt(2, allShots);
 				pstmt2.setInt(3, accPass);
-				pstmt2.setInt(4, intercept);
+				pstmt2.setInt(4, attackPass);
+				pstmt2.setInt(5, intercept);
+				pstmt2.setInt(6, blocking);
+				pstmt2.setInt(7, shotOnTarget);
 				pstmt2.executeUpdate();
 				pstmt2.close();
 					
