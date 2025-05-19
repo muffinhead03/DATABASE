@@ -45,7 +45,7 @@ public class viewTactics_statistics_List extends JFrame {
 	public viewTactics_statistics_List(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 300);
+		setBounds(100, 100, 1000, 300);
 		//setBounds(100, 100, 800, 600);
 
 		contentPane = new JPanel();
@@ -66,11 +66,11 @@ public class viewTactics_statistics_List extends JFrame {
 		JLabel lblNewLabel = new JLabel("전술 사용 경기 목록");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-		lblNewLabel.setBounds(6, 33, 788, 29);
+		lblNewLabel.setBounds(6, 33, 988, 29);
 		contentPane.add(lblNewLabel);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 74, 788, 192);
+		scrollPane.setBounds(6, 74, 988, 192);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
