@@ -73,7 +73,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewFieldTactics().setVisible(true); dispose();
+				new viewFieldTactics(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
