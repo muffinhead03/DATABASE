@@ -41,7 +41,7 @@ public class viewTactics extends JFrame {
 	 * Create the frame.
 	 */
 	public viewTactics(int idTeam) {
-		this.idTeam = DKicker.currentTeamId;
+		this.idTeam= idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -89,7 +89,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_3 = new JButton("전술별 경기 통계 분석");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics_statistics().setVisible(true); dispose();
+				new viewTactics_statistics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);
