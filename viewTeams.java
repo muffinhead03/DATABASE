@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -12,6 +12,8 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +28,7 @@ public class viewTeams extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int idTeams;
 
 	/**
 	 * Launch the application.
@@ -34,7 +37,7 @@ public class viewTeams extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTeams frame = new viewTeams();
+					viewTeams frame = new viewTeams(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +49,8 @@ public class viewTeams extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewTeams() {
+	public viewTeams(int idTeams) {
+		this.idTeams = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -77,10 +81,39 @@ public class viewTeams extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeams).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
+		
+		loadTeamData();
 	}
+	
+	private void loadTeamData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 행 삭제
+
+	    String query = "SELECT idTeam AS id, currName AS name, nation, FIFArank FROM DB2025_Team";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         java.sql.Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+
+	        while (rs.next()) {
+	            Object[] row = {
+	                rs.getInt("id"),
+	                rs.getString("name"),
+	                rs.getString("nation"),
+	                rs.getInt("FIFArank")
+	            };
+	            model.addRow(row);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "팀 정보를 불러오지 못했습니다.");
+	    }
+	}
+
 }
