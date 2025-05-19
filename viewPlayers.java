@@ -1,7 +1,6 @@
 package DB2025Team09;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +15,9 @@ import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
@@ -27,6 +29,7 @@ public class viewPlayers extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -48,6 +51,37 @@ public class viewPlayers extends JFrame {
 	 * Create the frame.
 	 */
 	public viewPlayers(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
+		
+		try {
+		    Connection conn = DBUtil.getConnection(); // DB 연결 메서드 필요
+		    String sql = "SELECT idPlayer, playerName, position, birthday FROM DB2025_Player WHERE idTeam = ?";
+		    PreparedStatement pstmt = conn.prepareStatement(sql);
+		    pstmt.setInt(1, idTeam); // 생성자 매개변수로 받은 팀 ID 사용
+
+		    ResultSet rs = pstmt.executeQuery();
+
+		    DefaultTableModel model = (DefaultTableModel) table.getModel();
+		    model.setRowCount(0); // 테이블 초기화
+
+		    while (rs.next()) {
+		        Object[] row = {
+		            rs.getInt("idPlayer"),
+		            rs.getString("playerName"),
+		            rs.getString("position"),
+		            rs.getDate("birthday") // 임시로 출전 시간 자리에 생일을 표시 (테이블 컬럼 매칭 위해)
+		        };
+		        model.addRow(row);
+		    }
+
+		    rs.close();
+		    pstmt.close();
+		    conn.close();
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
