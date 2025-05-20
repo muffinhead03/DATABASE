@@ -12,7 +12,7 @@ public class staff_teamInfoManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int teamId;
+	
 
 	// 🔧 텍스트필드를 인스턴스 변수로 선언
 	private JTextField textField;
@@ -25,7 +25,7 @@ public class staff_teamInfoManage extends JFrame {
 			public void run() {
 				try {
 					// 테스트용 teamId = 1 (실제 환경에서는 로그인 정보에서 받아야 함)
-					staff_teamInfoManage frame = new staff_teamInfoManage(DKicker.currentTeamId);
+					staff_teamInfoManage frame = new staff_teamInfoManage();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,8 +34,8 @@ public class staff_teamInfoManage extends JFrame {
 		});
 	}
 
-	public staff_teamInfoManage(int teamId) {
-		this.teamId = DKicker.currentTeamId;
+	public staff_teamInfoManage() {
+		
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -51,7 +51,7 @@ public class staff_teamInfoManage extends JFrame {
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage(teamId).setVisible(true);
+				new staff_teamManage().setVisible(true);
 				dispose();
 			}
 		});
@@ -96,7 +96,7 @@ public class staff_teamInfoManage extends JFrame {
 
 			String sql = "SELECT FIFArank, currName, currRank, currPoints FROM db2025_team WHERE idTeam = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, teamId);
+			pstmt.setInt(1, DKicker.currentTeamId);
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -115,8 +115,7 @@ public class staff_teamInfoManage extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Connection conn = DriverManager.getConnection(
-						"jdbc:mysql://localhost:3306/db2025team09", "root", "asdf1234!");
+					Connection conn = DBUtil.getConnection();
 
 					String sql = "UPDATE db2025_team SET FIFArank = ?, currName = ?, currRank = ?, currPoints = ? WHERE idTeam = ?";
 					PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -124,7 +123,7 @@ public class staff_teamInfoManage extends JFrame {
 					pstmt.setString(2, textField_1.getText());
 					pstmt.setString(3, textField_2.getText());
 					pstmt.setString(4, textField_3.getText());
-					pstmt.setInt(5, teamId);
+					pstmt.setInt(5, DKicker.currentTeamId);
 					
 
 
