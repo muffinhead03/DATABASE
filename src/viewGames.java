@@ -39,7 +39,7 @@ public class viewGames extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewGames frame = new viewGames(0);
+					viewGames frame = new viewGames();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,8 +55,8 @@ public class viewGames extends JFrame {
 		try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		        pstmt.setInt(1, idTeam); // 바인딩
-		        pstmt.setInt(2, idTeam);
+		        pstmt.setInt(1, DKicker.currentTeamId); // 바인딩
+		        pstmt.setInt(2, DKicker.currentTeamId);
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -115,7 +115,7 @@ public class viewGames extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewGames(int idTeam) {
+	public viewGames() {
 		this.idTeam=idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -147,7 +147,7 @@ public class viewGames extends JFrame {
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff(idTeam).setVisible(true); dispose();
+				new staff().setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
