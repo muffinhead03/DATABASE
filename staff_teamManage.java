@@ -57,7 +57,7 @@ public class staff_teamManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("우리 팀의 대외 정보 관리");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamInfoManage(idTeam).setVisible(true); dispose();
+				new staff_teamInfoManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
