@@ -35,8 +35,7 @@ public class staff_gameCreate extends JFrame {
 	private JTextField textField_10;
 	private JTextField textField_11;
 	private JTextField textField_12;
-	
-	private int idTeam;
+
 
 	/**
 	 * Launch the application.
@@ -58,7 +57,6 @@ public class staff_gameCreate extends JFrame {
 	 * Create the frame.
 	 */
 	public staff_gameCreate(int idTeam) {
-		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();

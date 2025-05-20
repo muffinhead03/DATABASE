@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -25,7 +25,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_teamManage_scoredMost frame = new staff_teamManage_scoredMost();
+					staff_teamManage_scoredMost frame = new staff_teamManage_scoredMost(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +37,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_teamManage_scoredMost() {
+	public staff_teamManage_scoredMost(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

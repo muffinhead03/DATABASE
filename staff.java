@@ -15,7 +15,6 @@ public class staff extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private String selectedTeam;
-	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -37,8 +36,7 @@ public class staff extends JFrame {
 	 * Create the frame.
 	 */
 	public staff(int idTeam) {
-		
-        this.idTeam = DKicker.currentTeamId;
+
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,7 +79,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_4 = new JButton("팀 관리");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage(idTeam).setVisible(true); dispose();
+				new staff_teamManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_4);
