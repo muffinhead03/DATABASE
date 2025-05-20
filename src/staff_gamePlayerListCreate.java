@@ -14,7 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.JComboBox;
@@ -159,8 +161,59 @@ public class staff_gamePlayerListCreate extends JFrame {
 		panel_1.add(textField_2);
 		textField_2.setColumns(10);
 		
-		//JButton btnNewButton_2 = new JButton("선수 추가");
-		//btnNewButton_2.setBounds(327, 168, 117, 29);
+		JButton btnNewButton_2 = new JButton("선수 명단");
+		btnNewButton_2.setBounds(327, 168, 117, 29);
+		btnNewButton_2.addActionListener(e -> {
+		    JFrame squadFrame = new JFrame("스쿼드 목록");
+		    squadFrame.setSize(600, 400);
+		    squadFrame.setLocationRelativeTo(null);
+		    
+		    try {
+		        // DB 연결
+		        Connection conn = DBUtil.getConnection();
+		        Statement stmt = conn.createStatement();
+		        ResultSet rs = stmt.executeQuery(
+		        	    "SELECT s.idGame AS \"경기 ID\", p.playerName AS \"선수 이름\", s.playTime AS \"출전 시간\" " +
+		        	    "FROM DB2025_Squad s " +
+		        	    "JOIN DB2025_Player p ON s.idPlayer = p.idPlayer"
+		        	);
+		        // ResultSet -> TableModel
+		        DefaultTableModel model = new DefaultTableModel();
+		        
+		        ResultSetMetaData meta = rs.getMetaData();
+		        int colCount = meta.getColumnCount();
+
+
+		       
+		        // 컬럼 이름 추가
+		        for (int i = 1; i <= colCount; i++) {
+		            model.addColumn(meta.getColumnLabel(i));
+		        }
+
+		        // 데이터 추가
+		        while (rs.next()) {
+		            Object[] row = new Object[colCount];
+		            for (int i = 0; i < colCount; i++) {
+		                row[i] = rs.getObject(i + 1);
+		            }
+		            model.addRow(row);
+		        }
+
+		        JTable table = new JTable(model);
+		        JScrollPane scrollPane1 = new JScrollPane(table);
+		        squadFrame.add(scrollPane1);
+
+		        squadFrame.setVisible(true);
+
+		        rs.close();
+		        stmt.close();
+		        conn.close();
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		        JOptionPane.showMessageDialog(null, "스쿼드 정보를 불러오는데 실패했습니다.");
+		    }
+		});
+		
 		btnNewButton_1.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String playerName = (String) comboBox_1.getSelectedItem();
@@ -182,7 +235,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 
 		    
 		
-		//contentPane.add(btnNewButton_2);
+		contentPane.add(btnNewButton_2);
 		
 	}
 	private boolean enterSquad() {
