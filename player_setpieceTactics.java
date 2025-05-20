@@ -24,7 +24,7 @@ public class player_setpieceTactics extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_setpieceTactics frame = new player_setpieceTactics(0);
+				player_setpieceTactics frame = new player_setpieceTactics();
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -32,7 +32,7 @@ public class player_setpieceTactics extends JFrame {
 		});
 	}
 
-	public player_setpieceTactics(int idPlayer) {
+	public player_setpieceTactics() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -42,7 +42,7 @@ public class player_setpieceTactics extends JFrame {
 
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(e -> {
-			new player_viewTactics(idPlayer).setVisible(true);
+			new player_viewTactics().setVisible(true);
 			dispose();
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

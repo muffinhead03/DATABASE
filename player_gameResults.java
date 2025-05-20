@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -16,6 +16,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.*;
+
 
 public class player_gameResults extends JFrame {
 
@@ -32,7 +34,7 @@ public class player_gameResults extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_gameResults frame = new player_gameResults();
+					player_gameResults frame = new player_gameResults(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +46,7 @@ public class player_gameResults extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_gameResults() {
+	public player_gameResults(int gameId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

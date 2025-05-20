@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -15,11 +15,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.*;
 
 public class player_myTacticsTeam extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int iDplayer;
+	private int teamnum;
 
 	/**
 	 * Launch the application.
@@ -40,7 +43,12 @@ public class player_myTacticsTeam extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+
+	
+	
 	public player_myTacticsTeam() {
+		this.iDplayer=iDplayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,6 +76,8 @@ public class player_myTacticsTeam extends JFrame {
 		panel.setBounds(6, 69, 438, 197);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		
 		
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {

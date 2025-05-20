@@ -1,95 +1,128 @@
 package DB2025Team09;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 
-public class player_setpieceTactics extends JFrame {
+public class player_myTacticsTeam_setpiece extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	
 
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			try {
-				player_setpieceTactics frame = new player_setpieceTactics();
-				frame.setVisible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					player_myTacticsTeam_setpiece frame = new player_myTacticsTeam_setpiece();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
 
-	public player_setpieceTactics() {
+	private void loadSetpieceTactics() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 데이터 제거
+
+
+	    try (Connection conn = DBUtil.getConnection();) {
+	        String sql = "SELECT idTactic, tacticName, tacticFormation, explainTactics " +
+	                     "FROM DB2025_Tactics " +
+	                     "WHERE idTeam = (SELECT idTeam FROM DB2025_Player WHERE idPlayer = ?) " +
+	                     "AND tacticType = 'Setpiece'";
+	        PreparedStatement stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, DKicker_player_choose.playerid);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            int idTactic = rs.getInt("idTactic");
+	            String name = rs.getString("tacticName");
+	            String formation = rs.getString("tacticFormation");
+	            String desc = rs.getString("explainTactics");
+
+	            model.addRow(new Object[] { idTactic, name, formation, desc });
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	/**
+	 * Create the frame.
+	 */
+	public player_myTacticsTeam_setpiece() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		
 		JButton btnNewButton = new JButton("Back");
-		btnNewButton.addActionListener(e -> {
-			new player_viewTactics().setVisible(true);
-			dispose();
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new player_myTacticsTeam().setVisible(true); dispose();
+			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
-
+		
 		JLabel lblNewLabel = new JLabel("세트피스 전술");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(6, 32, 438, 29);
+		lblNewLabel.setBounds(6, 40, 438, 29);
 		contentPane.add(lblNewLabel);
-
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 69, 438, 197);
+		scrollPane.setBounds(6, 81, 438, 185);
 		contentPane.add(scrollPane);
+		
+		 String[] columnNames = {"ID", "전술명", "포메이션", "설명"};
+	        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+	        table = new JTable(model);
 
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {},
-			new String[] {"전술 ID", "전술 이름", "포메이션"}
-		));
+	        // 설명 칼럼에 TextAreaRenderer 적용
+	        table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
+			
+		
+		
 		scrollPane.setViewportView(table);
+	    loadSetpieceTactics();
 
-		loadSetpieceData(); // 🔥 여기서 데이터 불러오기 실행
 	}
+	
+	static class TextAreaRenderer extends JTextArea implements TableCellRenderer {
+        public TextAreaRenderer() {
+            setLineWrap(true);
+            setWrapStyleWord(true);
+            setOpaque(true);
+        }
 
-	private void loadSetpieceData() {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
-
-		String query = "SELECT idTactic AS id, tacticName AS name, tacticFormation AS formation " +
-		               "FROM db2025_tactics WHERE tacticType = 'Setpiece'";
-
-		try (Connection conn = DBUtil.getConnection();
-		     java.sql.Statement stmt = conn.createStatement();
-		     ResultSet rs = stmt.executeQuery(query)) {
-
-			while (rs.next()) {
-				Object[] row = {
-					rs.getInt("id"),
-					rs.getString("name"),
-					rs.getString("formation")
-				};
-				model.addRow(row);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            setText(value != null ? value.toString() : "");
+            setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+            if (table.getRowHeight(row) != getPreferredSize().height) {
+                table.setRowHeight(row, getPreferredSize().height);
+            }
+            return this;
+        }
 	}
 }

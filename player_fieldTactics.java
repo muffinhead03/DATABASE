@@ -28,7 +28,7 @@ public class player_fieldTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_fieldTactics frame = new player_fieldTactics(0);
+					player_fieldTactics frame = new player_fieldTactics();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -62,7 +62,7 @@ public class player_fieldTactics extends JFrame {
 	}
 
 
-	public player_fieldTactics(int idPlayer) {
+	public player_fieldTactics() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -75,7 +75,7 @@ public class player_fieldTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewTactics(idPlayer).setVisible(true); dispose();
+				new player_viewTactics().setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.sql.*;
+
 
 public class player_viewGames extends JFrame {
 
@@ -25,6 +27,7 @@ public class player_viewGames extends JFrame {
 	private JButton btnNewButton;
 	private JTable table;
 	private JComboBox comboBox;
+	
 
 	/**
 	 * Launch the application.
@@ -41,11 +44,77 @@ public class player_viewGames extends JFrame {
 			}
 		});
 	}
+	
+	private void loadAllGames() {
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst\n"
+				+ "FROM DB2025_GameRec";
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+		            model.setRowCount(0); // 기존 데이터 삭제
+
+		        	while (rs.next()) {
+		            	int gameId = rs.getInt("idGame");
+		                Date date = rs.getDate("dateGame");
+		                int team1 = rs.getInt("idOurteam");
+		                int team2 = rs.getInt("idAgainstTeam");
+		                int goalFor = rs.getInt("goalFor");
+		                int goalAgainst = rs.getInt("goalAgainst");
+
+		                model.addRow(new Object[]{gameId, date.toString(),team1, team2, goalFor, goalAgainst});
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+	}
+	
+	private void loadTeamGames() {
+		String sql = "SELECT GR.idGame, GR.dateGame,GR.idOurTeam, GR.idAgainstTeam, GR.goalFor, GR.goalAgainst, P.idTeam\n"
+				+ "FROM DB2025_GameRec GR\n"
+				+ "JOIN DB2025_Player P ON GR.idOurTeam = P.idTeam OR GR.idAgainstTeam = P.idTeam\n"
+				+ "WHERE P.idPlayer = ?";
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+		        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+		            model.setRowCount(0); // 기존 데이터 삭제
+
+		        	while (rs.next()) {
+		            	int gameId = rs.getInt("idGame");
+		                Date date = rs.getDate("dateGame");
+		                int opponent = rs.getInt("idAgainstTeam");
+		                int myteam = rs.getInt("idTeam");
+		                int goalFor = rs.getInt("goalFor");
+		                int goalAgainst = rs.getInt("goalAgainst");
+
+		                if(myteam == opponent) {
+		                	opponent = rs.getInt("idOurTeam"); 
+		                	int temp = goalFor;
+		                	goalFor = goalAgainst;
+		                	goalAgainst = temp;
+		                }
+		               
+		                model.addRow(new Object[]{gameId, date.toString(), opponent, goalFor, goalAgainst});
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+	}
+
 
 	/**
 	 * Create the frame.
 	 */
 	public player_viewGames() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -63,7 +132,7 @@ public class player_viewGames extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uACBD\uAE30 ID", "\uACBD\uAE30 \uB0A0\uC9DC", "\uC0C1\uB300 \uD300", "\uB4DD\uC810", "\uC2E4\uC810"
+					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" 
 			}
 		));
 		scrollPane.setViewportView(table);
@@ -87,6 +156,24 @@ public class player_viewGames extends JFrame {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체 경기 조회", "우리 팀 경기 조회"}));
 		comboBox.setBounds(6, 68, 189, 27);
 		contentPane.add(comboBox);
+		loadAllGames();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (comboBox.getSelectedIndex() == 1) { // "우리 팀 경기 조회" 선택 시
+					String[] columnNames = { "경기 ID", "경기 날짜", "상대 팀", "득점", "실점" };
+		            DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 빈 모델
+		            table.setModel(model); // JTable에 모델 적용
+					loadTeamGames();
+				}
+				if (comboBox.getSelectedIndex() == 0) {
+					String[] columnNames = { "경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" };
+		            DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 빈 모델
+		            table.setModel(model); // JTable에 모델 적용
+					loadAllGames();
+				}
+			}
+		});
+
 	}
 
 }

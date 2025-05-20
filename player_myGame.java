@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -8,6 +8,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -21,6 +26,7 @@ public class player_myGame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	
 
 	/**
 	 * Launch the application.
@@ -29,6 +35,7 @@ public class player_myGame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					int iDplayer = 0;
 					player_myGame frame = new player_myGame();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -41,9 +48,43 @@ public class player_myGame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	private void loadGameData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 데이터 초기화
+
+	    String sql = "SELECT G.idGame, G.dateGame, T.nation AS opponentTeamName, G.goalFor, G.goalAgainst " +
+	                 "FROM DB2025_Squad S " +
+	                 "JOIN DB2025_GameRec G ON S.idGame = G.idGame " +
+	                 "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam " +
+	                 "WHERE S.idPlayer = ?";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                int gameId = rs.getInt("idGame");
+	                Date date = rs.getDate("dateGame");
+	                String opponent = rs.getString("opponentTeamName");
+	                int goalFor = rs.getInt("goalFor");
+	                int goalAgainst = rs.getInt("goalAgainst");
+
+	                model.addRow(new Object[]{gameId, date.toString(), opponent, goalFor, goalAgainst});
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	
 	public player_myGame() {
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -82,5 +123,8 @@ public class player_myGame extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table);
+		loadGameData();
+		
+		
 	}
 }
