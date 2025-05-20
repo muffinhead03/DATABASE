@@ -25,17 +25,13 @@ public class DKicker extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	public static int idTeam=0;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-		    Connection conn = DBUtil.getConnection();  // 공통 메서드 사용
-		    // SQL 실행...
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -73,7 +69,7 @@ public class DKicker extends JFrame {
 			URL imageUrl = getClass().getClassLoader().getResource("DB2025Team09/ball.png");
 
 			// 경로가 유효한지 출력
-			System.out.println("이미지 경로: " + imageUrl);
+			//System.out.println("이미지 경로: " + imageUrl);
 
 			if (imageUrl == null) {
 				throw new Exception("⚠ 이미지 리소스를 찾을 수 없습니다.");
@@ -105,10 +101,33 @@ public class DKicker extends JFrame {
 			}
 
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"팀1", "팀2", "팀3"}));
-		comboBox.setBounds(96, 168, 253, 27);
-		contentPane.add(comboBox);
+			// 콤보박스 생성
+			JComboBox<String> comboBox = new JComboBox<>();
+			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+			try {
+			    Connection conn = DBUtil.getConnection();
+			    Statement stmt = conn.createStatement();
+			    ResultSet rs = stmt.executeQuery("SELECT idTeam FROM DB2025_Team");
+
+			    while (rs.next()) {
+			        int id = rs.getInt("idTeam");
+			       
+			        model.addElement("팀"+id);
+			    }
+
+			    rs.close();
+			    stmt.close();
+			    conn.close();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			    javax.swing.JOptionPane.showMessageDialog(null, "팀 목록 로딩 중 오류가 발생했습니다.");
+			}
+
+			comboBox.setModel(model);
+			comboBox.setBounds(96, 168, 253, 27);
+			contentPane.add(comboBox);
+
 
 		// btnNewButton 선언 및 초기화
 		JButton btnNewButton = new JButton("선수");
@@ -118,6 +137,7 @@ public class DKicker extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedTeam = (String) comboBox.getSelectedItem();  // 선택된 팀명 가져오기
+		        idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
 		        new DKicker_player_choose(selectedTeam).setVisible(true);
 		        
 		        dispose();
@@ -130,7 +150,7 @@ public class DKicker extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 String selectedTeam = (String) comboBox.getSelectedItem();
-				 int idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
+				 idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
 				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
