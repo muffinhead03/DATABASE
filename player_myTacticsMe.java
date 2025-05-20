@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -20,7 +20,7 @@ public class player_myTacticsMe extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -41,6 +41,7 @@ public class player_myTacticsMe extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTacticsMe() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

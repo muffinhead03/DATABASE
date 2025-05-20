@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -7,6 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -20,6 +24,7 @@ public class player_myTacticsMe_field extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	
 
 	/**
 	 * Launch the application.
@@ -36,11 +41,56 @@ public class player_myTacticsMe_field extends JFrame {
 			}
 		});
 	}
+	
+	
+	//데이터베이스속 데이터 로드
+	private void loadfieldData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 테이블 초기화
+
+	    String sql = 
+	        "SELECT DISTINCT " +
+	        "    S.idTactic AS fieldTacticId, " +
+	        "    S.tacticName AS tacticName, " +
+	        "    S.tacticFormation AS tacticFormation " +
+	        "FROM " +
+	        "    DB2025_Player P " +
+	        "JOIN " +
+	        "    DB2025_Squad Q ON P.idPlayer = Q.idPlayer " +
+	        "JOIN " +
+	        "    DB2025_GameRec G ON Q.idGame = G.idGame " +
+	        "JOIN " +
+	        "    DB2025_Tactics S ON G.idField = S.idTactic " +
+	        "WHERE " +
+	        "    P.idPlayer = ? " +
+	        "    AND S.tacticType = 'Field' " +
+	        "    AND S.idTeam = P.idTeam";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                int tacticId = rs.getInt("fieldTacticId");
+	                String tacticName = rs.getString("tacticName");
+	                String formation = rs.getString("tacticFormation");
+
+	                model.addRow(new Object[]{tacticId, tacticName, formation});
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	/**
 	 * Create the frame.
 	 */
 	public player_myTacticsMe_field() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -77,6 +127,7 @@ public class player_myTacticsMe_field extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table);
+		loadfieldData();
 	}
 
 }

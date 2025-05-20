@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -25,6 +25,7 @@ public class player_myTactics extends JFrame {
 	private JPanel panel;
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
+	
 
 	/**
 	 * Launch the application.
@@ -46,6 +47,7 @@ public class player_myTactics extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTactics() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
