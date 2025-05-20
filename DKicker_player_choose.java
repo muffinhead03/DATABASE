@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -10,17 +10,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.sql.*;
 
-public class DKicker_player_choose extends JFrame {
+
+public class DKicker_player_choose  extends JFrame  {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-
+	public static int playerid; 
+   
 	/**
 	 * Launch the application.
 	 */
@@ -40,7 +44,42 @@ public class DKicker_player_choose extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	private void loadPlayerData() {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0); // 기존 테이블 데이터 초기화
+	    //선택된 팀 선수만 쿼리
+	    String sql = "SELECT idPlayer, playerName FROM DB2025_Player WHERE idTeam = ?";
+	    try (Connection conn = DBUtil.getConnection();
+	            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	           
+	           pstmt.setInt(1, DKicker.currentTeamId); // 변수 바인딩
+
+	           try (ResultSet rs = pstmt.executeQuery()) {
+	               while (rs.next()) {
+	                   String id = rs.getString("idPlayer");
+	                   String name = rs.getString("playerName");
+	                   model.addRow(new Object[]{id, name});
+	               }
+	           }
+
+	       } catch (SQLException e) {
+	           e.printStackTrace();
+	       }
+	   }
+	
+	
+	
 	public DKicker_player_choose() {
+		try {
+		    Connection conn = DBUtil.getConnection();  // 공통 메서드 사용
+		    // SQL 실행...
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -67,7 +106,7 @@ public class DKicker_player_choose extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uBC88\uD638", "\uC120\uC218 ID", "\uC120\uC218 \uC774\uB984"
+				 "\uC120\uC218 ID", "\uC120\uC218 \uC774\uB984"
 			}
 		));
 		scrollPane.setViewportView(table);
@@ -84,10 +123,20 @@ public class DKicker_player_choose extends JFrame {
 		
 		JButton btnNewButton_1 = new JButton("선택");
 		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        int selectedRow = table.getSelectedRow();
+		        if (selectedRow != -1) {
+		            Object playerIdObj = table.getValueAt(selectedRow, 0);
+		            playerid = Integer.parseInt(playerIdObj.toString());
+		            new player().setVisible(true);
+		            dispose();
+		        } else {
+		            JOptionPane.showMessageDialog(null, "선수를 선택해 주세요.", "선택 오류", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
 		});
 		panel.add(btnNewButton_1);
+		
+		loadPlayerData();
 	}
 }
