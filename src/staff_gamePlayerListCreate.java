@@ -27,7 +27,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField_2;
-	private int idTeam;
+	
 	private JComboBox comboBox;
 	private JComboBox comboBox_1;
 
@@ -39,7 +39,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gamePlayerListCreate frame = new staff_gamePlayerListCreate(1);
+					staff_gamePlayerListCreate frame = new staff_gamePlayerListCreate();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,8 +51,8 @@ public class staff_gamePlayerListCreate extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_gamePlayerListCreate(int idTeam) {
-		this.idTeam=idTeam;
+	public staff_gamePlayerListCreate() {
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -66,7 +66,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameManage(idTeam).setVisible(true); dispose();
+				new staff_gameManage().setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -95,7 +95,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 		    Connection conn = DBUtil.getConnection();
 		    String sql = "SELECT idGame FROM DB2025_GameRec WHERE idOurTeam = ?";
 		    PreparedStatement pstmt = conn.prepareStatement(sql);
-		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(1, DKicker.currentTeamId);
 		    ResultSet rs = pstmt.executeQuery();
 
 		    while (rs.next()) {
@@ -136,7 +136,7 @@ public class staff_gamePlayerListCreate extends JFrame {
 		    Connection conn = DBUtil.getConnection();
 		    String sql = "SELECT playerName FROM DB2025_Player WHERE idTeam = ?";
 		    PreparedStatement pstmt = conn.prepareStatement(sql);
-		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(1, DKicker.currentTeamId);
 		    ResultSet rs = pstmt.executeQuery();
 
 		    while (rs.next()) {
@@ -173,9 +173,9 @@ public class staff_gamePlayerListCreate extends JFrame {
 		        Connection conn = DBUtil.getConnection();
 		        Statement stmt = conn.createStatement();
 		        ResultSet rs = stmt.executeQuery(
-		        	    "SELECT s.idGame AS \"경기 ID\", p.playerName AS \"선수 이름\", s.playTime AS \"출전 시간\" " +
-		        	    "FROM DB2025_Squad s " +
-		        	    "JOIN DB2025_Player p ON s.idPlayer = p.idPlayer"
+		        		"SELECT s.idGame AS \"경기 ID\", p.playerName AS \"선수 이름\", p.idTeam AS \"팀 ID\", s.playTime AS \"출전 시간\" " +
+		        	             "FROM DB2025_Squad s " +
+		        	             "JOIN DB2025_Player p ON s.idPlayer = p.idPlayer"
 		        	);
 		        // ResultSet -> TableModel
 		        DefaultTableModel model = new DefaultTableModel();

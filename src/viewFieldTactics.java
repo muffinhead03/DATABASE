@@ -25,7 +25,7 @@ public class viewFieldTactics extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private int idTeam;
+
 
 	/**
 	 * Launch the application.
@@ -34,7 +34,7 @@ public class viewFieldTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewFieldTactics frame = new viewFieldTactics(0);
+					viewFieldTactics frame = new viewFieldTactics();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,8 +46,8 @@ public class viewFieldTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewFieldTactics(int idTeam) {
-		this.idTeam = idTeam;
+	public viewFieldTactics() {
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -59,7 +59,7 @@ public class viewFieldTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics(idTeam).setVisible(true); dispose();
+				new viewTactics().setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -98,7 +98,7 @@ public class viewFieldTactics extends JFrame {
 	                     "FROM DB2025_Tactics " +
 	                     "WHERE tacticType = 'Field' AND idTeam = ?";
 	        PreparedStatement pstmt = conn.prepareStatement(sql);
-	        pstmt.setInt(1, idTeam);
+	        pstmt.setInt(1, DKicker.currentTeamId);
 	        ResultSet rs = pstmt.executeQuery();
 
 	        while (rs.next()) {
