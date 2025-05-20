@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -17,6 +17,7 @@ public class staff_tacticManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -25,7 +26,7 @@ public class staff_tacticManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_tacticManage frame = new staff_tacticManage();
+					staff_tacticManage frame = new staff_tacticManage(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +38,8 @@ public class staff_tacticManage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_tacticManage() {
+	public staff_tacticManage(int idTeam) {
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -76,7 +78,7 @@ public class staff_tacticManage extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

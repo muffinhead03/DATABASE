@@ -1,6 +1,7 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -52,7 +53,7 @@ public class viewTactics_statistics_Achieved extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics_statistics().setVisible(true); dispose();
+				new viewTactics_statistics(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 			
 		});

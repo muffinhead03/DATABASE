@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -19,6 +19,7 @@ public class viewTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -27,7 +28,7 @@ public class viewTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTactics frame = new viewTactics();
+					viewTactics frame = new viewTactics(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +40,8 @@ public class viewTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewTactics() {
+	public viewTactics(int idTeam) {
+		this.idTeam= idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,7 +59,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -71,7 +73,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewFieldTactics().setVisible(true); dispose();
+				new viewFieldTactics(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -79,7 +81,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewSetpieceTactics().setVisible(true); dispose();
+				new viewSetpieceTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
@@ -87,7 +89,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_3 = new JButton("전술별 경기 통계 분석");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics_statistics().setVisible(true); dispose();
+				new viewTactics_statistics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);

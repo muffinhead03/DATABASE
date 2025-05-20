@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -17,11 +18,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import java.sql.*;
+
 public class viewFieldTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -30,7 +34,7 @@ public class viewFieldTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewFieldTactics frame = new viewFieldTactics();
+					viewFieldTactics frame = new viewFieldTactics(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +46,8 @@ public class viewFieldTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewFieldTactics() {
+	public viewFieldTactics(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,7 +59,7 @@ public class viewFieldTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics().setVisible(true); dispose();
+				new viewTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -79,6 +84,41 @@ public class viewFieldTactics extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table);
+		
+		loadFieldTacticsToTable(table);
 	}
+	
+	public void loadFieldTacticsToTable( JTable table) {
+	    String[] columnNames = {"전술 ID", "전술 이름", "포메이션"};
+	    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+	    try {
+	        Connection conn = DBUtil.getConnection();
+	        String sql = "SELECT idTactic, tacticName, tacticFormation " +
+	                     "FROM DB2025_Tactics " +
+	                     "WHERE tacticType = 'Field' AND idTeam = ?";
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, idTeam);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            int id = rs.getInt("idTactic");
+	            String name = rs.getString("tacticName");
+	            String formation = rs.getString("tacticFormation");
+	            model.addRow(new Object[]{id, name, formation});
+	        }
+
+	        rs.close();
+	        pstmt.close();
+	        conn.close();
+
+	        table.setModel(model); // 테이블에 모델 적용
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "전술 데이터를 불러오는 데 실패했습니다.");
+	    }
+	}
+
 
 }

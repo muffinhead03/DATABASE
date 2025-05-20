@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -26,6 +26,7 @@ public class viewPlayers_Edit extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private JTextField textField_6;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -34,7 +35,7 @@ public class viewPlayers_Edit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewPlayers_Edit frame = new viewPlayers_Edit();
+					viewPlayers_Edit frame = new viewPlayers_Edit(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +47,8 @@ public class viewPlayers_Edit extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewPlayers_Edit() {
+	public viewPlayers_Edit(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -58,7 +60,7 @@ public class viewPlayers_Edit extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewPlayers().setVisible(true); dispose();
+				new viewPlayers(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

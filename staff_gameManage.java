@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -17,6 +17,7 @@ public class staff_gameManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -25,7 +26,7 @@ public class staff_gameManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameManage frame = new staff_gameManage();
+					staff_gameManage frame = new staff_gameManage(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +38,8 @@ public class staff_gameManage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_gameManage() {
+	public staff_gameManage(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,7 +56,7 @@ public class staff_gameManage extends JFrame {
 		JButton button = new JButton("경기 기록 생성");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameCreate().setVisible(true); dispose();
+				new staff_gameCreate(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(button);
@@ -86,7 +88,7 @@ public class staff_gameManage extends JFrame {
 		JButton btnNewButton_4 = new JButton("다른 팀과 치른 경기 요약");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameWithOtherTeams().setVisible(true); dispose();
+				new staff_gameWithOtherTeams(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_4);
@@ -94,7 +96,7 @@ public class staff_gameManage extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

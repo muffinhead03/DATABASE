@@ -25,7 +25,7 @@ public class staff_teamInfoManage extends JFrame {
 			public void run() {
 				try {
 					// 테스트용 teamId = 1 (실제 환경에서는 로그인 정보에서 받아야 함)
-					staff_teamInfoManage frame = new staff_teamInfoManage(1);
+					staff_teamInfoManage frame = new staff_teamInfoManage(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,7 +35,7 @@ public class staff_teamInfoManage extends JFrame {
 	}
 
 	public staff_teamInfoManage(int teamId) {
-		this.teamId = teamId;
+		this.teamId = DKicker.currentTeamId;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -51,7 +51,7 @@ public class staff_teamInfoManage extends JFrame {
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage().setVisible(true);
+				new staff_teamManage(teamId).setVisible(true);
 				dispose();
 			}
 		});
@@ -92,8 +92,7 @@ public class staff_teamInfoManage extends JFrame {
 
 		// 🔻 DB에서 팀 정보 불러오기
 		try {
-			Connection conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/db2025team09", "root", "asdf1234!");
+			Connection conn = DBUtil.getConnection();
 
 			String sql = "SELECT FIFArank, currName, currRank, currPoints FROM db2025_team WHERE idTeam = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);

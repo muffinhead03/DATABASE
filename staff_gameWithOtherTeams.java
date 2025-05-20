@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -30,7 +30,7 @@ public class staff_gameWithOtherTeams extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameWithOtherTeams frame = new staff_gameWithOtherTeams();
+					staff_gameWithOtherTeams frame = new staff_gameWithOtherTeams(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +42,7 @@ public class staff_gameWithOtherTeams extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_gameWithOtherTeams() {
+	public staff_gameWithOtherTeams(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,7 +54,7 @@ public class staff_gameWithOtherTeams extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameManage().setVisible(true); dispose();
+				new staff_gameManage(DKicker.currentTeamId).setVisible(true); dispose();
  			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

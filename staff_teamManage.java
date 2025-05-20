@@ -1,4 +1,5 @@
-package dataKicker;
+
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -17,6 +18,7 @@ public class staff_teamManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -25,7 +27,7 @@ public class staff_teamManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_teamManage frame = new staff_teamManage();
+					staff_teamManage frame = new staff_teamManage(DKicker.currentTeamId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +39,8 @@ public class staff_teamManage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_teamManage() {
+	public staff_teamManage(int idTeam) {
+		this.idTeam = DKicker.currentTeamId;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,7 +57,7 @@ public class staff_teamManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("우리 팀의 대외 정보 관리");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamInfoManage().setVisible(true); dispose();
+				new staff_teamInfoManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -62,14 +65,14 @@ public class staff_teamManage extends JFrame {
 		JButton btnNewButton_2 = new JButton("우리 팀이 최다 득점한 상대팀 조회");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage_scoredMost().setVisible(true); dispose();			}
+				new staff_teamManage_scoredMost(idTeam).setVisible(true); dispose();			}
 		});
 		panel.add(btnNewButton_2);
 		
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
