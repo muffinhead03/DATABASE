@@ -25,7 +25,7 @@ public class DKicker extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	public static int idTeam=0;
+	public static int currentTeamId=0;
 
 	/**
 	 * Launch the application.
@@ -137,8 +137,8 @@ public class DKicker extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedTeam = (String) comboBox.getSelectedItem();  // 선택된 팀명 가져오기
-		        idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
-		        new DKicker_player_choose(selectedTeam).setVisible(true);
+		        currentTeamId = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
+		        new DKicker_player_choose().setVisible(true);
 		        
 		        dispose();
 		    }
@@ -150,8 +150,8 @@ public class DKicker extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 String selectedTeam = (String) comboBox.getSelectedItem();
-				 idTeam = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
-				new staff(idTeam).setVisible(true); dispose();
+				 currentTeamId = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
+				new staff().setVisible(true); dispose();
 			}
 		});
 		btnNewButton_1.setBounds(232, 207, 117, 29);

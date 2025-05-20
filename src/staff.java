@@ -15,7 +15,7 @@ public class staff extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private String selectedTeam;
-	private int idTeam;
+	
 
 	/**
 	 * Launch the application.
@@ -24,7 +24,7 @@ public class staff extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff frame = new staff(0);
+					staff frame = new staff();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,9 +36,9 @@ public class staff extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff(int idTeam) {
+	public staff() {
 		
-        this.idTeam = idTeam;
+        
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +57,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_1 = new JButton("선수 정보");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewPlayers(idTeam).setVisible(true); dispose();
+				new viewPlayers().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -65,7 +65,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_2 = new JButton("선수 관리");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerManage(idTeam).setVisible(true); dispose();
+				new staff_playerManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
@@ -73,7 +73,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_3 = new JButton("팀 정보");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTeams(idTeam).setVisible(true); dispose();
+				new viewTeams().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);
@@ -81,7 +81,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_4 = new JButton("팀 관리");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage(idTeam).setVisible(true); dispose();
+				new staff_teamManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_4);
@@ -89,7 +89,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_5 = new JButton("경기 기록");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewGames(idTeam).setVisible(true); dispose();
+				new viewGames().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_5);
@@ -97,7 +97,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_7 = new JButton("경기 기록 관리");
 		btnNewButton_7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameManage(idTeam).setVisible(true); dispose();
+				new staff_gameManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_7);
@@ -105,7 +105,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_6 = new JButton("전술 정보");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics(idTeam).setVisible(true); dispose();
+				new viewTactics().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_6);
@@ -113,7 +113,7 @@ public class staff extends JFrame {
 		JButton btnNewButton_8 = new JButton("전술 정보 관리");
 		btnNewButton_8.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_tacticManage(idTeam).setVisible(true); dispose();
+				new staff_tacticManage().setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_8);

@@ -26,13 +26,7 @@ public class DKicker_player_choose  extends JFrame  {
 	private String teamName;  // 전달받을 팀 이름을 저장할 변수
 	private int teamnum;
 
-    public DKicker_player_choose(String teamName) {
-    	this();
-        this.teamName = teamName;
-        this.teamnum = Integer.parseInt(teamName.replaceAll("[^0-9]", ""));
-        // String 형으로 넘어온 변수에서 숫자만
-        loadPlayerData();  // 팀 선수 불러오기
-    }
+   
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +55,7 @@ public class DKicker_player_choose  extends JFrame  {
 	    try (Connection conn = DBUtil.getConnection();
 	            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	           
-	           pstmt.setInt(1, teamnum); // 변수 바인딩
+	           pstmt.setInt(1, DKicker.currentTeamId); // 변수 바인딩
 
 	           try (ResultSet rs = pstmt.executeQuery()) {
 	               while (rs.next()) {
