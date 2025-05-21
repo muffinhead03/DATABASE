@@ -89,7 +89,7 @@ public class player_myTacticsTeam_field extends JFrame {
 		// ✅ 설명 열에만 줄바꿈 렌더러 적용 (열 너비는 그대로 유지)
 		table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
 
-		loadSetpieceTactics(DKicker_player_choose.playerid, table);
+		loadSetpieceTactics(DKicker_player_choose.currentidPlayer, table);
 	}
 
 	public void loadSetpieceTactics(int idPlayer, JTable table) {
