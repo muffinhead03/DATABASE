@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -22,6 +22,7 @@ public class player_viewMyGames extends JFrame {
 	private JTable table;
 	private JLabel lblNewLabel;
 	private JButton btnNewButton;
+	private int iDplayer;
 
 	/**
 	 * Launch the application.
