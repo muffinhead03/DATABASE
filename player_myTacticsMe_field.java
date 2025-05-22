@@ -58,7 +58,7 @@ public class player_myTacticsMe_field extends JFrame {
 	        "JOIN " +
 	        "    DB2025_Squad Q ON P.idPlayer = Q.idPlayer " +
 	        "JOIN " +
-	        "    view_GameSummary G ON Q.idGame = G.idGame " +
+	        "    DB2025_view_GameSummary G ON Q.idGame = G.idGame " +
 	        "JOIN " +
 	        "    DB2025_Tactics S ON G.idField = S.idTactic " +
 	        "WHERE " +

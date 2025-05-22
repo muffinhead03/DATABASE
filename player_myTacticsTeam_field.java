@@ -94,7 +94,7 @@ public class player_myTacticsTeam_field extends JFrame {
 
 	public void loadSetpieceTactics(int idPlayer, JTable table) {
 		String query = "SELECT F.idTactic AS fieldTacticId, F.tacticName AS fieldTacticName, F.tacticFormation AS fieldFormation, F.explainTactics AS fieldDescription,\r\n COUNT(*) AS useCount\r\n"
-				+ "FROM view_GameSummary G\r\n"
+				+ "FROM DB2025_view_GameSummary G\r\n"
 				+ "LEFT JOIN DB2025_Tactics F ON G.idField = F.idTactic AND F.tacticType = 'Field' AND F.idTeam = ?\r\n"
 				
 				+ "WHERE G.idOurTeam = ?\r\n"

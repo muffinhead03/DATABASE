@@ -1,4 +1,4 @@
-CREATE VIEW view_GameSummary 
+CREATE VIEW DB2025_view_GameSummary 
 AS SELECT s1.idGame, r.dateGame, s1.idOurTeam, s2.idOurTeam AS idAgainstTeam,
  s1.idField, s1.idSetpiece, s1.goalOurTeam AS goalFor, s2.goalOurTeam AS goalAgainst 
 FROM DB2025_GameStat s1 

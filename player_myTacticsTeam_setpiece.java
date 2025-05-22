@@ -39,7 +39,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 
 
 	    try (Connection conn = DBUtil.getConnection();) {
-	        String sql = "SELECT	S.idTactic AS setpieceTacticId, S.tacticName AS setpieceTacticName, S.tacticFormation AS setpieceFormation, S.explainTactics AS setpieceDescription,COUNT(*) AS useCount FROM view_GameSummary G LEFT JOIN DB2025_Tactics S ON G.idSetpiece = S.idTactic AND S.tacticType = 'Setpiece' AND S.idTeam = ? WHERE G.idOurTeam = ? GROUP BY S.idTactic, S.tacticName, S.tacticFormation, S.explainTactics ORDER BY useCount DESC LIMIT 3;";
+	        String sql = "SELECT	S.idTactic AS setpieceTacticId, S.tacticName AS setpieceTacticName, S.tacticFormation AS setpieceFormation, S.explainTactics AS setpieceDescription,COUNT(*) AS useCount FROM DB2025_view_GameSummary G LEFT JOIN DB2025_Tactics S ON G.idSetpiece = S.idTactic AND S.tacticType = 'Setpiece' AND S.idTeam = ? WHERE G.idOurTeam = ? GROUP BY S.idTactic, S.tacticName, S.tacticFormation, S.explainTactics ORDER BY useCount DESC LIMIT 3;";
 	        PreparedStatement stmt = conn.prepareStatement(sql);
 	        stmt.setInt(1, DKicker.currentTeamId);
 	        stmt.setInt(2, DKicker.currentTeamId);

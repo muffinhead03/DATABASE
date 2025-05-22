@@ -57,7 +57,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		    	    "JOIN " +
 		    	    "    DB2025_Player P ON Q.idPlayer = P.idPlayer " +
 		    	    "JOIN " +
-		    	    "    view_GameSummary G ON Q.idGame = G.idGame " +
+		    	    "    DB2025_view_GameSummary G ON Q.idGame = G.idGame " +
 		    	    "JOIN " +
 		    	    "    DB2025_Tactics S ON G.idSetpiece = S.idTactic " +
 		    	    "WHERE " +

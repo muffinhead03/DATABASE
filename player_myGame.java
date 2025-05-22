@@ -54,7 +54,7 @@ public class player_myGame extends JFrame {
 
 	    String sql = "SELECT G.idGame, G.dateGame, T.nation AS opponentTeamName, G.goalFor, G.goalAgainst\n"
 	    		+ "FROM DB2025_Squad S\n"
-	    		+ "JOIN view_GameSummary G ON S.idGame = G.idGame\n"
+	    		+ "JOIN DB2025_view_GameSummary G ON S.idGame = G.idGame\n"
 	    		+ "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam\n"
 	    		+ "WHERE S.idPlayer = ? AND G.idOurTeam = ?;";
 
