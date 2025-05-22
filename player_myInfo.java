@@ -16,7 +16,7 @@ public class player_myInfo extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private JTextField textField_3;
+	private JLabel labelTeam;
 	private JTextField textField_4;
 	private JRadioButton rdbtnNewRadioButton;
 	private JRadioButton rdbtnNewRadioButton_1;
@@ -84,10 +84,9 @@ public class player_myInfo extends JFrame {
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 
-		textField_3 = new JTextField();
-		textField_3.setBounds(260, 147, 112, 26);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
+		JLabel labelTeam = new JLabel();
+		labelTeam.setBounds(260, 147, 112, 26);
+		contentPane.add(labelTeam);
 
 		textField_4 = new JTextField();
 		textField_4.setBounds(260, 175, 112, 26);
@@ -138,7 +137,7 @@ public class player_myInfo extends JFrame {
 	            String name = textField.getText().trim();
 	            String birthdateStr = textField_1.getText().trim();
 	            String position = textField_2.getText().trim();
-	            String team = textField_3.getText().trim();
+	            String team = labelTeam.getText().trim();
 	            String playerAction = textField_4.getText().trim();
 	            Integer ableToPlay = null;
 
@@ -230,7 +229,7 @@ public class player_myInfo extends JFrame {
 	                    textField.setText(name);
 	                    textField_1.setText(birthday != null ? birthday.toString() : "");
 	                    textField_2.setText(position);
-	                    textField_3.setText(team);
+	                    labelTeam.setText(team);
 	                    textField_4.setText(action);  // Optional: Keep this if needed
 
 	                    // 출전 가능 여부 라디오 버튼 설정
