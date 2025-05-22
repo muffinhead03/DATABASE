@@ -26,7 +26,7 @@ public class player_myGame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	
+	public static int idGame=1;
 
 	/**
 	 * Launch the application.
@@ -35,7 +35,7 @@ public class player_myGame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					int iDplayer = 0;
+					
 					player_myGame frame = new player_myGame();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -52,16 +52,17 @@ public class player_myGame extends JFrame {
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 데이터 초기화
 
-	    String sql = "SELECT G.idGame, G.dateGame, T.nation AS opponentTeamName, G.goalFor, G.goalAgainst " +
-	                 "FROM DB2025_Squad S " +
-	                 "JOIN DB2025_GameRec G ON S.idGame = G.idGame " +
-	                 "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam " +
-	                 "WHERE S.idPlayer = ?";
+	    String sql = "SELECT G.idGame, G.dateGame, T.nation AS opponentTeamName, G.goalFor, G.goalAgainst\n"
+	    		+ "FROM DB2025_Squad S\n"
+	    		+ "JOIN view_GameSummary G ON S.idGame = G.idGame\n"
+	    		+ "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam\n"
+	    		+ "WHERE S.idPlayer = ? AND G.idOurTeam = ?;";
 
 	    try (Connection conn = DBUtil.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-	        pstmt.setInt(1, DKicker_player_choose.currentidPlayer); // 바인딩
+	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+	        pstmt.setInt(2, DKicker.currentTeamId);
 
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            while (rs.next()) {
@@ -125,6 +126,24 @@ public class player_myGame extends JFrame {
 		scrollPane.setViewportView(table);
 		loadGameData();
 		
+		// "경기 상세 정보" 버튼 추가
+		JButton btnDetail = new JButton("경기 상세 정보");
+		btnDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow != -1) {
+					idGame = (int) table.getValueAt(selectedRow, 0); 
+					//System.out.println(idGame);
+					new player_myGameOne().setVisible(true);
+					dispose(); // 현재 창 닫기 (선택 사항)
+				} else {
+					System.out.println("행을 선택하세요.");
+				}
+			}
+		});
+		btnDetail.setBounds(160, 280, 150, 30); // 위치는 필요에 따라 조정 가능
+		contentPane.add(btnDetail);
+
 		
 	}
 }

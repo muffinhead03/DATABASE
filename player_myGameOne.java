@@ -15,7 +15,7 @@ public class player_myGameOne extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int iDplayer;
+	
 
 	/**
 	 * Launch the application.
@@ -37,6 +37,7 @@ public class player_myGameOne extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myGameOne() {
+		//System.out.println(idGame);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
