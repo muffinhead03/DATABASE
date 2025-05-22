@@ -22,7 +22,6 @@ public class player_viewMyGames extends JFrame {
 	private JTable table;
 	private JLabel lblNewLabel;
 	private JButton btnNewButton;
-	private int iDplayer;
 
 	/**
 	 * Launch the application.

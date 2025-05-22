@@ -39,21 +39,20 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 
 
 	    try (Connection conn = DBUtil.getConnection();) {
-	        String sql = "SELECT idTactic, tacticName, tacticFormation, explainTactics " +
-	                     "FROM DB2025_Tactics " +
-	                     "WHERE idTeam = (SELECT idTeam FROM DB2025_Player WHERE idPlayer = ?) " +
-	                     "AND tacticType = 'Setpiece'";
+	        String sql = "SELECT	S.idTactic AS setpieceTacticId, S.tacticName AS setpieceTacticName, S.tacticFormation AS setpieceFormation, S.explainTactics AS setpieceDescription,COUNT(*) AS useCount FROM view_GameSummary G LEFT JOIN DB2025_Tactics S ON G.idSetpiece = S.idTactic AND S.tacticType = 'Setpiece' AND S.idTeam = ? WHERE G.idOurTeam = ? GROUP BY S.idTactic, S.tacticName, S.tacticFormation, S.explainTactics ORDER BY useCount DESC LIMIT 3;";
 	        PreparedStatement stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, DKicker_player_choose.currentidPlayer);
+	        stmt.setInt(1, DKicker.currentTeamId);
+	        stmt.setInt(2, DKicker.currentTeamId);
 	        ResultSet rs = stmt.executeQuery();
 
 	        while (rs.next()) {
-	            int idTactic = rs.getInt("idTactic");
-	            String name = rs.getString("tacticName");
-	            String formation = rs.getString("tacticFormation");
-	            String desc = rs.getString("explainTactics");
+	            int idTactic = rs.getInt("setpieceTacticId");
+	            String name = rs.getString("setpieceTacticName");
+	            String formation = rs.getString("setpieceFormation");
+	            String desc = rs.getString("setpieceDescription");
+	            int count = rs.getInt("useCount");
 
-	            model.addRow(new Object[] { idTactic, name, formation, desc });
+	            model.addRow(new Object[] { idTactic, name, formation, desc, count });
 	        }
 
 	    } catch (Exception e) {
@@ -93,7 +92,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 		scrollPane.setBounds(6, 81, 438, 185);
 		contentPane.add(scrollPane);
 		
-		 String[] columnNames = {"ID", "전술명", "포메이션", "설명"};
+		 String[] columnNames = {"ID", "전술명", "포메이션", "설명", "사용 횟수"};
 	        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 	        table = new JTable(model);
 

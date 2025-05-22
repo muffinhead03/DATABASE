@@ -13,17 +13,20 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.sql.*;
 
-public class player_viewPlayers extends JFrame {
+
+public class player_viewGames extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel lblNewLabel;
+	private JButton btnNewButton;
 	private JTable table;
+	private JComboBox comboBox;
 	
 
 	/**
@@ -33,7 +36,7 @@ public class player_viewPlayers extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewPlayers frame = new player_viewPlayers();
+					player_viewGames frame = new player_viewGames();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,11 +44,73 @@ public class player_viewPlayers extends JFrame {
 			}
 		});
 	}
+	
+	private void loadAllGames() {
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM view_GameSummary WHERE idOurTeam < idAgainstTeam";
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+		            model.setRowCount(0); // 기존 데이터 삭제
+
+		        	while (rs.next()) {
+		            	int gameId = rs.getInt("idGame");
+		                Date date = rs.getDate("dateGame");
+		                int team1 = rs.getInt("idOurteam");
+		                int team2 = rs.getInt("idAgainstTeam");
+		                int goalFor = rs.getInt("goalFor");
+		                int goalAgainst = rs.getInt("goalAgainst");
+
+		                model.addRow(new Object[]{gameId, date.toString(),team1, team2, goalFor, goalAgainst});
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+	}
+	
+	private void loadTeamGames() {
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM view_GameSummary WHERE idOurTeam = ?";
+		try (Connection conn = DBUtil.getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+		        pstmt.setInt(1, DKicker.currentTeamId); // 바인딩
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+		            model.setRowCount(0); // 기존 데이터 삭제
+
+		        	while (rs.next()) {
+		            	int gameId = rs.getInt("idGame");
+		                Date date = rs.getDate("dateGame");
+		                int opponent = rs.getInt("idAgainstTeam");
+		                int myteam = rs.getInt("idOurTeam");
+		                int goalFor = rs.getInt("goalFor");
+		                int goalAgainst = rs.getInt("goalAgainst");
+
+		                if(myteam == opponent) {
+		                	opponent = rs.getInt("idOurTeam"); 
+		                	int temp = goalFor;
+		                	goalFor = goalAgainst;
+		                	goalAgainst = temp;
+		                }
+		               
+		                model.addRow(new Object[]{gameId, date.toString(), opponent, goalFor, goalAgainst});
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+	}
+
 
 	/**
 	 * Create the frame.
 	 */
-	public player_viewPlayers() {
+	public player_viewGames() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,13 +119,27 @@ public class player_viewPlayers extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("선수 정보");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 17));
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 107, 438, 159);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" 
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		lblNewLabel = new JLabel("경기 기록");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(6, 36, 438, 25);
+		lblNewLabel.setBounds(6, 35, 438, 22);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnNewButton = new JButton("Back");
+		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new player().setVisible(true); dispose();
@@ -69,79 +148,28 @@ public class player_viewPlayers extends JFrame {
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 94, 438, 172);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "\uCD9C\uC804 \uC2DC\uAC04"
-			}
-		));
-		scrollPane.setViewportView(table);
-		
-		JLabel lblNewLabel_1 = new JLabel("포지션");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBounds(6, 73, 39, 16);
-		contentPane.add(lblNewLabel_1);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체", "AM", "DF", "DM", "FW", "GK"}));
-		comboBox.setBounds(46, 69, 77, 27);
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체 경기 조회", "우리 팀 경기 조회"}));
+		comboBox.setBounds(6, 68, 189, 27);
 		contentPane.add(comboBox);
-		
-		JLabel lblNewLabel_2 = new JLabel("정렬");
-		lblNewLabel_2.setBounds(288, 73, 28, 16);
-		contentPane.add(lblNewLabel_2);
-		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"가나다순", "최신 등록순", "최다 출전 시간순"}));
-		comboBox_1.setBounds(313, 69, 131, 27);
-		contentPane.add(comboBox_1);
-		
-		JLabel lblNewLabel_3 = new JLabel("소속 팀");
-		lblNewLabel_3.setBounds(122, 73, 39, 16);
-		contentPane.add(lblNewLabel_3);
-		
-		JComboBox comboBox_1_1 = new JComboBox();
-		comboBox_1_1.setModel(new DefaultComboBoxModel(new String[] {"전체", "팀1", "팀2", "팀3"}));
-		comboBox_1_1.setBounds(159, 69, 117, 27);
-		contentPane.add(comboBox_1_1);
-		
-		JLabel lblNewLabel_4 = new JLabel("나의 포지션: AM");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_4.setBounds(288, 6, 156, 16);
-		contentPane.add(lblNewLabel_4);
-		
-		loadPlayerData();
+		loadAllGames();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (comboBox.getSelectedIndex() == 1) { // "우리 팀 경기 조회" 선택 시
+					String[] columnNames = { "경기 ID", "경기 날짜", "상대 팀", "득점", "실점" };
+		            DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 빈 모델
+		            table.setModel(model); // JTable에 모델 적용
+					loadTeamGames();
+				}
+				if (comboBox.getSelectedIndex() == 0) {
+					String[] columnNames = { "경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" };
+		            DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 빈 모델
+		            table.setModel(model); // JTable에 모델 적용
+					loadAllGames();
+				}
+			}
+		});
+
 	}
-	
-	private void loadPlayerData() {
-	    DefaultTableModel model = (DefaultTableModel) table.getModel();
-	    model.setRowCount(0);
 
-	    String query = "SELECT idPlayer AS id, playerName AS name, position, performance " +
-	                   "FROM db2025_player";
-
-	    try (Connection conn = DBUtil.getConnection();
-	         java.sql.Statement stmt = conn.createStatement();
-	         ResultSet rs = stmt.executeQuery(query)) {
-
-	        while (rs.next()) {
-	            Object[] row = {
-	                rs.getInt("id"),
-	                rs.getString("name"),
-	                rs.getString("position"),
-	                rs.getInt("performance")
-	            };
-	            model.addRow(row); // ✅ 추가
-	        }
-
-	    } catch (Exception e) {
-	        e.printStackTrace(); // 예외 출력
-	    }
-	}
 }

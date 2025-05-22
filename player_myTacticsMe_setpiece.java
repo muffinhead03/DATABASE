@@ -57,7 +57,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		    	    "JOIN " +
 		    	    "    DB2025_Player P ON Q.idPlayer = P.idPlayer " +
 		    	    "JOIN " +
-		    	    "    DB2025_GameRec G ON Q.idGame = G.idGame " +
+		    	    "    view_GameSummary G ON Q.idGame = G.idGame " +
 		    	    "JOIN " +
 		    	    "    DB2025_Tactics S ON G.idSetpiece = S.idTactic " +
 		    	    "WHERE " +
@@ -69,7 +69,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		    try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		        pstmt.setInt(1, DKicker_player_choose.currentidPlayer); // 바인딩
+		        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            while (rs.next()) {

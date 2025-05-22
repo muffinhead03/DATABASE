@@ -82,38 +82,44 @@ public class player_myTacticsTeam_field extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {},
-			new String[] {"전술 ID", "전술 이름", "포메이션", "설명"}
+			new String[] {"전술 ID", "전술 이름", "포메이션", "설명", "사용 횟수"}
 		));
 		scrollPane.setViewportView(table);
 
 		// ✅ 설명 열에만 줄바꿈 렌더러 적용 (열 너비는 그대로 유지)
 		table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
 
-		loadSetpieceTactics(DKicker_player_choose.currentidPlayer, table);
+		loadSetpieceTactics(DKicker_player_choose.playerid, table);
 	}
 
 	public void loadSetpieceTactics(int idPlayer, JTable table) {
-		String query = "SELECT T.idTactic, T.tacticName, T.tacticFormation, T.explainTactics " +
-		               "FROM DB2025_Tactics T " +
-		               "JOIN DB2025_Player P ON T.idTeam = P.idTeam " +
-		               "WHERE P.idPlayer = ? AND T.tacticType = 'Setpiece'";
+		String query = "SELECT F.idTactic AS fieldTacticId, F.tacticName AS fieldTacticName, F.tacticFormation AS fieldFormation, F.explainTactics AS fieldDescription,\r\n COUNT(*) AS useCount\r\n"
+				+ "FROM view_GameSummary G\r\n"
+				+ "LEFT JOIN DB2025_Tactics F ON G.idField = F.idTactic AND F.tacticType = 'Field' AND F.idTeam = ?\r\n"
+				
+				+ "WHERE G.idOurTeam = ?\r\n"
+				+ "GROUP BY F.idTactic, F.tacticName, F.tacticFormation, F.explainTactics\r\n"
+								+ "ORDER BY useCount DESC\r\n"
+				+ "LIMIT 3;";
 
 		try (Connection conn = DBUtil.getConnection();
 		     PreparedStatement stmt = conn.prepareStatement(query)) {
 
-			stmt.setInt(1, idPlayer);
+			stmt.setInt(1, DKicker.currentTeamId);
+			stmt.setInt(2, DKicker.currentTeamId);
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				DefaultTableModel model = (DefaultTableModel) table.getModel();
 				model.setRowCount(0);
 
 				while (rs.next()) {
-					int idTactic = rs.getInt("idTactic");
-					String name = rs.getString("tacticName");
-					String formation = rs.getString("tacticFormation");
-					String description = rs.getString("explainTactics");
+					int idTactic = rs.getInt("fieldTacticId");
+					String name = rs.getString("fieldTacticName");
+					String formation = rs.getString("fieldFormation");
+					String description = rs.getString("fieldDescription");
+					int count = rs.getInt("useCount");
 
-					model.addRow(new Object[]{idTactic, name, formation, description});
+					model.addRow(new Object[]{idTactic, name, formation, description, count});
 				}
 			}
 		} catch (SQLException e) {
