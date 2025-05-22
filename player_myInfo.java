@@ -183,7 +183,7 @@ public class player_myInfo extends JFrame {
 	            // 마지막 쉼표 제거
 	            sql.setLength(sql.length() - 2);
 	            sql.append(" WHERE idPlayer=?");
-	            params.add(DKicker_player_choose.playerid);
+	            params.add(DKicker_player_choose.currentidPlayer);
 
 	            try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 	                for (int i = 0; i < params.size(); i++) {
@@ -216,7 +216,7 @@ public class player_myInfo extends JFrame {
 	    try (Connection conn = DBUtil.getConnection()) {
 	        String sql = "SELECT playerName, birthday, position, idTeam, playerAction , ableToPlay FROM DB2025_Player WHERE idPlayer = ?";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setInt(1, DKicker_player_choose.playerid);
+	            pstmt.setInt(1, DKicker_player_choose.currentidPlayer);
 
 	            try (ResultSet rs = pstmt.executeQuery()) {
 	                if (rs.next()) {

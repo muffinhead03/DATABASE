@@ -61,7 +61,7 @@ public class player_myGame extends JFrame {
 	    try (Connection conn = DBUtil.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+	        pstmt.setInt(1, DKicker_player_choose.currentidPlayer); // 바인딩
 
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            while (rs.next()) {

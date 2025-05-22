@@ -44,7 +44,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	                     "WHERE idTeam = (SELECT idTeam FROM DB2025_Player WHERE idPlayer = ?) " +
 	                     "AND tacticType = 'Setpiece'";
 	        PreparedStatement stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, DKicker_player_choose.playerid);
+	        stmt.setInt(1, DKicker_player_choose.currentidPlayer);
 	        ResultSet rs = stmt.executeQuery();
 
 	        while (rs.next()) {

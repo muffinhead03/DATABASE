@@ -138,7 +138,7 @@ public class DKicker extends JFrame {
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedTeam = (String) comboBox.getSelectedItem();  // 선택된 팀명 가져오기
 		        currentTeamId = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
-		        new DKicker_player_choose().setVisible(true);
+		        new DKicker_player_choose(selectedTeam).setVisible(true);
 		        
 		        dispose();
 		    }
@@ -151,7 +151,7 @@ public class DKicker extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 String selectedTeam = (String) comboBox.getSelectedItem();
 				 currentTeamId = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
-				new staff().setVisible(true); dispose();
+				new staff(DKicker.currentTeamId).setVisible(true); dispose();
 			}
 		});
 		btnNewButton_1.setBounds(232, 207, 117, 29);
