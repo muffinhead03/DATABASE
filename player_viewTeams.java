@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -62,7 +63,7 @@ public class player_viewTeams extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uD300 ID", "\uD300 \uC774\uB984", "\uAD6D\uAC00", "FIFA \uB7AD\uD0B9"
+				"\uD300 ID", "국가", "현재 재회 이름", "FIFA \uB7AD\uD0B9"
 			}
 		));
 		scrollPane.setViewportView(table);
@@ -86,9 +87,9 @@ public class player_viewTeams extends JFrame {
 	}
 	private void loadTeamData() {
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
-	    model.setRowCount(0); // 기존 데이터 초기화
+	    model.setRowCount(0); // 기존 행 삭제
 
-	    String query = "SELECT idTeam AS id, currName AS name, nation, FIFArank FROM db2025_team";
+	    String query = "SELECT idTeam AS id, currName AS name, nation, FIFArank FROM DB2025_Team";
 
 	    try (Connection conn = DBUtil.getConnection();
 	         java.sql.Statement stmt = conn.createStatement();
@@ -97,8 +98,8 @@ public class player_viewTeams extends JFrame {
 	        while (rs.next()) {
 	            Object[] row = {
 	                rs.getInt("id"),
-	                rs.getString("name"),
 	                rs.getString("nation"),
+	                rs.getString("name"),
 	                rs.getInt("FIFArank")
 	            };
 	            model.addRow(row);
@@ -106,7 +107,9 @@ public class player_viewTeams extends JFrame {
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "팀 정보를 불러오지 못했습니다.");
 	    }
 	}
+
 
 }

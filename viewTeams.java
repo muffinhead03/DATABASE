@@ -28,7 +28,7 @@ public class viewTeams extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private int idTeams;
+
 
 	/**
 	 * Launch the application.
@@ -37,7 +37,7 @@ public class viewTeams extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTeams frame = new viewTeams(DKicker.currentTeamId);
+					viewTeams frame = new viewTeams(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,8 +49,8 @@ public class viewTeams extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewTeams(int idTeams) {
-		this.idTeams = DKicker.currentTeamId;
+	public viewTeams(int idTeam) {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,7 +68,7 @@ public class viewTeams extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uD300 ID", "\uD300 \uC774\uB984", "\uAD6D\uAC00", "FIFA \uB7AD\uD0B9"}
+				"\uD300 ID", "\uAD6D\uAC00", "현재 대회 이름", "FIFA \uB7AD\uD0B9"}
 		));
 		scrollPane.setViewportView(table);
 		
@@ -81,7 +81,7 @@ public class viewTeams extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff(idTeams).setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -103,8 +103,8 @@ public class viewTeams extends JFrame {
 	        while (rs.next()) {
 	            Object[] row = {
 	                rs.getInt("id"),
-	                rs.getString("name"),
 	                rs.getString("nation"),
+	                rs.getString("name"),
 	                rs.getInt("FIFArank")
 	            };
 	            model.addRow(row);
