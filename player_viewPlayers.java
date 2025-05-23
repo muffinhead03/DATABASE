@@ -28,11 +28,7 @@ public class player_viewPlayers extends JFrame {
 	private JComboBox<String> comboBoxPosition;
 	private JComboBox<String> comboBoxSort;
 	private JComboBox<String> comboBoxTeam;
-<<<<<<< HEAD
 	private int idTeam, idPlayer;
-=======
-	
->>>>>>> 3b72f27d09d93a09e279e4d43332797f4422c326
 
 	/**
 	 * Launch the application.
@@ -109,11 +105,7 @@ public class player_viewPlayers extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		comboBoxSort = new JComboBox<>();
-<<<<<<< HEAD
 		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순","가나다순", "최신 등록순", "최장 출전 시간순"}));
-=======
-		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"가나다순", "최신 등록순", "최다 출전 시간순"}));
->>>>>>> 3b72f27d09d93a09e279e4d43332797f4422c326
 		comboBoxSort.setBounds(313, 69, 131, 27);
 		contentPane.add(comboBoxSort);
 		
@@ -163,15 +155,10 @@ public class player_viewPlayers extends JFrame {
 	        query.append(" ORDER BY playerName ASC");
 	    } else if (selectedSort.equals("최신 등록순")) {
 	        query.append(" ORDER BY idPlayer DESC");
-<<<<<<< HEAD
 	    } else if (selectedSort.equals("최장 출전 시간순")) {
 	        query.append(" ORDER BY performance DESC");
 	    } else if(selectedSort.equals("번호 순")){
 	    	query.append(" ORDER BY idPlayer ASC");	
-=======
-	    } else if (selectedSort.equals("최다 출전 시간순")) {
-	        query.append(" ORDER BY performance DESC");
->>>>>>> 3b72f27d09d93a09e279e4d43332797f4422c326
 	    }
 
 	    try (Connection conn = DBUtil.getConnection();
