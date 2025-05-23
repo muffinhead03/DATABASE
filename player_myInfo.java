@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.awt.Font;
 import java.sql.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 public class player_myInfo extends JFrame {
@@ -87,7 +88,7 @@ public class player_myInfo extends JFrame {
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 
-		JLabel labelTeam = new JLabel();
+		labelTeam = new JLabel();
 		labelTeam.setBounds(260, 147, 112, 26);
 		contentPane.add(labelTeam);
 
@@ -158,7 +159,9 @@ public class player_myInfo extends JFrame {
 	            }
 	            if (!birthdateStr.isEmpty()) {
 	                sql.append("birthday=?, ");
-	                params.add(Date.valueOf(birthdateStr));
+	                LocalDate birthdate = LocalDate.parse(birthdateStr);
+	                birthdate = birthdate.plusDays(1);//하루 추가
+	                params.add(Date.valueOf(birthdate));
 	            }
 	            if (!position.isEmpty()) {
 	                sql.append("position=?, ");
