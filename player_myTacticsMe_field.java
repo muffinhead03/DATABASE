@@ -24,7 +24,7 @@ public class player_myTacticsMe_field extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	
+	private int idTeam, idPlayer;
 
 	/**
 	 * Launch the application.
@@ -33,7 +33,7 @@ public class player_myTacticsMe_field extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsMe_field frame = new player_myTacticsMe_field();
+					player_myTacticsMe_field frame = new player_myTacticsMe_field(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,27 +49,14 @@ public class player_myTacticsMe_field extends JFrame {
 	    model.setRowCount(0); // 기존 테이블 초기화
 
 	    String sql = 
-	        "SELECT DISTINCT " +
-	        "    S.idTactic AS fieldTacticId, " +
-	        "    S.tacticName AS tacticName, " +
-	        "    S.tacticFormation AS tacticFormation " +
-	        "FROM " +
-	        "    DB2025_Player P " +
-	        "JOIN " +
-	        "    DB2025_Squad Q ON P.idPlayer = Q.idPlayer " +
-	        "JOIN " +
-	        "    DB2025_view_GameSummary G ON Q.idGame = G.idGame " +
-	        "JOIN " +
-	        "    DB2025_Tactics S ON G.idField = S.idTactic " +
-	        "WHERE " +
-	        "    P.idPlayer = ? " +
-	        "    AND S.tacticType = 'Field' " +
-	        "    AND S.idTeam = P.idTeam";
+	        "SELECT DISTINCT S.idTactic AS fieldTacticId, \n"
+	        + "S.tacticName AS tacticName, \n"
+	        + "S.tacticFormation AS tacticFormation FROM  DB2025_Player P JOIN   DB2025_Squad Q ON P.idPlayer = Q.idPlayer JOIN     DB2025_view_GameSummary G ON Q.idGame = G.idGame JOIN     DB2025_Tactics S ON G.idField = S.idTactic WHERE     P.idPlayer = ?    AND S.tacticType = 'Field'   AND S.idTeam = P.idTeam";
 
 	    try (Connection conn = DBUtil.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+	        pstmt.setInt(1, idPlayer); // 바인딩
 
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            while (rs.next()) {
@@ -89,8 +76,9 @@ public class player_myTacticsMe_field extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTacticsMe_field() {
-		
+	public player_myTacticsMe_field(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -102,7 +90,7 @@ public class player_myTacticsMe_field extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsMe().setVisible(true); dispose();
+				new player_myTacticsMe(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

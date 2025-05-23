@@ -20,11 +20,11 @@ public class player_setpieceTactics extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-
+	private int idTeam, idPlayer;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_setpieceTactics frame = new player_setpieceTactics();
+				player_setpieceTactics frame = new player_setpieceTactics(1,1);
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -32,7 +32,9 @@ public class player_setpieceTactics extends JFrame {
 		});
 	}
 
-	public player_setpieceTactics() {
+	public player_setpieceTactics(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -42,7 +44,7 @@ public class player_setpieceTactics extends JFrame {
 
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(e -> {
-			new player_viewTactics().setVisible(true);
+			new player_viewTactics(idTeam, idPlayer).setVisible(true);
 			dispose();
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

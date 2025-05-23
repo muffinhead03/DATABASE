@@ -25,6 +25,7 @@ public class player_myTactics extends JFrame {
 	private JPanel panel;
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
+	private int idTeam, idPlayer;
 	
 
 	/**
@@ -34,7 +35,7 @@ public class player_myTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTactics frame = new player_myTactics();
+					player_myTactics frame = new player_myTactics(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,8 +47,9 @@ public class player_myTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTactics() {
-		
+	public player_myTactics(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -65,7 +67,8 @@ public class player_myTactics extends JFrame {
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(idTeam, idPlayer
+).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -79,7 +82,7 @@ public class player_myTactics extends JFrame {
 		btnNewButton_1 = new JButton("우리 팀의 주요 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam().setVisible(true); dispose();
+				new player_myTacticsTeam(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -87,7 +90,7 @@ public class player_myTactics extends JFrame {
 		btnNewButton_2 = new JButton("내가 동원된 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsMe().setVisible(true); dispose();
+				new player_myTacticsMe(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);

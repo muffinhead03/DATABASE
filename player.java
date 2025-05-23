@@ -24,7 +24,7 @@ public class player extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player frame = new player();
+					player frame = new player(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +36,7 @@ public class player extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player() {
+	public player(int idTeam, int idPlayer) {
 		
 		
 		
@@ -56,7 +56,7 @@ public class player extends JFrame {
 		JButton btnNewButton = new JButton("나의 정보");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myInfo().setVisible(true); dispose();
+				new player_myInfo(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton, BorderLayout.CENTER);
@@ -69,7 +69,7 @@ public class player extends JFrame {
 		JButton btnNewButton_1 = new JButton("나의 출전 경기");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myGame().setVisible(true); dispose();
+				new player_myGame(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_1);
@@ -77,7 +77,7 @@ public class player extends JFrame {
 		JButton btnNewButton_2 = new JButton("나의 전술 정보");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTactics().setVisible(true); dispose();
+				new player_myTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_2);
@@ -85,7 +85,7 @@ public class player extends JFrame {
 		JButton btnNewButton_3 = new JButton("선수 정보");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewPlayers().setVisible(true); dispose();
+				new player_viewPlayers(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_3);
@@ -93,7 +93,7 @@ public class player extends JFrame {
 		JButton btnNewButton_4 = new JButton("팀 정보");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewTeams().setVisible(true); dispose();
+				new player_viewTeams(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_4);
@@ -101,7 +101,7 @@ public class player extends JFrame {
 		JButton btnNewButton_5 = new JButton("경기 기록");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewGames().setVisible(true); dispose();
+				new player_viewGames(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_5);
@@ -109,7 +109,7 @@ public class player extends JFrame {
 		JButton btnNewButton_6 = new JButton("전체 전술 정보");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewTactics().setVisible(true); dispose();
+				new player_viewTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel_1.add(btnNewButton_6);

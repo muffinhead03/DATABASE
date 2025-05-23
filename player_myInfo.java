@@ -20,11 +20,12 @@ public class player_myInfo extends JFrame {
 	private JTextField textField_4;
 	private JRadioButton rdbtnNewRadioButton;
 	private JRadioButton rdbtnNewRadioButton_1;
+	private int idTeam, idPlayer;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_myInfo frame = new player_myInfo();
+				player_myInfo frame = new player_myInfo(1,1);
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -32,7 +33,9 @@ public class player_myInfo extends JFrame {
 		});
 	}
 
-	public player_myInfo() {
+	public player_myInfo(int idTeam, int idPlayer) {
+		this.idTeam=idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -113,7 +116,7 @@ public class player_myInfo extends JFrame {
 
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(e -> {
-			new player().setVisible(true);
+			new player(idTeam, idPlayer).setVisible(true);
 			dispose();
 		});
 		btnBack.setBounds(6, 6, 117, 29);
@@ -183,7 +186,7 @@ public class player_myInfo extends JFrame {
 	            // 마지막 쉼표 제거
 	            sql.setLength(sql.length() - 2);
 	            sql.append(" WHERE idPlayer=?");
-	            params.add(DKicker_player_choose.currentidPlayer);
+	            params.add(idPlayer);
 
 	            try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 	                for (int i = 0; i < params.size(); i++) {
@@ -216,7 +219,7 @@ public class player_myInfo extends JFrame {
 	    try (Connection conn = DBUtil.getConnection()) {
 	        String sql = "SELECT playerName, birthday, position, idTeam, playerAction , ableToPlay FROM DB2025_Player WHERE idPlayer = ?";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setInt(1, DKicker_player_choose.currentidPlayer);
+	            pstmt.setInt(1, idPlayer);
 
 	            try (ResultSet rs = pstmt.executeQuery()) {
 	                if (rs.next()) {

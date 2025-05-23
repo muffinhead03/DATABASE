@@ -14,11 +14,11 @@ public class player_myGameTactics extends JFrame {
 
 	private JLabel lblGameId, lblDate, lblOpponent, lblGoalFor, lblGoalAgainst;
 	private JLabel lblFieldName, lblFieldFormation, lblSetName, lblSetFormation;
-
+	private int idTeam, idPlayer, idGame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_myGameTactics frame = new player_myGameTactics();
+				player_myGameTactics frame = new player_myGameTactics(1,1,1);
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -26,7 +26,10 @@ public class player_myGameTactics extends JFrame {
 		});
 	}
 
-	public player_myGameTactics() {
+	public player_myGameTactics(int idTeam, int idPlayer, int idGame) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
+		this.idGame = idGame;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 300);
 		contentPane = new JPanel();
@@ -36,7 +39,7 @@ public class player_myGameTactics extends JFrame {
 
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(e -> {
-			new player_myGameOne().setVisible(true);
+			new player_myGameOne(idTeam, idPlayer, idGame).setVisible(true);
 			dispose();
 		});
 		btnBack.setBounds(6, 6, 117, 29);
@@ -89,13 +92,14 @@ public class player_myGameTactics extends JFrame {
 			JOIN DB2025_Tactics_in_Game TIG ON GPL.idGame = TIG.idGame
 			JOIN DB2025_Game_Info_All GIA ON GIA.idGame = TIG.idGame
 			JOIN DB2025_Team T ON GIA.idAgainstTeam = T.idTeam
-			WHERE GPL.idPlayer = ?
+			WHERE GPL.idPlayer = ? AND  GIA.idGame = ?
 		""";
 
 		try (Connection conn = DBUtil.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			pstmt.setInt(1, DKicker_player_choose.playerid);
+			pstmt.setInt(1, idPlayer);
+			pstmt.setInt(2, idGame);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {

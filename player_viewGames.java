@@ -27,7 +27,7 @@ public class player_viewGames extends JFrame {
 	private JButton btnNewButton;
 	private JTable table;
 	private JComboBox comboBox;
-	
+	private int idTeam, idPlayer;
 
 	/**
 	 * Launch the application.
@@ -36,7 +36,7 @@ public class player_viewGames extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewGames frame = new player_viewGames();
+					player_viewGames frame = new player_viewGames(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +46,7 @@ public class player_viewGames extends JFrame {
 	}
 	
 	private void loadAllGames() {
-		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM view_GameSummary WHERE idOurTeam < idAgainstTeam";
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM DB2025_view_GameSummary WHERE idOurTeam < idAgainstTeam";
 		try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -72,11 +72,11 @@ public class player_viewGames extends JFrame {
 	}
 	
 	private void loadTeamGames() {
-		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM view_GameSummary WHERE idOurTeam = ?";
+		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst FROM DB2025_view_GameSummary WHERE idOurTeam = ?";
 		try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		        pstmt.setInt(1, DKicker.currentTeamId); // 바인딩
+		        pstmt.setInt(1, idTeam); // 바인딩
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -109,8 +109,9 @@ public class player_viewGames extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_viewGames() {
-		
+	public player_viewGames(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -142,7 +143,7 @@ public class player_viewGames extends JFrame {
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

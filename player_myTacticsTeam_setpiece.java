@@ -15,7 +15,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	
+	private int idTeam, idPlayer;
 
 	/**
 	 * Launch the application.
@@ -24,7 +24,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsTeam_setpiece frame = new player_myTacticsTeam_setpiece();
+					player_myTacticsTeam_setpiece frame = new player_myTacticsTeam_setpiece(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,8 +41,8 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	    try (Connection conn = DBUtil.getConnection();) {
 	        String sql = "SELECT	S.idTactic AS setpieceTacticId, S.tacticName AS setpieceTacticName, S.tacticFormation AS setpieceFormation, S.explainTactics AS setpieceDescription,COUNT(*) AS useCount FROM DB2025_view_GameSummary G LEFT JOIN DB2025_Tactics S ON G.idSetpiece = S.idTactic AND S.tacticType = 'Setpiece' AND S.idTeam = ? WHERE G.idOurTeam = ? GROUP BY S.idTactic, S.tacticName, S.tacticFormation, S.explainTactics ORDER BY useCount DESC LIMIT 3;";
 	        PreparedStatement stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, DKicker.currentTeamId);
-	        stmt.setInt(2, DKicker.currentTeamId);
+	        stmt.setInt(1, idTeam);
+	        stmt.setInt(2, idTeam);
 	        ResultSet rs = stmt.executeQuery();
 
 	        while (rs.next()) {
@@ -63,8 +63,10 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTacticsTeam_setpiece() {
-		
+	public player_myTacticsTeam_setpiece(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -76,7 +78,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam().setVisible(true); dispose();
+				new player_myTacticsTeam(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

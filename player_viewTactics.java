@@ -28,7 +28,7 @@ public class player_viewTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewTactics frame = new player_viewTactics();
+					player_viewTactics frame = new player_viewTactics(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +40,7 @@ public class player_viewTactics extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_viewTactics() {
+	public player_viewTactics(int idTeam, int idPlayer) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -59,7 +59,8 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(idTeam, idPlayer
+).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -73,7 +74,7 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_fieldTactics().setVisible(true); dispose();
+				new player_fieldTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -81,7 +82,7 @@ public class player_viewTactics extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_setpieceTactics().setVisible(true); dispose();
+				new player_setpieceTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);

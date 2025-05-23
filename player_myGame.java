@@ -26,7 +26,7 @@ public class player_myGame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	public static int idGame=1;
+	private int idTeam, idPlayer;
 
 	/**
 	 * Launch the application.
@@ -36,7 +36,7 @@ public class player_myGame extends JFrame {
 			public void run() {
 				try {
 					
-					player_myGame frame = new player_myGame();
+					player_myGame frame = new player_myGame(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,6 +49,7 @@ public class player_myGame extends JFrame {
 	 * Create the frame.
 	 */
 	private void loadGameData() {
+		
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 데이터 초기화
 
@@ -61,8 +62,8 @@ public class player_myGame extends JFrame {
 	    try (Connection conn = DBUtil.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-	        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
-	        pstmt.setInt(2, DKicker.currentTeamId);
+	        pstmt.setInt(1, idPlayer); // 바인딩
+	        pstmt.setInt(2, idTeam);
 
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            while (rs.next()) {
@@ -81,9 +82,10 @@ public class player_myGame extends JFrame {
 	}
 
 	
-	public player_myGame() {
+	public player_myGame(int idTeam, int idPlayer) {
 		
-		
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
@@ -101,7 +103,7 @@ public class player_myGame extends JFrame {
 		JButton btnNewButton_4 = new JButton("Back");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton_4.setBounds(5, 6, 117, 29);
@@ -132,9 +134,9 @@ public class player_myGame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
 				if (selectedRow != -1) {
-					idGame = (int) table.getValueAt(selectedRow, 0); 
+					int idGame = (int) table.getValueAt(selectedRow, 0); 
 					//System.out.println(idGame);
-					new player_myGameOne().setVisible(true);
+					new player_myGameOne(idTeam, idPlayer, idGame).setVisible(true);
 					dispose(); // 현재 창 닫기 (선택 사항)
 				} else {
 					System.out.println("행을 선택하세요.");

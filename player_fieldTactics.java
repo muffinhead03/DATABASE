@@ -15,20 +15,20 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
+import java.sql.*;
 public class player_fieldTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-
+	private int idTeam, idPlayer;
 
 	//프로그램을 실행하면 player_fielddTactics 창이 뜬다
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_fieldTactics frame = new player_fieldTactics();
+					player_fieldTactics frame = new player_fieldTactics(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,20 +40,25 @@ public class player_fieldTactics extends JFrame {
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0);
 
-	    String query = "SELECT idTactic AS id, tacticName AS name, tacticFormation AS formation " +
-	                   "FROM db2025_tactics WHERE tacticType = 'Field'";
+	    String query = "SELECT v.idGame, v.idAgainstTeam, t.fieldName\n"
+	                 + "FROM view_GameSummary v\n"
+	                 + "JOIN DB2025_Tactics t ON v.idGame = t.idGame\n"
+	                 + "WHERE v.idOurTeam = ? AND t.idTeam = v.idOurTeam";
 
 	    try (Connection conn = DBUtil.getConnection();
-	         java.sql.Statement stmt = conn.createStatement();
-	         ResultSet rs = stmt.executeQuery(query)) {
+	         PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-	        while (rs.next()) {
-	            Object[] row = {
-	                rs.getInt("id"),
-	                rs.getString("name"),
-	                rs.getString("formation")
-	            };
-	            model.addRow(row);
+	        pstmt.setInt(1, idTeam);  // 바인딩
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                Object[] row = {
+	                    rs.getInt("idGame"),
+	                    rs.getInt("idAgainstTeam"),
+	                    rs.getString("fieldName")
+	                };
+	                model.addRow(row);
+	            }
 	        }
 
 	    } catch (Exception e) {
@@ -62,7 +67,10 @@ public class player_fieldTactics extends JFrame {
 	}
 
 
-	public player_fieldTactics() {
+
+	public player_fieldTactics(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -75,7 +83,7 @@ public class player_fieldTactics extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_viewTactics().setVisible(true); dispose();
+				new player_viewTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -99,7 +107,7 @@ public class player_fieldTactics extends JFrame {
 			},
 			//컬럼명 : 전술 ID(전술 고유 번호), 전술 이름, 포메이션
 			new String[] {
-				"\uC804\uC220 ID", "\uC804\uC220 \uC774\uB984", "\uD3EC\uBA54\uC774\uC158"
+				"우리팀","상대팀","필드 전술 이름"
 			}
 		));
 		scrollPane.setViewportView(table);

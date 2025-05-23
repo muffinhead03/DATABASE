@@ -22,7 +22,7 @@ public class player_myTacticsTeam extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private int iDplayer;
-	private int teamnum;
+	
 
 	/**
 	 * Launch the application.
@@ -31,7 +31,7 @@ public class player_myTacticsTeam extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsTeam frame = new player_myTacticsTeam();
+					player_myTacticsTeam frame = new player_myTacticsTeam(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +47,7 @@ public class player_myTacticsTeam extends JFrame {
 
 	
 	
-	public player_myTacticsTeam() {
+	public player_myTacticsTeam(int idTeam, int idPlayer) {
 		this.iDplayer=iDplayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -66,7 +66,7 @@ public class player_myTacticsTeam extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTactics().setVisible(true); dispose();
+				new player_myTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -82,7 +82,7 @@ public class player_myTacticsTeam extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam_field().setVisible(true); dispose();
+				new player_myTacticsTeam_field(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -90,7 +90,7 @@ public class player_myTacticsTeam extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsTeam_setpiece().setVisible(true); dispose();
+				new player_myTacticsTeam_setpiece(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);

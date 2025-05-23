@@ -14,11 +14,12 @@ public class player_myGameDetail extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblGameId, lblDate, lblOpponent, lblGoalFor, lblGoalAgainst;
 	private JLabel lblShots, lblOnTarget, lblAccPass, lblAttackPass, lblIntercept, lblBlocking;
+	private int idTeam, idPlayer, idGame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_myGameDetail frame = new player_myGameDetail();
+				player_myGameDetail frame = new player_myGameDetail(1,1,1);
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -26,7 +27,8 @@ public class player_myGameDetail extends JFrame {
 		});
 	}
 
-	public player_myGameDetail() {
+	public player_myGameDetail(int idTeam, int idPlayer, int idGame) {
+		this.idGame = idGame;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -43,7 +45,7 @@ public class player_myGameDetail extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myGameOne().setVisible(true);
+				new player_myGameOne( idTeam, idPlayer, idGame).setVisible(true);
 				dispose();
 			}
 		});
@@ -121,11 +123,11 @@ public class player_myGameDetail extends JFrame {
 		try (Connection conn = DBUtil.getConnection();
 		     PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			pstmt.setInt(1, player_myGame.idGame); 
+			pstmt.setInt(1, idGame); 
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					lblGameId.setText(String.valueOf(player_myGame.idGame));
+					lblGameId.setText(String.valueOf(idGame));
 					lblDate.setText(rs.getDate("dateGame").toString());
 					lblOpponent.setText(rs.getString("opponentTeamName"));
 					lblGoalFor.setText(String.valueOf(rs.getInt("goalFor")));

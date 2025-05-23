@@ -13,12 +13,12 @@ public class player_myTacticsTeam_field extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	
+	private int idTeam, idPlayer;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				player_myTacticsTeam_field frame = new player_myTacticsTeam_field();
+				player_myTacticsTeam_field frame = new player_myTacticsTeam_field(1,1);
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -51,8 +51,9 @@ public class player_myTacticsTeam_field extends JFrame {
 		}
 	}
 
-	public player_myTacticsTeam_field() {
-		
+	public player_myTacticsTeam_field(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -63,7 +64,7 @@ public class player_myTacticsTeam_field extends JFrame {
 
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(e -> {
-			new player_myTacticsTeam().setVisible(true);
+			new player_myTacticsTeam(idTeam, idPlayer).setVisible(true);
 			dispose();
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -89,7 +90,7 @@ public class player_myTacticsTeam_field extends JFrame {
 		// ✅ 설명 열에만 줄바꿈 렌더러 적용 (열 너비는 그대로 유지)
 		table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
 
-		loadSetpieceTactics(DKicker_player_choose.playerid, table);
+		loadSetpieceTactics(idPlayer, table);
 	}
 
 	public void loadSetpieceTactics(int idPlayer, JTable table) {
@@ -105,8 +106,8 @@ public class player_myTacticsTeam_field extends JFrame {
 		try (Connection conn = DBUtil.getConnection();
 		     PreparedStatement stmt = conn.prepareStatement(query)) {
 
-			stmt.setInt(1, DKicker.currentTeamId);
-			stmt.setInt(2, DKicker.currentTeamId);
+			stmt.setInt(1, idTeam);
+			stmt.setInt(2, idTeam);
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				DefaultTableModel model = (DefaultTableModel) table.getModel();

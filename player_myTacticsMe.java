@@ -20,7 +20,7 @@ public class player_myTacticsMe extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	
+	private int idTeam, idPlayer;
 	/**
 	 * Launch the application.
 	 */
@@ -28,7 +28,7 @@ public class player_myTacticsMe extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsMe frame = new player_myTacticsMe();
+					player_myTacticsMe frame = new player_myTacticsMe(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,8 +40,9 @@ public class player_myTacticsMe extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTacticsMe() {
-		
+	public player_myTacticsMe(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -53,7 +54,7 @@ public class player_myTacticsMe extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTactics().setVisible(true); dispose();
+				new player_myTactics(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -73,7 +74,7 @@ public class player_myTacticsMe extends JFrame {
 		JButton btnNewButton_2 = new JButton("필드 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsMe_field().setVisible(true); dispose();
+				new player_myTacticsMe_field(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
@@ -81,7 +82,7 @@ public class player_myTacticsMe extends JFrame {
 		JButton btnNewButton_1 = new JButton("세트피스 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsMe_setpiece().setVisible(true); dispose();
+				new player_myTacticsMe_setpiece(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);

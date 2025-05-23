@@ -32,7 +32,7 @@ public class player_viewTeams extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_viewTeams frame = new player_viewTeams();
+					player_viewTeams frame = new player_viewTeams(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +44,7 @@ public class player_viewTeams extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_viewTeams() {
+	public player_viewTeams(int idTeam, int idPlayer) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -76,7 +76,7 @@ public class player_viewTeams extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player().setVisible(true); dispose();
+				new player(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

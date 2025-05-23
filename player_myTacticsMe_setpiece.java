@@ -25,7 +25,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	
+	private int idTeam, idPlayer;
 	/**
 	 * Launch the application.
 	 */
@@ -33,7 +33,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					player_myTacticsMe_setpiece frame = new player_myTacticsMe_setpiece();
+					player_myTacticsMe_setpiece frame = new player_myTacticsMe_setpiece(1,1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -69,7 +69,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		    try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		        pstmt.setInt(1, DKicker_player_choose.playerid); // 바인딩
+		        pstmt.setInt(1, idPlayer); // 바인딩
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            while (rs.next()) {
@@ -89,8 +89,9 @@ public class player_myTacticsMe_setpiece extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public player_myTacticsMe_setpiece() {
-		
+	public player_myTacticsMe_setpiece(int idTeam, int idPlayer) {
+		this.idTeam = idTeam;
+		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -102,7 +103,7 @@ public class player_myTacticsMe_setpiece extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new player_myTacticsMe().setVisible(true); dispose();
+				new player_myTacticsMe(idTeam, idPlayer).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
