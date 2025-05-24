@@ -17,6 +17,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -25,7 +26,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_teamManage_scoredMost frame = new staff_teamManage_scoredMost(DKicker.currentTeamId);
+					staff_teamManage_scoredMost frame = new staff_teamManage_scoredMost(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,6 +39,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 	 * Create the frame.
 	 */
 	public staff_teamManage_scoredMost(int idTeam) {
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -49,7 +51,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage().setVisible(true); dispose();
+				new staff_teamManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -114,7 +115,29 @@ public class player_viewPlayers extends JFrame {
 		contentPane.add(lblNewLabel_3);
 		
 		comboBoxTeam = new JComboBox<>();
-		comboBoxTeam.setModel(new DefaultComboBoxModel<>(new String[] {"전체", "팀1", "팀2", "팀3"}));
+
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+		try {
+		    Connection conn = DBUtil.getConnection();
+		    Statement stmt = conn.createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT idTeam FROM DB2025_Team");
+
+		    while (rs.next()) {
+		        int id = rs.getInt("idTeam");
+		       
+		        model.addElement("팀"+id);
+		    }
+
+		    rs.close();
+		    stmt.close();
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    javax.swing.JOptionPane.showMessageDialog(null, "팀 목록 로딩 중 오류가 발생했습니다.");
+		}
+
+		comboBoxTeam.setModel(model);
 		comboBoxTeam.setBounds(159, 69, 117, 27);
 		contentPane.add(comboBoxTeam);
 		

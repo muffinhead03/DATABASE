@@ -1,0 +1,24 @@
+package DB2025Team09;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBUtil {
+    private static final String URL = "jdbc:mysql://localhost:3306/DB2025Team09?serverTimezone=Asia/Seoul";
+    private static final String USER = "DB2025Team09";
+    private static final String PASSWORD = "DB2025Team09";
+
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); // 드라이버는 한 번만 로드하면 됨
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+}
+

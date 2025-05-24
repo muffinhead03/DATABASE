@@ -19,13 +19,14 @@ public class staff_teamInfoManage extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private int idTeam;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					// 테스트용 teamId = 1 (실제 환경에서는 로그인 정보에서 받아야 함)
-					staff_teamInfoManage frame = new staff_teamInfoManage();
+					staff_teamInfoManage frame = new staff_teamInfoManage(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,9 +35,9 @@ public class staff_teamInfoManage extends JFrame {
 		});
 	}
 
-	public staff_teamInfoManage() {
+	public staff_teamInfoManage(int idTeam) {
 		
-
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
@@ -51,7 +52,7 @@ public class staff_teamInfoManage extends JFrame {
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage().setVisible(true);
+				new staff_teamManage(idTeam).setVisible(true);
 				dispose();
 			}
 		});
@@ -96,7 +97,7 @@ public class staff_teamInfoManage extends JFrame {
 
 			String sql = "SELECT FIFArank, currName, currRank, currPoints FROM db2025_team WHERE idTeam = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, DKicker.currentTeamId);
+			pstmt.setInt(1, idTeam);
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -123,7 +124,7 @@ public class staff_teamInfoManage extends JFrame {
 					pstmt.setString(2, textField_1.getText());
 					pstmt.setString(3, textField_2.getText());
 					pstmt.setString(4, textField_3.getText());
-					pstmt.setInt(5, DKicker.currentTeamId);
+					pstmt.setInt(5, idTeam);
 					
 
 

@@ -5,8 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -15,6 +19,7 @@ import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JComboBox;
+import java.sql.*;
 
 public class viewPlayers_Edit extends JFrame {
 
@@ -26,6 +31,9 @@ public class viewPlayers_Edit extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private JTextField textField_6;
+	private JComboBox comboBox;
+	private JToggleButton tglbtnNewToggleButton;
+
 	private int idTeam;
 
 	/**
@@ -35,7 +43,7 @@ public class viewPlayers_Edit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewPlayers_Edit frame = new viewPlayers_Edit(DKicker.currentTeamId);
+					viewPlayers_Edit frame = new viewPlayers_Edit(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,7 +56,7 @@ public class viewPlayers_Edit extends JFrame {
 	 * Create the frame.
 	 */
 	public viewPlayers_Edit(int idTeam) {
-		this.idTeam = DKicker.currentTeamId;
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -81,8 +89,10 @@ public class viewPlayers_Edit extends JFrame {
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		panel.add(comboBox);
+		
+		
 		
 		JLabel lblNewLabel_4 = new JLabel("이름");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
@@ -92,13 +102,13 @@ public class viewPlayers_Edit extends JFrame {
 		panel.add(textField_3);
 		textField_3.setColumns(10);
 		
-		JLabel lblNewLabel_6 = new JLabel("번호");
+		/*JLabel lblNewLabel_6 = new JLabel("번호");
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_6);
 		
 		textField_6 = new JTextField();
 		panel.add(textField_6);
-		textField_6.setColumns(10);
+		textField_6.setColumns(10);*/
 		
 		JLabel lblNewLabel_3 = new JLabel("포지션");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -135,8 +145,7 @@ public class viewPlayers_Edit extends JFrame {
 		JLabel lblNewLabel_7 = new JLabel("출전 가능 여부");
 		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_7);
-		
-		JToggleButton tglbtnNewToggleButton = new JToggleButton("가능");
+		tglbtnNewToggleButton = new JToggleButton("가능");
 		tglbtnNewToggleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (tglbtnNewToggleButton.isSelected()) {
@@ -154,5 +163,92 @@ public class viewPlayers_Edit extends JFrame {
 		
 		JButton btnNewButton_1 = new JButton("저장");
 		panel_1.add(btnNewButton_1);
+		
+		loadPlayerid();
 	}
+	
+	private void loadPlayerInfo(int playerId, JToggleButton toggle) {
+	    try {
+	        Connection conn = DBUtil.getConnection();
+	        String sql = "SELECT playerName, birthday, position, idTeam, playerAction, ableToPlay,performance FROM DB2025_Player WHERE idPlayer = ?";
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, playerId);
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            textField_3.setText(rs.getString("playerName"));     // 이름
+	            textField_4.setText(rs.getString("birthday"));       // 생년월일
+	            textField_2.setText(rs.getString("position"));       // 포지션
+	            textField_5.setText(rs.getString("playerAction"));   // 액션
+	            int perfom = rs.getInt("performance");
+	            textField.setText(String.valueOf(perfom));
+
+
+	            int able = rs.getInt("ableToPlay");
+	            toggle.setSelected(able == 0); // 0이면 선택되어 있어야 "불가능"
+	            toggle.setText(able == 1 ? "가능" : "불가능");
+	        }
+
+	        rs.close();
+	        pstmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        javax.swing.JOptionPane.showMessageDialog(null, "선수 정보 로딩 중 오류가 발생했습니다.");
+	    }
+	}
+	
+	private void loadPlayerid() {
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+		try {
+			  Connection conn = DBUtil.getConnection();
+			    String sql = "SELECT idPlayer FROM DB2025_Player WHERE idTeam = ?";
+			    PreparedStatement pstmt = conn.prepareStatement(sql);
+			    
+			    pstmt.setInt(1, idTeam); // idTeam은 메서드 인자나 로컬 변수로 정의되어 있어야 함
+
+			    ResultSet rs = pstmt.executeQuery();
+
+			    while (rs.next()) {
+			        int idplayer = rs.getInt("idPlayer");
+			        model.addElement(String.valueOf(idplayer));
+			    }
+
+
+		    rs.close();
+		    pstmt.close();
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    javax.swing.JOptionPane.showMessageDialog(null, "팀 목록 로딩 중 오류가 발생했습니다.");
+		}
+		comboBox.setModel(model);
+		comboBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String selected = (String) comboBox.getSelectedItem();
+		        if (selected != null && !selected.isEmpty()) {
+		            int playerId = Integer.parseInt(selected);
+		            loadPlayerInfo(playerId, tglbtnNewToggleButton);
+		        }
+		    }
+		});
+
+		// ✅ 콤보박스에 처음 로딩된 선수가 있을 경우, 자동으로 첫 선수 정보 로드
+		if (model.getSize() > 0) {
+		    comboBox.setSelectedIndex(0); // 첫 번째 선수 선택
+		    String selected = (String) comboBox.getSelectedItem();
+		    if (selected != null && !selected.isEmpty()) {
+		        int playerId = Integer.parseInt(selected);
+		        loadPlayerInfo(playerId, tglbtnNewToggleButton);
+		    }
+		}
+		
+
+	}
+	
+	
+
+	
 }

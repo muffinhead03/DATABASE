@@ -1,6 +1,7 @@
 package DB2025Team09;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +17,7 @@ public class staff_playerManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+
 	/**
 	 * Launch the application.
 	 */
@@ -23,7 +25,7 @@ public class staff_playerManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_playerManage frame = new staff_playerManage();
+					staff_playerManage frame = new staff_playerManage(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,7 +37,7 @@ public class staff_playerManage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_playerManage() {
+	public staff_playerManage(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -52,7 +54,7 @@ public class staff_playerManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("선수 생성");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			new staff_playerCreate().setVisible(true); dispose();
+			new staff_playerCreate(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -60,7 +62,7 @@ public class staff_playerManage extends JFrame {
 		JButton btnNewButton_2 = new JButton("조건별 선수 검색");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchTypes().setVisible(true); dispose();
+				new staff_playerSearchTypes(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
@@ -68,7 +70,7 @@ public class staff_playerManage extends JFrame {
 		JButton btnNewButton_3 = new JButton("선수 스쿼드 조회 및 관리");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerManage_squad().setVisible(true); dispose();
+				new staff_playerManage_squad(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);
@@ -76,7 +78,7 @@ public class staff_playerManage extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff(DKicker.currentTeamId).setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);

@@ -24,6 +24,7 @@ public class staff_playerSearchPosition extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTable table;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -32,7 +33,7 @@ public class staff_playerSearchPosition extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_playerSearchPosition frame = new staff_playerSearchPosition();
+					staff_playerSearchPosition frame = new staff_playerSearchPosition(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +45,8 @@ public class staff_playerSearchPosition extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_playerSearchPosition() {
+	public staff_playerSearchPosition(int idTeam) {
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,7 +59,7 @@ public class staff_playerSearchPosition extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchTypes().setVisible(true); dispose();
+				new staff_playerSearchTypes(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -81,23 +83,29 @@ public class staff_playerSearchPosition extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String positionInput = textField.getText().trim(); // 포지션 입력값
+					String positionInput = textField.getText().trim(); // 포지션
+
+					//int minPerformance = positionInput.isEmpty() ? 0 : Integer.parseInt(positionInput);
 
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
-					model.setRowCount(0); // 테이블 초기화
+					model.setRowCount(0); // 초기화
 
+					// 조건 조립
 					String query = "SELECT idPlayer, playerName, performance, position, birthday, ableToPlay, playerAction " +
-					               "FROM DB2025_Player";
+					               "FROM DB2025_Player WHERE idTeam = ? ";
 					boolean hasPosition = !positionInput.isEmpty();
 					if (hasPosition) {
-						query += " WHERE position = ?";
+						query += " AND position = ?";
 					}
 
 					try (Connection conn = DBUtil.getConnection();
 					     PreparedStatement pstmt = conn.prepareStatement(query)) {
 
+						pstmt.setInt(1, idTeam);
+						pstmt.setString(2, textField.getText().trim());
+
 						if (hasPosition) {
-							pstmt.setString(1, positionInput);
+							pstmt.setString(2, positionInput);
 						}
 
 						ResultSet rs = pstmt.executeQuery();
@@ -129,7 +137,7 @@ public class staff_playerSearchPosition extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "\uC0DD\uB144\uC6D4\uC77C", "\uCD9C\uC804 \uAC00\uB2A5 \uC5EC\uBD80", "\uC2E4\uC801", "\uC561\uC158"
+				"선수 ID", "이름", "실적", "포지션", "생년월일", "출전 가능 여부", "액션"
 			}
 		));
 		scrollPane.setViewportView(table);

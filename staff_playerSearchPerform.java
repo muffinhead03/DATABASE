@@ -24,6 +24,7 @@ public class staff_playerSearchPerform extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -32,7 +33,7 @@ public class staff_playerSearchPerform extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_playerSearchPerform frame = new staff_playerSearchPerform();
+					staff_playerSearchPerform frame = new staff_playerSearchPerform(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +45,8 @@ public class staff_playerSearchPerform extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_playerSearchPerform() {
+	public staff_playerSearchPerform(int idTeam) {
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -56,7 +58,7 @@ public class staff_playerSearchPerform extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchTypes().setVisible(true); dispose();
+				new staff_playerSearchTypes(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -91,12 +93,13 @@ public class staff_playerSearchPerform extends JFrame {
 					model.setRowCount(0); // 기존 데이터 초기화
 
 					String query = "SELECT idPlayer, playerName, performance, position, birthday, ableToPlay, playerAction " +
-					               "FROM DB2025_Player WHERE performance >= ?";
+					               "FROM DB2025_Player WHERE performance >= ? AND idTeam = ?";
 
 					try (Connection conn = DBUtil.getConnection();
 					     PreparedStatement pstmt = conn.prepareStatement(query)) {
 
 						pstmt.setInt(1, minPerformance);
+						pstmt.setInt(2, idTeam);
 						ResultSet rs = pstmt.executeQuery();
 
 						while (rs.next()) {

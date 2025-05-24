@@ -25,7 +25,7 @@ public class staff_playerSearchTypes extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_playerSearchTypes frame = new staff_playerSearchTypes();
+					staff_playerSearchTypes frame = new staff_playerSearchTypes(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +37,7 @@ public class staff_playerSearchTypes extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_playerSearchTypes() {
+	public staff_playerSearchTypes(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -49,7 +49,7 @@ public class staff_playerSearchTypes extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerManage().setVisible(true); dispose();
+				new staff_playerManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -69,7 +69,7 @@ public class staff_playerSearchTypes extends JFrame {
 		JButton btnNewButton_1 = new JButton("포지션에 따른 선수 검색");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchPosition().setVisible(true); dispose();
+				new staff_playerSearchPosition(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -77,7 +77,7 @@ public class staff_playerSearchTypes extends JFrame {
 		JButton btnNewButton_2 = new JButton("출전 가능 여부에 따른 선수 검색");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchAvailable().setVisible(true); dispose();
+				new staff_playerSearchAvailable(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
@@ -85,7 +85,7 @@ public class staff_playerSearchTypes extends JFrame {
 		JButton btnNewButton_3 = new JButton("실적에 따른 선수 검색");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerSearchPerform().setVisible(true); dispose();
+				new staff_playerSearchPerform(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);

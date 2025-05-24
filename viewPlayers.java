@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
@@ -30,9 +31,9 @@ public class viewPlayers extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private int idTeam;
-	JComboBox comboBox_1 = new JComboBox();
-	JComboBox comboBox_1_1 = new JComboBox();
-	JComboBox comboBox = new JComboBox();
+	private JComboBox<String> comboBoxPosition;
+	private JComboBox<String> comboBoxSort;
+	private JComboBox<String> comboBoxTeam;
 
 	/**
 	 * Launch the application.
@@ -41,7 +42,7 @@ public class viewPlayers extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewPlayers frame = new viewPlayers(DKicker.currentTeamId);
+					viewPlayers frame = new viewPlayers(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,39 +51,13 @@ public class viewPlayers extends JFrame {
 		});
 	}
 
-
-	
+	/**
+	 * Create the frame.
+	 */
 	public viewPlayers(int idTeam) {
-		this.idTeam = DKicker.currentTeamId;
+		this.idTeam = idTeam;
 		
-		try {
-		    Connection conn = DBUtil.getConnection(); // DB 연결 메서드 필요
-		    String sql = "SELECT idPlayer, playerName, position, birthday FROM DB2025_Player WHERE idTeam = ?";
-		    PreparedStatement pstmt = conn.prepareStatement(sql);
-		    pstmt.setInt(1, idTeam); // 생성자 매개변수로 받은 팀 ID 사용
-
-		    ResultSet rs = pstmt.executeQuery();
-
-		    DefaultTableModel model = (DefaultTableModel) table.getModel();
-		    model.setRowCount(0); // 테이블 초기화
-
-		    while (rs.next()) {
-		        Object[] row = {
-		            rs.getInt("idPlayer"),
-		            rs.getString("playerName"),
-		            rs.getString("position"),
-		            rs.getDate("birthday") // 임시로 출전 시간 자리에 생일을 표시 (테이블 컬럼 매칭 위해)
-		        };
-		        model.addRow(row);
-		    }
-
-		    rs.close();
-		    pstmt.close();
-		    conn.close();
-
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -101,7 +76,7 @@ public class viewPlayers extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff(DKicker.currentTeamId).setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -126,29 +101,50 @@ public class viewPlayers extends JFrame {
 		lblNewLabel_1.setBounds(6, 73, 39, 16);
 		contentPane.add(lblNewLabel_1);
 		
-
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"전체", "AM", "DF", "DM", "FW", "GK"}));
-		comboBox.setBounds(46, 69, 77, 27);
-		contentPane.add(comboBox);
+		comboBoxPosition = new JComboBox<>();
+		comboBoxPosition.setModel(new DefaultComboBoxModel<>(new String[] {"전체", "AM", "DF", "DM", "FW", "GK"}));
+		comboBoxPosition.setBounds(46, 69, 77, 27);
+		contentPane.add(comboBoxPosition);
 		
 		JLabel lblNewLabel_2 = new JLabel("정렬");
 		lblNewLabel_2.setBounds(288, 73, 28, 16);
 		contentPane.add(lblNewLabel_2);
 		
-
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"가나다순", "최신 등록순", "최다 출전 시간순"}));
-		comboBox_1.setBounds(313, 69, 131, 27);
-		contentPane.add(comboBox_1);
+		comboBoxSort = new JComboBox<>();
+		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순", "가나다순", "최장 출전 시간순"}));
+		comboBoxSort.setBounds(313, 69, 131, 27);
+		contentPane.add(comboBoxSort);
 		
 		JLabel lblNewLabel_3 = new JLabel("소속 팀");
 		lblNewLabel_3.setBounds(122, 73, 39, 16);
 		contentPane.add(lblNewLabel_3);
 		
+		comboBoxTeam = new JComboBox<>();
 
-		comboBox_1_1.setModel(new DefaultComboBoxModel(new String[] {"전체", "팀1", "팀2", "팀3"}));
-		comboBox_1_1.setBounds(159, 69, 117, 27);
-		contentPane.add(comboBox_1_1);
-		
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+		try {
+		    Connection conn = DBUtil.getConnection();
+		    Statement stmt = conn.createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT idTeam FROM DB2025_Team");
+
+		    while (rs.next()) {
+		        int id = rs.getInt("idTeam");
+		       
+		        model.addElement("팀"+id);
+		    }
+
+		    rs.close();
+		    stmt.close();
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    javax.swing.JOptionPane.showMessageDialog(null, "팀 목록 로딩 중 오류가 발생했습니다.");
+		}
+
+		comboBoxTeam.setModel(model);
+		comboBoxTeam.setBounds(159, 69, 117, 27);
+		contentPane.add(comboBoxTeam);
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 237, 438, 29);
 		contentPane.add(panel);
@@ -157,15 +153,10 @@ public class viewPlayers extends JFrame {
 		JButton btnNewButton_1 = new JButton("수정");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewPlayers_Edit(DKicker.currentTeamId).setVisible(true); dispose();
+				new viewPlayers_Edit(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
-		
-		comboBox.addActionListener(e -> reloadFilter());
-		comboBox_1_1.addActionListener(e -> reloadFilter());
-		comboBox_1.addActionListener(e -> reloadFilter());
-		
 		
 		JButton btnNewButton_2 = new JButton("삭제");
 		btnNewButton_2.addActionListener(new ActionListener() {
@@ -192,57 +183,53 @@ public class viewPlayers extends JFrame {
 		});
 		panel.add(btnNewButton_2);
 		
-		loadPlayers("전체", "전체", "가나다순");
+		comboBoxPosition.addActionListener(e -> loadPlayerData());
+		comboBoxSort.addActionListener(e -> loadPlayerData());
+		comboBoxTeam.addActionListener(e -> loadPlayerData());
+		loadPlayerData();
 	}
 	
-	private void loadPlayers(String position, String teamName, String sortOption) {
-	    try (Connection conn = DBUtil.getConnection()) {
-	        StringBuilder sql = new StringBuilder(
-	            "SELECT idPlayer, playerName, position, birthday FROM DB2025_Player WHERE 1=1"
-	        );
+private void loadPlayerData() {
+		
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0);
 
-	        // 필터 조건
-	        if (!"전체".equals(position)) {
-	            sql.append(" AND position = ?");
-	        }
-	        if (!"전체".equals(teamName)) {
-	            sql.append(" AND idTeam = ?");
-	        }
+	    // 콤보박스에서 선택한 값 가져오기
+	    String selectedPosition = comboBoxPosition.getSelectedItem().toString();
+	    String selectedSort = comboBoxSort.getSelectedItem().toString();
+	    String selectedTeam = comboBoxTeam.getSelectedItem().toString();
+	    
+	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, performance FROM db2025_player WHERE 1=1");
 
-	        // 정렬 조건
-	        switch (sortOption) {
-	            case "가나다순":
-	                sql.append(" ORDER BY playerName ASC");
-	                break;
-	            case "최신 등록순":
-	                sql.append(" ORDER BY idPlayer DESC");
-	                break;
-	            case "최다 출전 시간순":
-	                sql.append(" ORDER BY performance DESC"); // 출전 시간 없으므로 performance 대체
-	                break;
-	        }
+	    if (!selectedPosition.equals("전체")) {
+	        query.append(" AND position = '").append(selectedPosition).append("'");
+	    }
 
-	        PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-	        int index = 1;
+	    if (!selectedTeam.equals("전체")) {
+	        query.append(" AND idTeam = ").append(selectedTeam.replace("팀", ""));
+	    }
 
-	        if (!"전체".equals(position)) {
-	            pstmt.setString(index++, position);
-	        }
+	    // 정렬 조건
+	    if (selectedSort.equals("가나다순")) {
+	        query.append(" ORDER BY playerName ASC");
+	    }/* else if (selectedSort.equals("최신 등록순")) {
+	        query.append(" ORDER BY idPlayer DESC");
+	    }*/ else if (selectedSort.equals("최장 출전 시간순")) {
+	        query.append(" ORDER BY performance DESC");
+	    } else if(selectedSort.equals("번호 순")){
+	    	query.append(" ORDER BY idPlayer ASC");	
+	    }
 
-	        if (!"전체".equals(teamName)) {
-	            pstmt.setInt(index++, getTeamIdByName(teamName));
-	        }
-
-	        ResultSet rs = pstmt.executeQuery();
-	        DefaultTableModel model = (DefaultTableModel) table.getModel();
-	        model.setRowCount(0); // 테이블 초기화
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query.toString());
+	         ResultSet rs = pstmt.executeQuery()) {
 
 	        while (rs.next()) {
 	            Object[] row = {
 	                rs.getInt("idPlayer"),
 	                rs.getString("playerName"),
 	                rs.getString("position"),
-	                rs.getDate("birthday") // 임시로 생일을 출전시간 컬럼에 표시
+	                rs.getInt("performance")
 	            };
 	            model.addRow(row);
 	        }
@@ -252,23 +239,5 @@ public class viewPlayers extends JFrame {
 	    }
 	}
 	
-	private void reloadFilter() {
-	    String position = (String) comboBox.getSelectedItem();
-	    String teamName = (String) comboBox_1_1.getSelectedItem();
-	    String sort = (String) comboBox_1.getSelectedItem();
-
-	    loadPlayers(position, teamName, sort);
-	}
-	
-	private int getTeamIdByName(String name) {
-	    switch (name) {
-	        case "팀1": return 1;
-	        case "팀2": return 2;
-	        case "팀3": return 3;
-	        default: return -1;
-	    }
-	}
-	
-
 	
 }
