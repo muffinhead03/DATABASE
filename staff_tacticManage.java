@@ -17,7 +17,6 @@ public class staff_tacticManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -26,7 +25,7 @@ public class staff_tacticManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_tacticManage frame = new staff_tacticManage(DKicker.currentTeamId);
+					staff_tacticManage frame = new staff_tacticManage(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +38,6 @@ public class staff_tacticManage extends JFrame {
 	 * Create the frame.
 	 */
 	public staff_tacticManage(int idTeam) {
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -56,7 +54,7 @@ public class staff_tacticManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술 관리");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_fieldTactics().setVisible(true); dispose();
+				new staff_fieldTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -64,7 +62,7 @@ public class staff_tacticManage extends JFrame {
 		JButton btnNewButton_2 = new JButton("세트피스 전술 관리");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_setpieceTactics().setVisible(true); dispose();
+				new staff_setpieceTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);

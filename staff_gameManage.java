@@ -1,6 +1,7 @@
 package DB2025Team09;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +18,6 @@ public class staff_gameManage extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-
 	/**
 	 * Launch the application.
 	 */
@@ -25,7 +25,7 @@ public class staff_gameManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameManage frame = new staff_gameManage(DKicker.currentTeamId);
+					staff_gameManage frame = new staff_gameManage(0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -62,22 +62,22 @@ public class staff_gameManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("경기 기록 검색");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameSearch().setVisible(true); dispose();
+				new staff_gameSearch(idTeam).setVisible(true); dispose();
 			}
 		});
 		
-		JButton btnNewButton_2 = new JButton("경기 통계 데이터 생성");
+		/*JButton btnNewButton_2 = new JButton("경기 통계 데이터 생성");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameStatisticsCreate().setVisible(true); dispose();
+				new staff_gameStatisticsCreate(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
-		
+		*/
 		JButton btnNewButton_3 = new JButton("경기 출전 선수 명단 생성");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gamePlayerListCreate().setVisible(true); dispose();
+				new staff_gamePlayerListCreate(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_3);

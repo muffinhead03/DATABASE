@@ -1,124 +1,130 @@
 package DB2025Team09;
 
+import java.awt.Component;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.GridLayout;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.*;
 
 public class viewFieldTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private int idTeam;
+	private int idTeam, idPlayer;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					viewFieldTactics frame = new viewFieldTactics(DKicker.currentTeamId);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+		EventQueue.invokeLater(() -> {
+			try {
+				viewFieldTactics frame = new viewFieldTactics(1);
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private void loadTacticsData() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+
+		String query = "SELECT idTactic, tacticName, tacticFormation, explainTactics, ableToTactic "
+				+ "FROM DB2025_Tactics WHERE tacticType = 'Field' AND idTeam = ?";
+		try (Connection conn = DBUtil.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+			pstmt.setInt(1, idTeam);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					int idTactic = rs.getInt("idTactic");
+					String tacticName = rs.getString("tacticName");
+					String tacticFormation = rs.getString("tacticFormation");
+					String explainTactics = rs.getString("explainTactics");
+					String able = (rs.getInt("ableToTactic") == 1) ? "가능" : "불가능";
+
+					Object[] row = {idTactic, tacticName, tacticFormation, explainTactics, able};
+					model.addRow(row);
 				}
 			}
-		});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public viewFieldTactics(int idTeam) {
-		this.idTeam = DKicker.currentTeamId;
+		this.idTeam = idTeam;
+		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 650, 350); // 창 크기 줄임
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JButton btnNewButton = new JButton("Back");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new viewTactics(idTeam).setVisible(true); dispose();
-			}
+
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(e -> {
+			new viewTactics(idTeam).setVisible(true);
+			dispose();
 		});
-		btnNewButton.setBounds(6, 6, 117, 29);
-		contentPane.add(btnNewButton);
-		
-		JLabel lblNewLabel = new JLabel("필드 전술");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(6, 32, 438, 29);
-		contentPane.add(lblNewLabel);
-		
+		btnBack.setBounds(6, 6, 117, 29);
+		contentPane.add(btnBack);
+
+		JLabel lblTitle = new JLabel("필드 전술");
+		lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setBounds(6, 32, 620, 29); // 라벨 너비 줄임
+		contentPane.add(lblTitle);
+
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 73, 438, 193);
+		scrollPane.setBounds(6, 66, 620, 230); // 스크롤 영역 크기 줄임
 		contentPane.add(scrollPane);
-		
-		table = new JTable();
+
+		table = new JTable() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
+			new Object[][] {},
 			new String[] {
-				"\uC804\uC220ID", "\uC804\uC220 \uC774\uB984", "\uD3EC\uBA54\uC774\uC158"
+				"전술 ID", "필드 전술 이름", "포메이션", "전술 설명", "사용 가능 여부"
 			}
 		));
+
+		table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
+		table.setRowHeight(60);
+		table.setRowMargin(5);
 		scrollPane.setViewportView(table);
-		
-		loadFieldTacticsToTable(table);
-	}
-	
-	public void loadFieldTacticsToTable( JTable table) {
-	    String[] columnNames = {"전술 ID", "전술 이름", "포메이션"};
-	    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-	    try {
-	        Connection conn = DBUtil.getConnection();
-	        String sql = "SELECT idTactic, tacticName, tacticFormation " +
-	                     "FROM DB2025_Tactics " +
-	                     "WHERE tacticType = 'Field' AND idTeam = ?";
-	        PreparedStatement pstmt = conn.prepareStatement(sql);
-	        pstmt.setInt(1, idTeam);
-	        ResultSet rs = pstmt.executeQuery();
-
-	        while (rs.next()) {
-	            int id = rs.getInt("idTactic");
-	            String name = rs.getString("tacticName");
-	            String formation = rs.getString("tacticFormation");
-	            model.addRow(new Object[]{id, name, formation});
-	        }
-
-	        rs.close();
-	        pstmt.close();
-	        conn.close();
-
-	        table.setModel(model); // 테이블에 모델 적용
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "전술 데이터를 불러오는 데 실패했습니다.");
-	    }
+		loadTacticsData();
 	}
 
+	// 줄바꿈용 셀 렌더러
+	class TextAreaRenderer extends JTextArea implements TableCellRenderer {
+		public TextAreaRenderer() {
+			setLineWrap(true);
+			setWrapStyleWord(true);
+			setOpaque(true);
+		}
 
+		public Component getTableCellRendererComponent(JTable table, Object value,
+													   boolean isSelected, boolean hasFocus,
+													   int row, int column) {
+			setText(value == null ? "" : value.toString());
+			if (isSelected) {
+				setBackground(table.getSelectionBackground());
+				setForeground(table.getSelectionForeground());
+			} else {
+				setBackground(table.getBackground());
+				setForeground(table.getForeground());
+			}
+			setFont(table.getFont());
+			return this;
+		}
+	}
 }

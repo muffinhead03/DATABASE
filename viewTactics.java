@@ -19,7 +19,7 @@ public class viewTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int idTeam;
+	
 
 	/**
 	 * Launch the application.
@@ -28,7 +28,7 @@ public class viewTactics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTactics frame = new viewTactics(DKicker.currentTeamId);
+					viewTactics frame = new viewTactics(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +41,7 @@ public class viewTactics extends JFrame {
 	 * Create the frame.
 	 */
 	public viewTactics(int idTeam) {
-		this.idTeam= idTeam;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -73,7 +73,7 @@ public class viewTactics extends JFrame {
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewFieldTactics(DKicker.currentTeamId).setVisible(true); dispose();
+				new viewFieldTactics(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);

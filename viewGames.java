@@ -39,7 +39,7 @@ public class viewGames extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewGames frame = new viewGames();
+					viewGames frame = new viewGames(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,13 +50,13 @@ public class viewGames extends JFrame {
 	
 	private void loadTeamGames() {
 		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst\n"
-				+ "FROM DB2025_GameRec \n"
-				+ "WHERE idOurTeam = ? OR idAgainstTeam = ?";
+				+ "FROM DB2025_view_GameSummary \n"
+				+ "WHERE idOurTeam = ? ORDER BY dateGame DESC";
 		try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-		        pstmt.setInt(1, DKicker.currentTeamId); // 바인딩
-		        pstmt.setInt(2, DKicker.currentTeamId);
+		        pstmt.setInt(1, idTeam); // 바인딩
+		        
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		        	DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -87,7 +87,7 @@ public class viewGames extends JFrame {
 	
 	private void loadAllGames() {
 		String sql = "SELECT idGame, dateGame,idOurTeam, idAgainstTeam, goalFor, goalAgainst\n"
-				+ "FROM DB2025_GameRec";
+				+ "FROM DB2025_view_GameSummary WHERE idOurTeam<idAgainstTeam";
 		try (Connection conn = DBUtil.getConnection();
 		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -115,7 +115,7 @@ public class viewGames extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public viewGames() {
+	public viewGames(int idTeam) {
 		this.idTeam=idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -147,7 +147,7 @@ public class viewGames extends JFrame {
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff().setVisible(true); dispose();
+				new staff(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
