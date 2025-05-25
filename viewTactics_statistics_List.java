@@ -1,23 +1,28 @@
 package DB2025Team09;
 
-import java.awt.*;
+import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Font;
 import java.awt.event.*;
 import java.sql.*;
 
 public class viewTactics_statistics_List extends JFrame {
 
+    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTable table;
-    private JTextField txtTacticId;
-    private JRadioButton rbtnField, rbtnSetPiece;
+    private JComboBox<String> comboBox;
+    private int idTeam;
 
+    /**
+     * Launch the application.
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-            	viewTactics_statistics_List frame = new viewTactics_statistics_List();
+                viewTactics_statistics_List frame = new viewTactics_statistics_List(1);
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -25,132 +30,149 @@ public class viewTactics_statistics_List extends JFrame {
         });
     }
 
-    public viewTactics_statistics_List() {
-        setTitle("전술 검색");
+    /**
+     * Create the frame.
+     */
+    public viewTactics_statistics_List(int idTeam) {
+        this.idTeam = idTeam;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 500, 400);
+        setBounds(100, 100, 1000, 350);
         contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
         JButton btnBack = new JButton("Back");
         btnBack.setBounds(6, 6, 117, 29);
         btnBack.addActionListener(e -> {
-            new viewTactics_statistics(DKicker.currentTeamId).setVisible(true);
+            new viewTactics_statistics(idTeam).setVisible(true);
             dispose();
         });
         contentPane.add(btnBack);
 
-        JLabel lblTitle = new JLabel("전술 ID로 전술 검색");
-        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel lblTitle = new JLabel("전술 사용 경기 목록");
         lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-        lblTitle.setBounds(6, 40, 480, 25);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle.setBounds(6, 33, 988, 29);
         contentPane.add(lblTitle);
 
-        rbtnField = new JRadioButton("필드 전술");
-        rbtnField.setBounds(50, 75, 100, 23);
-        contentPane.add(rbtnField);
-
-        rbtnSetPiece = new JRadioButton("세트피스 전술");
-        rbtnSetPiece.setBounds(160, 75, 120, 23);
-        contentPane.add(rbtnSetPiece);
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(rbtnField);
-        group.add(rbtnSetPiece);
-
-        JLabel lblId = new JLabel("전술 ID:");
-        lblId.setBounds(50, 110, 60, 16);
-        contentPane.add(lblId);
-
-        txtTacticId = new JTextField();
-        txtTacticId.setBounds(110, 105, 150, 26);
-        contentPane.add(txtTacticId);
-        txtTacticId.setColumns(10);
-
-        JButton btnSearch = new JButton("검색");
-        btnSearch.setBounds(280, 105, 80, 26);
-        contentPane.add(btnSearch);
+        comboBox = new JComboBox<>();
+        comboBox.setBounds(130, 6, 200, 27);
+        contentPane.add(comboBox);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(6, 150, 480, 210);
+        scrollPane.setBounds(6, 74, 988, 242);
         contentPane.add(scrollPane);
 
         table = new JTable();
-        table.setModel(new DefaultTableModel(
-            new Object[][] {},
-            new String[] {"우리팀", "상대팀", "전술 이름", "포메이션"}
-        ));
         scrollPane.setViewportView(table);
 
-        // 검색 버튼 이벤트
-        btnSearch.addActionListener(e -> searchTactic());
+        // Load comboBox options and initial data
+        loadTacticNames();
+        loadTacticUsagesByTeam(idTeam);
+
+        // ComboBox listener
+        comboBox.addActionListener(e -> {
+            String selected = (String) comboBox.getSelectedItem();
+            if (selected == null || selected.equals("전체 전술")) {
+                loadTacticUsagesByTeam(idTeam);
+            } else {
+                loadTacticUsagesByName(selected);
+            }
+        });
     }
 
-    private void searchTactic() {
-        String tacticIdText = txtTacticId.getText().trim();
-        if (tacticIdText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "전술 ID를 입력해주세요.");
-            return;
-        }
+    private void loadTacticNames() {
+        comboBox.removeAllItems();
+        comboBox.addItem("전체 전술");
 
-        try {
-            int tacticId = Integer.parseInt(tacticIdText);
-            boolean isField = rbtnField.isSelected();
-            boolean isSetPiece = rbtnSetPiece.isSelected();
+        try (Connection conn = DBUtil.getConnection()) {
+            String sql = "SELECT tacticName FROM DB2025_Tactics WHERE idTeam = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idTeam);
+            ResultSet rs = pstmt.executeQuery();
 
-            if (!isField && !isSetPiece) {
-                JOptionPane.showMessageDialog(this, "전술 종류를 선택해주세요.");
-                return;
+            while (rs.next()) {
+                comboBox.addItem(rs.getString("tacticName"));
             }
 
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.setRowCount(0); // 테이블 초기화
-
-            String columnName, formationColumn;
-            String query = "SELECT gr.idGame, t1.nation AS ourTeam, t2.nation AS opponentTeam, v.%s AS tacticName, v.%s AS tacticFormation " +
-                           "FROM DB2025_Tactics_in_Game v " +
-                           "JOIN DB2025_GameRec gr ON v.idGame = gr.idGame " +
-                           "JOIN DB2025_Team t1 ON gr.idOurTeam = t1.idTeam " +
-                           "JOIN DB2025_Team t2 ON gr.idAgainstTeam = t2.idTeam " +
-                           "WHERE v.idTactic = ? AND v.tacticType = ? " +
-                           "ORDER BY v.idGame ASC";
-
-            if (isField) {
-                columnName = "fieldName";
-                formationColumn = "fieldFormation";
-            } else {
-                columnName = "setpieceName";
-                formationColumn = "setpieceFormation";
-            }
-
-            String formattedQuery = String.format(query, columnName, formationColumn);
-
-            try (Connection conn = DBUtil.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(formattedQuery)) {
-
-                pstmt.setInt(1, tacticId);
-                pstmt.setString(2, isField ? "Field" : "Setpiece");
-
-                ResultSet rs = pstmt.executeQuery();
-
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getString("ourTeam"),
-                        rs.getString("opponentTeam"),
-                        rs.getString("tacticName"),
-                        rs.getString("tacticFormation")
-                    });
-                }
-
-            }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "숫자 형식의 전술 ID를 입력해주세요.");
-        } catch (SQLException e) {
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "DB 오류가 발생했습니다.");
+        }
+    }
+
+    private void loadTacticUsagesByTeam(int idTeam) {
+        loadTacticUsages("WHERE Tac.idTeam = ? OR Tac.idTeam = ?", idTeam, null);
+    }
+
+    private void loadTacticUsagesByName(String tacticName) {
+        loadTacticUsages("WHERE Tac.tacticName = ? OR Tac.tacticName = ?", 0, tacticName);
+    }
+
+    private void loadTacticUsages(String whereClause, int idTeam, String tacticName) {
+        String[] columnNames = {
+            "전술 ID", "전술 이름", "포메이션", "경기 ID", "경기 날짜",
+            "상대 팀", "득점", "실점", "전술 위치"
+        };
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        try (Connection conn = DBUtil.getConnection()) {
+            String sql =
+                "SELECT Tac.idTactic, Tac.tacticName, Tac.tacticFormation, " +
+                "       G.idGame, G.dateGame, T.nation AS opponentTeam, " +
+                "       G.goalFor, G.goalAgainst, '필드 전술' AS usageType " +
+                "FROM DB2025_view_GameSummary G " +
+                "JOIN DB2025_Tactics Tac ON G.idField = Tac.idTactic " +
+                "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam " +
+                whereClause +
+                " UNION ALL " +
+                "SELECT Tac.idTactic, Tac.tacticName, Tac.tacticFormation, " +
+                "       G.idGame, G.dateGame, T.nation AS opponentTeam, " +
+                "       G.goalFor, G.goalAgainst, '세트피스 전술' AS usageType " +
+                "FROM DB2025_view_GameSummary G " +
+                "JOIN DB2025_Tactics Tac ON G.idSetpiece = Tac.idTactic " +
+                "JOIN DB2025_Team T ON G.idAgainstTeam = T.idTeam " +
+                whereClause +
+                " ORDER BY idTactic, idGame";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            if (tacticName != null) {
+                pstmt.setString(1, tacticName);
+                pstmt.setString(2, tacticName);
+                pstmt.setString(3, tacticName);
+                pstmt.setString(4, tacticName);
+            } else {
+                pstmt.setInt(1, idTeam);
+                pstmt.setInt(2, idTeam);
+                pstmt.setInt(3, idTeam);
+                pstmt.setInt(4, idTeam);
+            }
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("idTactic"),
+                    rs.getString("tacticName"),
+                    rs.getString("tacticFormation"),
+                    rs.getInt("idGame"),
+                    rs.getDate("dateGame"),
+                    rs.getString("opponentTeam"),
+                    rs.getInt("goalFor"),
+                    rs.getInt("goalAgainst"),
+                    rs.getString("usageType")
+                });
+            }
+
+            table.setModel(model);
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

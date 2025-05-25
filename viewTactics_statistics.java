@@ -17,7 +17,7 @@ public class viewTactics_statistics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int idTeam;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -25,7 +25,7 @@ public class viewTactics_statistics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTactics_statistics frame = new viewTactics_statistics(1);
+					viewTactics_statistics frame = new viewTactics_statistics();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,7 +38,7 @@ public class viewTactics_statistics extends JFrame {
 	 * Create the frame.
 	 */
 	public viewTactics_statistics(int idTeam) {
-		this.idTeam = idTeam;
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -70,7 +70,7 @@ public class viewTactics_statistics extends JFrame {
 		JButton btnNewButton_1 = new JButton("전술 사용 경기 목록");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics_statistics_List().setVisible(true); dispose();
+				new viewTactics_statistics_List(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -78,7 +78,7 @@ public class viewTactics_statistics extends JFrame {
 		JButton btnNewButton_2 = new JButton("전술별 성과 요약");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new viewTactics_statistics_Achieved().setVisible(true); dispose();
+				new viewTactics_statistics_Achieved(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);

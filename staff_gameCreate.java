@@ -25,8 +25,8 @@ public class staff_gameCreate extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JComboBox<String> comboBox_fieldTactic;
+	private JComboBox<String> comboBox_setpieceTactic;
 	private JTextField textField_5;
 	private JTextField textField_6;
 	private JTextField textField_7;
@@ -35,7 +35,8 @@ public class staff_gameCreate extends JFrame {
 	private JTextField textField_10;
 	private JTextField textField_11;
 	private JTextField textField_12;
-
+	
+	private int idTeam;
 
 	/**
 	 * Launch the application.
@@ -44,7 +45,7 @@ public class staff_gameCreate extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameCreate frame = new staff_gameCreate(DKicker.currentTeamId);
+					staff_gameCreate frame = new staff_gameCreate(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,6 +58,8 @@ public class staff_gameCreate extends JFrame {
 	 * Create the frame.
 	 */
 	public staff_gameCreate(int idTeam) {
+		this.idTeam = idTeam;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
@@ -110,21 +113,23 @@ public class staff_gameCreate extends JFrame {
 		panel.add(textField_2);
 		textField_2.setColumns(14);
 		
-		JLabel lblNewLabel_4 = new JLabel("사용 필드 전술");
+		/*JLabel lblNewLabel_4 = new JLabel("사용 필드 전술");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_4);
 		
-		textField_3 = new JTextField();
-		panel.add(textField_3);
-		textField_3.setColumns(14);
+		comboBox_fieldTactic = new JComboBox<>();
+		panel.add(comboBox_fieldTactic);
+		//comboBox_fieldTactic.setColumns(14);
 		
 		JLabel lblNewLabel_5 = new JLabel("사용 세트피스 전술");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_5);
 		
-		textField_4 = new JTextField();
-		panel.add(textField_4);
-		textField_4.setColumns(14);
+
+		comboBox_setpieceTactic = new JComboBox<>();
+		panel.add(comboBox_setpieceTactic);
+		
+		loadTacticsFromDatabase();
 		
 		JLabel lblNewLabel_6 = new JLabel("득점");
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
@@ -191,7 +196,7 @@ public class staff_gameCreate extends JFrame {
 		panel.add(textField_11);
 		textField_11.setColumns(14);
 		
-		
+		*/
 		JButton btnNewButton_1 = new JButton("생성");
 		btnNewButton_1.setBounds(6, 277, 438, 29);
 		contentPane.add(btnNewButton_1);
@@ -202,46 +207,51 @@ public class staff_gameCreate extends JFrame {
 					// 입력값 가져오기
 					String dateGame = textField_1.getText();
 					int idAgainstTeam = Integer.parseInt(textField_2.getText());
-					int idSetpiece = Integer.parseInt(textField_4.getText());
-					int goalFor = Integer.parseInt(textField_5.getText());
-					int goalAgainst = Integer.parseInt(textField_6.getText());
+					
+					//String fieldTacticName = (String) comboBox_fieldTactic.getSelectedItem();
+					//String setpieceTacticName = (String) comboBox_setpieceTactic.getSelectedItem();
+					//int idField = getTacticIdByName(fieldTacticName, "Field");
+					//int idSetpiece = getTacticIdByName(setpieceTacticName, "Setpiece");
+
+					
+					//int goalFor = Integer.parseInt(textField_5.getText());
+					//int goalAgainst = Integer.parseInt(textField_6.getText());
 					int idGame = Integer.parseInt(textField_idGame.getText());
-					int idField = Integer.parseInt(textField_3.getText()); // 필드 ID는 예시로 1 사용
 					
-					int allShots = Integer.parseInt(textField_7.getText());
-					int accPass = Integer.parseInt(textField_8.getText());
-					int attackPass = Integer.parseInt(textField_9.getText());
-					int intercept = Integer.parseInt(textField_10.getText());
-					int blocking = Integer.parseInt(textField_11.getText());
-					int shotOnTarget = Integer.parseInt(textField_12.getText());
 					
-					LocalDate localDate = LocalDate.parse(dateGame).plusDays(1);
+					//int allShots = Integer.parseInt(textField_7.getText());
+					//int accPass = Integer.parseInt(textField_8.getText());
+					//int attackPass = Integer.parseInt(textField_9.getText());
+					//int intercept = Integer.parseInt(textField_10.getText());
+					//int blocking = Integer.parseInt(textField_11.getText());
+					//int shotOnTarget = Integer.parseInt(textField_12.getText());
+					
+					LocalDate localDate = LocalDate.parse(dateGame);
 					LocalDateTime localDateTime = localDate.atStartOfDay();
 					Timestamp timestamp = Timestamp.valueOf(localDateTime);
 					// DB 연결
 					Connection conn = DBUtil.getConnection();
 
 					String sql1 = "INSERT INTO DB2025_GameRec " +
-								 "(idGame, dateGame, idOurTeam, idAgainstTeam, idField, idSetpiece, goalFor, goalAgainst) " +
-								 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+								 "(idGame, dateGame, idTeam1, idTeam2) " +
+								 "VALUES (?, ?, ?, ?)";
 
 					PreparedStatement pstmt1 = conn.prepareStatement(sql1);
 					idGame = getNextGameId();
 					// 바인딩
 					pstmt1.setInt(1, idGame);
 					pstmt1.setTimestamp(2, timestamp);
-
+					
 					pstmt1.setInt(3, idTeam); // 생성자에서 전달된 우리 팀 ID
 					pstmt1.setInt(4, idAgainstTeam);
-					pstmt1.setInt(5, idField);
-					pstmt1.setInt(6, idSetpiece);
-					pstmt1.setInt(7, goalFor);
-					pstmt1.setInt(8, goalAgainst);
-					
+					if (idTeam>idAgainstTeam) {
+						pstmt1.setInt(4, idTeam); // 생성자에서 전달된 우리 팀 ID
+						pstmt1.setInt(3, idAgainstTeam);
+					}
 
 					pstmt1.executeUpdate();
 					
-					String sql2 = "INSERT INTO DB2025_GameStat " +
+					/*String sql2 = "INSERT INTO DB2025_GameStat " +
 							  "(idGame, allShots, accPass,attackPass, intercept,blocking, shotOnTarget) " +
 							  "VALUES (?, ?, ?, ?, ?, ?, ?)";
 				PreparedStatement pstmt2 = conn.prepareStatement(sql2);
@@ -254,7 +264,7 @@ public class staff_gameCreate extends JFrame {
 				pstmt2.setInt(7, shotOnTarget);
 				pstmt2.executeUpdate();
 				pstmt2.close();
-					
+					*/
 					conn.close();
 
 					// 알림창 표시
@@ -292,6 +302,53 @@ public class staff_gameCreate extends JFrame {
 	    return nextId;
 	}
 	
-	
+	/*private void loadTacticsFromDatabase() {
+	    try {
+	        Connection conn = DBUtil.getConnection();
+	        String sql = "SELECT tacticName, tacticType FROM DB2025_Tactics " +
+	                     "WHERE idTeam = ?";
 
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, idTeam);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            String tacticName = rs.getString("tacticName");
+	            String tacticType = rs.getString("tacticType");
+
+	            if (tacticType.equalsIgnoreCase("Field")) {
+	                comboBox_fieldTactic.addItem(tacticName);
+	            } else if (tacticType.equalsIgnoreCase("Setpiece")) {
+	                comboBox_setpieceTactic.addItem(tacticName);
+	            }
+	        }
+
+	        rs.close();
+	        pstmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}*/
+
+	/*private int getTacticIdByName(String tacticName, String tacticType) throws SQLException {
+	    Connection conn = DBUtil.getConnection();
+	    String sql = "SELECT idTactic FROM DB2025_Tactics WHERE tacticName = ? AND tacticType = ? AND idTeam = ?";
+	    PreparedStatement pstmt = conn.prepareStatement(sql);
+	    pstmt.setString(1, tacticName);
+	    pstmt.setString(2, tacticType);
+	    pstmt.setInt(3, DKicker.currentTeamId);
+	    ResultSet rs = pstmt.executeQuery();
+
+	    int id = -1;
+	    if (rs.next()) {
+	        id = rs.getInt("idTactic");
+	    }
+
+	    rs.close();
+	    pstmt.close();
+	    conn.close();
+	    return id;
+	}
+*/
 }
