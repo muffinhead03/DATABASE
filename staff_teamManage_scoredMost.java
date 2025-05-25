@@ -11,6 +11,11 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class staff_teamManage_scoredMost extends JFrame {
@@ -51,7 +56,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage(idTeam).setVisible(true); dispose();
+				new staff_teamManage().setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -98,5 +103,63 @@ public class staff_teamManage_scoredMost extends JFrame {
 		JLabel lblNewLabel_1_6 = new JLabel("");
 		lblNewLabel_1_6.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_1_6);
+		
+		
+		try {
+		    // MySQL 드라이버 명시적으로 로드 (필요 없을 수도 있음)
+		    Class.forName("com.mysql.cj.jdbc.Driver");
+
+		    // MySQL 연결 정보 설정
+		    String url = "jdbc:mysql://localhost:3306/DB2025Team09?serverTimezone=UTC";
+		    String user = "root"; // 사용자의 DB 계정
+		    String password = "asdf1234!"; // 실제 비밀번호로 교체
+
+		    Connection conn = DriverManager.getConnection(url, user, password);
+
+		    String query =
+		        "SELECT opponentId, T.nation, COUNT(*) AS matchCount, AVG(goal) AS avgGoals " +
+		        "FROM ( " +
+		        "    SELECT CASE WHEN G.idTeam1 = ? THEN G.idTeam2 ELSE G.idTeam1 END AS opponentId, " +
+		        "           S.goalOurTeam AS goal " +
+		        "    FROM DB2025_GameRec G " +
+		        "    JOIN DB2025_GameStat S ON G.idGame = S.idGame " +
+		        "    WHERE S.idOurTeam = ? " +
+		        ") AS stats " +
+		        "JOIN DB2025_Team T ON stats.opponentId = T.idTeam " +
+		        "GROUP BY opponentId " +
+		        "ORDER BY avgGoals DESC " +
+		        "LIMIT 1";
+
+		    PreparedStatement pstmt = conn.prepareStatement(query);
+		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(2, idTeam);
+
+		    ResultSet rs = pstmt.executeQuery();
+
+		    if (rs.next()) {
+		        int opponentId = rs.getInt("opponentId");
+		        String nation = rs.getString("nation");
+		        int matchCount = rs.getInt("matchCount");
+		        double avgGoals = rs.getDouble("avgGoals");
+
+		        lblNewLabel_2.setText(String.valueOf(opponentId));
+		        lblNewLabel_1_2.setText(nation);
+		        lblNewLabel_1_4.setText(String.valueOf(matchCount));
+		        lblNewLabel_1_6.setText(String.format("%.2f", avgGoals));
+		    } else {
+		        lblNewLabel_2.setText("정보 없음");
+		        lblNewLabel_1_2.setText("-");
+		        lblNewLabel_1_4.setText("-");
+		        lblNewLabel_1_6.setText("-");
+		    }
+
+		    rs.close();
+		    pstmt.close();
+		    conn.close();
+		} catch (SQLException | ClassNotFoundException e) {
+		    e.printStackTrace();
+		}
 	}
+	
+	
 }
