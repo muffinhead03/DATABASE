@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -58,6 +59,15 @@ public class staff_playerManage_squad extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JLabel lblGameId = new JLabel("경기 ID");
+		lblGameId.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGameId.setBounds(320,6,60,24);
+		contentPane.add(lblGameId);
+		
+		JComboBox<Integer> gameIdComboBox = new JComboBox<>();
+		gameIdComboBox.setBounds(380,6,60,24);
+		contentPane.add(gameIdComboBox);
 		
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -249,7 +259,21 @@ public class staff_playerManage_squad extends JFrame {
 		
 		loadSquadData();
 		loadPlayerIdsToComboBox(comboBox);
+		loadGameIdsToComboBox(gameIdComboBox);
 	}
+		private void loadGameIdsToComboBox(JComboBox<Integer> comboBox) {
+			String query = "SELECT DISTINCT idGame FROM DB2025_Squad ORDER BY idGame";
+			try(Connection conn = DBUtil.getConnection();
+					Statement stmt = conn.createStatement();
+					ResultSet rs = stmt.executeQuery(query)){
+						
+						while(rs.next()){
+							comboBox.addItem(rs.getInt("idGame"));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		}
 		
 		private void loadSquadData() {
 		    DefaultTableModel model = (DefaultTableModel) table.getModel();
