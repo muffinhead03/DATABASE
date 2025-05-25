@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
+import java.sql.*;
 
 public class staff_gameStatisticsCreate extends JFrame {
 
@@ -25,6 +29,10 @@ public class staff_gameStatisticsCreate extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_6;
 	private JTextField textField_8;
+	private int idTeam;
+	private JComboBox comboBox;
+	private JComboBox fieldbox;
+	private JComboBox setpiecebox;
 
 	/**
 	 * Launch the application.
@@ -33,7 +41,7 @@ public class staff_gameStatisticsCreate extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameCreate frame = new staff_gameCreate(DKicker.currentTeamId);
+					staff_gameStatisticsCreate frame = new staff_gameStatisticsCreate(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +53,8 @@ public class staff_gameStatisticsCreate extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_gameStatisticsCreate() {
+	public staff_gameStatisticsCreate(int idTeam) {
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,7 +66,7 @@ public class staff_gameStatisticsCreate extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameManage(DKicker.currentTeamId).setVisible(true); dispose();
+				new staff_gameManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -73,6 +82,22 @@ public class staff_gameStatisticsCreate extends JFrame {
 		panel.setBounds(6, 111, 438, 123);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
+		
+		JLabel lblNewLabel_11 = new JLabel("필드 전술");
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblNewLabel_11);
+		
+		fieldbox = new JComboBox();
+		panel.add(fieldbox);
+		//fieldbox.setColumns(10);
+		
+		JLabel lblNewLabel_12 = new JLabel("세트피스 전술");
+		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblNewLabel_12);
+		
+		setpiecebox = new JComboBox();
+		panel.add(setpiecebox);
+		//setpiecebox.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("전체 슛팅 수");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -126,6 +151,13 @@ public class staff_gameStatisticsCreate extends JFrame {
 		btnNewButton_1.setBounds(6, 237, 438, 29);
 		contentPane.add(btnNewButton_1);
 		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				insertgamestatic();
+			}
+		});
+
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(6, 75, 438, 29);
 		contentPane.add(panel_1);
@@ -135,7 +167,116 @@ public class staff_gameStatisticsCreate extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblNewLabel_1);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		panel_1.add(comboBox);
+		loadGameid();
+		
+		loadTacticsFromDatabase();
 	}
+	
+	public void loadGameid() {
+		try {
+		    Connection conn = DBUtil.getConnection();
+		    String sql = "SELECT idGame FROM DB2025_GameRec\n"
+		    		+ " WHERE idTeam1 = ? OR idTeam2 = ?";
+		    PreparedStatement pstmt = conn.prepareStatement(sql);
+		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(2, idTeam);
+		    ResultSet rs = pstmt.executeQuery();
+
+		    while (rs.next()) {
+		        int idGame = rs.getInt("idGame");
+		        comboBox.addItem(idGame); // comboBox에 경기 ID 추가
+		    }
+
+		    rs.close();
+		    pstmt.close();
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	private void loadTacticsFromDatabase() {
+		try {
+			Connection conn = DBUtil.getConnection();
+			String sql = "SELECT tacticName, tacticType FROM DB2025_Tactics WHERE idTeam = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idTeam);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				String tacticName = rs.getString("tacticName");
+				String tacticType = rs.getString("tacticType");
+
+				if (tacticType.equalsIgnoreCase("Field")) {
+					fieldbox.addItem(tacticName);
+				} else if (tacticType.equalsIgnoreCase("Setpiece")) {
+					setpiecebox.addItem(tacticName);
+				}
+			}
+
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private int getTacticIdByName(String tacticName, String tacticType) throws SQLException {
+		Connection conn = DBUtil.getConnection();
+		String sql = "SELECT idTactic FROM DB2025_Tactics WHERE tacticName = ? AND tacticType = ? AND idTeam = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, tacticName);
+		pstmt.setString(2, tacticType);
+		pstmt.setInt(3, idTeam);
+		ResultSet rs = pstmt.executeQuery();
+
+		int id = -1;
+		if (rs.next()) {
+			id = rs.getInt("idTactic");
+		}
+
+		rs.close();
+		pstmt.close();
+		conn.close();
+		return id;
+	}
+	private void insertgamestatic() {
+	    try {
+	        int idField = getTacticIdByName((String) fieldbox.getSelectedItem(), "Field");
+	        int idSetpiece = getTacticIdByName((String) setpiecebox.getSelectedItem(), "Setpiece");
+	        int idGame = (Integer) comboBox.getSelectedItem();
+
+	        Connection conn = DBUtil.getConnection();
+	        String sql = "UPDATE DB2025_GameStat SET idField = ?, idSetpiece = ?, allShots = ?, shotOnTarget = ?, accPass = ?, attackPass = ?, intercept = ?, blocking = ? WHERE idGame = ? AND idOurTeam = ?";
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setInt(1, idField);
+	        pstmt.setInt(2, idSetpiece);
+	        pstmt.setInt(3, Integer.parseInt(textField_2.getText())); // allShots
+	        pstmt.setInt(4, Integer.parseInt(textField_3.getText())); // shotOnTarget
+	        pstmt.setInt(5, Integer.parseInt(textField_1.getText())); // accPass
+	        pstmt.setInt(6, Integer.parseInt(textField_4.getText())); // attackPass
+	        pstmt.setInt(7, Integer.parseInt(textField_6.getText())); // intercept
+	        pstmt.setInt(8, Integer.parseInt(textField_8.getText())); // blocking
+	        pstmt.setInt(9, idGame);
+	        pstmt.setInt(10, idTeam);
+	        
+	        int affectedRows = pstmt.executeUpdate();
+	        if (affectedRows > 0) {
+	            System.out.println("경기 통계가 성공적으로 수정되었습니다.");
+	        } else {
+	            System.out.println("수정할 데이터가 없습니다. 먼저 해당 경기와 팀의 데이터가 존재하는지 확인하세요.");
+	        }
+
+	        pstmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 }
