@@ -38,7 +38,7 @@ public class staff_playerManage_squad extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_playerManage_squad frame = new staff_playerManage_squad();
+					staff_playerManage_squad frame = new staff_playerManage_squad(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +50,7 @@ public class staff_playerManage_squad extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_playerManage_squad() {
+	public staff_playerManage_squad(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -62,7 +62,7 @@ public class staff_playerManage_squad extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_playerManage().setVisible(true); dispose();
+				new staff_playerManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
