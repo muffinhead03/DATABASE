@@ -1,4 +1,4 @@
-package dataKicker;
+package DB2025Team09;
 
 import java.awt.EventQueue;
 
@@ -7,6 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -31,6 +34,9 @@ public class staff_gameSearch_Edit extends JFrame {
 	private JTextField textField_10;
 	private JTextField textField_11;
 	private JTextField textField_12;
+	private int idTeam;
+	private JComboBox comboBox;
+	private JLabel labelOpponentId;
 
 	/**
 	 * Launch the application.
@@ -39,7 +45,7 @@ public class staff_gameSearch_Edit extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					staff_gameSearch_Edit frame = new staff_gameSearch_Edit();
+					staff_gameSearch_Edit frame = new staff_gameSearch_Edit(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,7 +57,8 @@ public class staff_gameSearch_Edit extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public staff_gameSearch_Edit() {
+	public staff_gameSearch_Edit(int idTeam) {
+		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -63,7 +70,7 @@ public class staff_gameSearch_Edit extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameSearch().setVisible(true); dispose();
+				new staff_gameManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -82,6 +89,13 @@ public class staff_gameSearch_Edit extends JFrame {
 		JButton btnNewButton_1 = new JButton("저장");
 		panel_1.add(btnNewButton_1);
 		
+		btnNewButton_1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        updateGameStatistics();
+		    }
+		});
+
+		
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 73, 438, 153);
 		contentPane.add(panel);
@@ -91,8 +105,17 @@ public class staff_gameSearch_Edit extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_1);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		panel.add(comboBox);
+		loadGameid();
+		comboBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (comboBox.getSelectedItem() != null) {
+		            showAgainstTeam();
+		        }
+		    }
+		});
+
 		
 		JLabel lblNewLabel_2 = new JLabel("경기 날짜");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -106,11 +129,10 @@ public class staff_gameSearch_Edit extends JFrame {
 		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2_1);
 		
-		textField_2 = new JTextField();
-		panel.add(textField_2);
-		textField_2.setColumns(10);
-		
-		JLabel lblNewLabel_2_2 = new JLabel("사용한 필드 전술");
+		labelOpponentId = new JLabel();
+		panel.add(labelOpponentId);  
+		showAgainstTeam();
+		JLabel lblNewLabel_2_2 = new JLabel("필드 전술");
 		lblNewLabel_2_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2_2);
 		
@@ -118,7 +140,7 @@ public class staff_gameSearch_Edit extends JFrame {
 		panel.add(textField_3);
 		textField_3.setColumns(10);
 		
-		JLabel lblNewLabel_3 = new JLabel("사용한 세트피스 전술");
+		JLabel lblNewLabel_3 = new JLabel("세트피스 전술");
 		panel.add(lblNewLabel_3);
 		
 		textField_4 = new JTextField();
@@ -192,10 +214,260 @@ public class staff_gameSearch_Edit extends JFrame {
 		JButton btnNewButton_2 = new JButton("출전 선수 수정");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameSearch_EditPlayers().setVisible(true); dispose();
+				 int idGame = (Integer) comboBox.getSelectedItem();
+				new staff_gameSearch_EditPlayers(idTeam, idGame).setVisible(true); dispose();
 			}
 		});
 		btnNewButton_2.setBounds(327, 6, 117, 29);
 		contentPane.add(btnNewButton_2);
+		
+		JButton btnViewStats = new JButton("통계 보기");
+		btnViewStats.setBounds(200, 6, 117, 29);
+		contentPane.add(btnViewStats);
+
+		btnViewStats.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int idGame = (Integer) comboBox.getSelectedItem();
+		        showGameStatistics();
+		    }
+		});
+		
 	}
+	
+	public void loadGameid() {
+		try {
+		    Connection conn = DBUtil.getConnection();
+		    String sql = "SELECT idGame, idTeam1, idTeam2 FROM DB2025_GameRec\n"
+		    		+ " WHERE idTeam1 = ? OR idTeam2 = ?";
+		    PreparedStatement pstmt = conn.prepareStatement(sql);
+		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(2, idTeam);
+		    ResultSet rs = pstmt.executeQuery();
+
+		    while (rs.next()) {
+		        int idGame = rs.getInt("idGame");
+		        comboBox.addItem(idGame); // comboBox에 경기 ID 추가
+		    }
+		 // showGameStatistics() 또는 loadGameid() 내부에서 아래 코드 추가:
+		    
+		    rs.close();
+		    pstmt.close();
+		    
+		    conn.close();
+		    
+		    
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
+	}
+	private void showAgainstTeam() {
+		try {
+			int idGame = (Integer) comboBox.getSelectedItem();
+		    Connection conn = DBUtil.getConnection();
+		    String sql = "SELECT idTeam1, idTeam2 FROM DB2025_GameRec\n"
+		    		+ " WHERE (idTeam1 = ? OR idTeam2 = ?) AND idGame = ?";
+		    PreparedStatement pstmt = conn.prepareStatement(sql);
+		    pstmt.setInt(1, idTeam);
+		    pstmt.setInt(2, idTeam);
+		    pstmt.setInt(3, idGame);
+		    ResultSet rs = pstmt.executeQuery();
+
+		    
+		    	if (rs.next()) {
+		    	    int team1 = rs.getInt("idTeam1");
+		    	    int team2 = rs.getInt("idTeam2");
+
+		    	    int opponentId = (idTeam == team1) ? team2 : team1;
+		    	    labelOpponentId.setText(String.valueOf(opponentId));  // JLabel에 표시
+		    	}
+
+		    
+		 // showGameStatistics() 또는 loadGameid() 내부에서 아래 코드 추가:
+		    
+		    rs.close();
+		    pstmt.close();
+		    
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	private void showGameStatistics() {
+	    try {
+	        int idGame = (Integer) comboBox.getSelectedItem();
+
+	        Connection conn = DBUtil.getConnection();
+
+	        String sql = "SELECT \n"
+	        		
+	        		+ "    V.idGame, V.idOurTeam,\n"
+	        		+ "    V.idAgainstTeam,\n"
+	        		+ "    V.goalFor,\n"
+	        		+ "    V.goalAgainst,\n"
+	        		+ "    T1.tacticName AS fieldTactic,\n"
+	        		+ "    T2.tacticName AS setpieceTactic,\n"
+	        		+ "    A.allShots,\n"
+	        		+ "    A.shotOnTarget,\n"
+	        		+ "    A.accPass,\n"
+	        		+ "    A.attackPass,\n"
+	        		+ "    A.intercept,\n"
+	        		+ "    A.blocking\n"
+	        		+ "FROM DB2025_view_GameSummary V\n"
+	        		+ "JOIN DB2025_GameStat A ON V.idGame = A.idGame AND V.idOurTeam = A.idOurTeam\n"
+	        		+ "LEFT JOIN DB2025_Tactics T1 ON T1.idTactic = A.idField\n"
+	        		+ "LEFT JOIN DB2025_Tactics T2 ON T2.idTactic = A.idSetpiece\n where A.idgame = ?";
+	        		
+	        		
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, idGame);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        boolean found = false;
+
+	        while (rs.next()) {
+	            int gameId = rs.getInt("idGame");
+	            int ourTeamId = rs.getInt("idOurTeam");
+
+	            if (gameId == idGame && ourTeamId == idTeam) {
+	                StringBuilder sb = new StringBuilder();
+	                sb.append("경기 ID: ").append(rs.getInt("idGame")).append("\n");
+	                sb.append("우리 팀 ID: ").append(rs.getInt("idOurTeam")).append("\n");
+	                sb.append("상대 팀 ID: ").append(rs.getInt("idAgainstTeam")).append("\n");
+	                sb.append("우리 팀 득점: ").append(rs.getInt("goalFor")).append("\n");
+	                sb.append("상대 팀 득점: ").append(rs.getInt("goalAgainst")).append("\n");
+	                //sb.append("필드 전술 ID: ").append(rs.getInt("idField")).append("\n");
+	                sb.append("필드 전술명: ").append(rs.getString("fieldTactic")).append("\n");
+	                //sb.append("세트피스 전술 ID: ").append(rs.getInt("idSetpiece")).append("\n");
+	                sb.append("세트피스 전술명: ").append(rs.getString("setpieceTactic")).append("\n");
+
+	                sb.append("전체 슛팅 수: ").append(rs.getInt("allShots")).append("\n");
+	                sb.append("유효 슛팅 수: ").append(rs.getInt("shotOnTarget")).append("\n");
+	                sb.append("정확한 패스 수: ").append(rs.getInt("accPass")).append("\n");
+	                sb.append("공격지역 패스 수: ").append(rs.getInt("attackPass")).append("\n");
+	                sb.append("수비 - 가로채기 수: ").append(rs.getInt("intercept")).append("\n");
+	                sb.append("수비 - 차단 수: ").append(rs.getInt("blocking")).append("\n");
+
+	                javax.swing.JOptionPane.showMessageDialog(null, sb.toString(), "게임 통계", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+	                found = true;
+	                break;
+	            }
+	        }
+
+	        if (!found) {
+	            javax.swing.JOptionPane.showMessageDialog(null, "해당 경기 통계가 존재하지 않습니다.", "정보 없음", javax.swing.JOptionPane.WARNING_MESSAGE);
+	        }
+
+	        rs.close();
+	        pstmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        javax.swing.JOptionPane.showMessageDialog(null, "오류 발생: " + e.getMessage(), "오류", javax.swing.JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	private void updateGameStatistics() {
+	    int idGame = (Integer) comboBox.getSelectedItem();
+
+	    try (Connection conn = DBUtil.getConnection()) {
+	        StringBuilder sql = new StringBuilder("UPDATE DB2025_GameStat SET ");
+	        boolean first = true;
+
+	        // 조건적으로 세팅할 항목들
+	        if (!textField_3.getText().trim().isEmpty()) {
+	            sql.append("idField = ?");
+	            first = false;
+	        }
+	        if (!textField_4.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("idSetpiece = ?");
+	            first = false;
+	        }
+	        if (!textField_5.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("goalOurTeam = ?");
+	            first = false;
+	        }
+	        if (!textField_7.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("allShots = ?");
+	            first = false;
+	        }
+	        if (!textField_8.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("shotOnTarget = ?");
+	            first = false;
+	        }
+	        if (!textField_9.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("accPass = ?");
+	            first = false;
+	        }
+	        if (!textField_10.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("attackPass = ?");
+	            first = false;
+	        }
+	        if (!textField_11.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("intercept = ?");
+	            first = false;
+	        }
+	        if (!textField_12.getText().trim().isEmpty()) {
+	            if (!first) sql.append(", ");
+	            sql.append("blocking = ?");
+	            first = false;
+	        }
+
+	        sql.append(" WHERE idGame = ? AND idOurTeam = ?");
+
+	        PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+
+	        // 순서에 맞게 값 넣기
+	        int paramIndex = 1;
+	        if (!textField_3.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_3.getText().trim()));
+	        }
+	        if (!textField_4.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_4.getText().trim()));
+	        }
+	        if (!textField_5.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_5.getText().trim()));
+	        }
+	        if (!textField_7.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_7.getText().trim()));
+	        }
+	        if (!textField_8.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_8.getText().trim()));
+	        }
+	        if (!textField_9.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_9.getText().trim()));
+	        }
+	        if (!textField_10.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_10.getText().trim()));
+	        }
+	        if (!textField_11.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_11.getText().trim()));
+	        }
+	        if (!textField_12.getText().trim().isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(textField_12.getText().trim()));
+	        }
+
+	        pstmt.setInt(paramIndex++, idGame);
+	        pstmt.setInt(paramIndex++, idTeam);  // this.idTeam
+
+	        int updated = pstmt.executeUpdate();
+
+	        if (updated > 0) {
+	            javax.swing.JOptionPane.showMessageDialog(null, "경기 통계가 성공적으로 수정되었습니다.");
+	        } else {
+	            javax.swing.JOptionPane.showMessageDialog(null, "수정할 데이터가 없습니다.");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        javax.swing.JOptionPane.showMessageDialog(null, "오류 발생: " + e.getMessage(), "오류", javax.swing.JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
 }

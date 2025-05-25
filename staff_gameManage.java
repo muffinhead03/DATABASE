@@ -59,14 +59,14 @@ public class staff_gameManage extends JFrame {
 		});
 		panel.add(button);
 		
-		JButton btnNewButton_1 = new JButton("경기 기록 검색");
+		JButton btnNewButton_1 = new JButton("경기 기록 수정");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_gameSearch(idTeam).setVisible(true); dispose();
+				new staff_gameSearch_Edit(idTeam).setVisible(true); dispose();
 			}
 		});
 		
-		JButton btnNewButton_2 = new JButton("경기 상세 데이터 생성");
+		JButton btnNewButton_2 = new JButton("경기 통계 데이터 생성");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new staff_gameStatisticsCreate(idTeam).setVisible(true); dispose();

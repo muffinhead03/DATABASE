@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -147,7 +148,7 @@ public class staff_gameStatisticsCreate extends JFrame {
 		panel.add(textField_8);
 		textField_8.setColumns(10);
 		
-		JButton btnNewButton_1 = new JButton("생성");
+		JButton btnNewButton_1 = new JButton("생성 / 수정");
 		btnNewButton_1.setBounds(6, 237, 438, 29);
 		contentPane.add(btnNewButton_1);
 		
@@ -172,6 +173,19 @@ public class staff_gameStatisticsCreate extends JFrame {
 		loadGameid();
 		
 		loadTacticsFromDatabase();
+		
+		
+		JButton btnViewStats = new JButton("통계 보기");
+		btnViewStats.setBounds(320, 6, 117, 29);
+		contentPane.add(btnViewStats);
+
+		btnViewStats.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int idGame = (Integer) comboBox.getSelectedItem();
+		        showGameStatistics();
+		    }
+		});
+
 	}
 	
 	public void loadGameid() {
@@ -278,5 +292,81 @@ public class staff_gameStatisticsCreate extends JFrame {
 	    }
 	}
 
+	private void showGameStatistics() {
+	    try {
+	        int idGame = (Integer) comboBox.getSelectedItem();
 
+	        Connection conn = DBUtil.getConnection();
+
+	        String sql = "SELECT \n"
+	        		
+	        		+ "    V.idGame, V.idOurTeam,\n"
+	        		+ "    V.idAgainstTeam,\n"
+	        		+ "    V.goalFor,\n"
+	        		+ "    V.goalAgainst,\n"
+	        		+ "    T1.tacticName AS fieldTactic,\n"
+	        		+ "    T2.tacticName AS setpieceTactic,\n"
+	        		+ "    A.allShots,\n"
+	        		+ "    A.shotOnTarget,\n"
+	        		+ "    A.accPass,\n"
+	        		+ "    A.attackPass,\n"
+	        		+ "    A.intercept,\n"
+	        		+ "    A.blocking\n"
+	        		+ "FROM DB2025_view_GameSummary V\n"
+	        		+ "JOIN DB2025_GameStat A ON V.idGame = A.idGame AND V.idOurTeam = A.idOurTeam\n"
+	        		+ "LEFT JOIN DB2025_Tactics T1 ON T1.idTactic = A.idField\n"
+	        		+ "LEFT JOIN DB2025_Tactics T2 ON T2.idTactic = A.idSetpiece\n where A.idgame = ?";
+	        		
+	        		
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, idGame);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        boolean found = false;
+
+	        while (rs.next()) {
+	            int gameId = rs.getInt("idGame");
+	            int ourTeamId = rs.getInt("idOurTeam");
+
+	            if (gameId == idGame && ourTeamId == idTeam) {
+	                StringBuilder sb = new StringBuilder();
+	                sb.append("경기 ID: ").append(rs.getInt("idGame")).append("\n");
+	                sb.append("우리 팀 ID: ").append(rs.getInt("idOurTeam")).append("\n");
+	                sb.append("상대 팀 ID: ").append(rs.getInt("idAgainstTeam")).append("\n");
+	                sb.append("우리 팀 득점: ").append(rs.getInt("goalFor")).append("\n");
+	                sb.append("상대 팀 득점: ").append(rs.getInt("goalAgainst")).append("\n");
+	                //sb.append("필드 전술 ID: ").append(rs.getInt("idField")).append("\n");
+	                sb.append("필드 전술명: ").append(rs.getString("fieldTactic")).append("\n");
+	                //sb.append("세트피스 전술 ID: ").append(rs.getInt("idSetpiece")).append("\n");
+	                sb.append("세트피스 전술명: ").append(rs.getString("setpieceTactic")).append("\n");
+
+	                sb.append("전체 슛팅 수: ").append(rs.getInt("allShots")).append("\n");
+	                sb.append("유효 슛팅 수: ").append(rs.getInt("shotOnTarget")).append("\n");
+	                sb.append("정확한 패스 수: ").append(rs.getInt("accPass")).append("\n");
+	                sb.append("공격지역 패스 수: ").append(rs.getInt("attackPass")).append("\n");
+	                sb.append("수비 - 가로채기 수: ").append(rs.getInt("intercept")).append("\n");
+	                sb.append("수비 - 차단 수: ").append(rs.getInt("blocking")).append("\n");
+
+	                javax.swing.JOptionPane.showMessageDialog(null, sb.toString(), "게임 통계", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+	                found = true;
+	                break;
+	            }
+	        }
+
+	        if (!found) {
+	            javax.swing.JOptionPane.showMessageDialog(null, "해당 경기 통계가 존재하지 않습니다.", "정보 없음", javax.swing.JOptionPane.WARNING_MESSAGE);
+	        }
+
+	        rs.close();
+	        pstmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        javax.swing.JOptionPane.showMessageDialog(null, "오류 발생: " + e.getMessage(), "오류", javax.swing.JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+
+
+	
 }
