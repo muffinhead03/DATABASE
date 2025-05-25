@@ -66,14 +66,14 @@ public class staff_gameManage extends JFrame {
 			}
 		});
 		
-		/*JButton btnNewButton_2 = new JButton("경기 통계 데이터 생성");
+		JButton btnNewButton_2 = new JButton("경기 상세 데이터 생성");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new staff_gameStatisticsCreate(idTeam).setVisible(true); dispose();
 			}
 		});
 		panel.add(btnNewButton_2);
-		*/
+		
 		JButton btnNewButton_3 = new JButton("경기 출전 선수 명단 생성");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
