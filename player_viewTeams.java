@@ -63,7 +63,7 @@ public class player_viewTeams extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uD300 ID", "국가", "현재 재회 이름", "FIFA \uB7AD\uD0B9"
+				"\uD300 ID", "국가", "현재 대회 이름", "FIFA \uB7AD\uD0B9"
 			}
 		));
 		scrollPane.setViewportView(table);
