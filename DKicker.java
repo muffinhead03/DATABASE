@@ -157,6 +157,18 @@ public class DKicker extends JFrame {
 		btnNewButton_1.setBounds(232, 207, 117, 29);
 		contentPane.add(btnNewButton_1);
 		
+		JButton btnNewButton_2 = new JButton("팀 추가");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 
+				
+				new DKicker_Create_Team().setVisible(true);  dispose();
+			}
+		});
+		btnNewButton_2.setBounds(167, 237, 117, 29);
+		contentPane.add(btnNewButton_2);
+
+		
 		
 		JLabel lblNewLabel_1 = new JLabel("팀을 선택하세요");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
