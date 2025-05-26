@@ -55,7 +55,7 @@ public class DKicker_Create_Team extends JFrame {
         tfCurrName.setBounds(140, 140, 180, 25);
         contentPane.add(tfCurrName);
 
-        JLabel lblPoints = new JLabel("Points:");
+        JLabel lblPoints = new JLabel("승점:");
         lblPoints.setBounds(30, 180, 80, 25);
         contentPane.add(lblPoints);
 
