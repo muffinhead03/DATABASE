@@ -280,9 +280,10 @@ public class staff_gameStatisticsCreate extends JFrame {
 	        
 	        int affectedRows = pstmt.executeUpdate();
 	        if (affectedRows > 0) {
-	            System.out.println("경기 통계가 성공적으로 수정되었습니다.");
+	        	javax.swing.JOptionPane.showMessageDialog(null,"경기 통계가 성공적으로 수정되었습니다");
 	        } else {
-	            System.out.println("수정할 데이터가 없습니다. 먼저 해당 경기와 팀의 데이터가 존재하는지 확인하세요.");
+	            //System.out.println("수정할 데이터가 없습니다. 먼저 해당 경기와 팀의 데이터가 존재하는지 확인하세요.");
+	            javax.swing.JOptionPane.showMessageDialog(null,"수정할 데이터가 없습니다. 먼저 해당 경기와 팀의 데이터가 존재하는지 확인하세요.");
 	        }
 
 	        pstmt.close();
