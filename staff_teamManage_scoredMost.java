@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.sql.*;
 
 public class staff_teamManage_scoredMost extends JFrame {
 
@@ -56,7 +57,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new staff_teamManage().setVisible(true); dispose();
+				new staff_teamManage(idTeam).setVisible(true); dispose();
 			}
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
@@ -78,6 +79,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("국가:");
@@ -106,15 +108,10 @@ public class staff_teamManage_scoredMost extends JFrame {
 		
 		
 		try {
-		    // MySQL 드라이버 명시적으로 로드 (필요 없을 수도 있음)
-		    Class.forName("com.mysql.cj.jdbc.Driver");
+		   
+		   
 
-		    // MySQL 연결 정보 설정
-		    String url = "jdbc:mysql://localhost:3306/DB2025Team09?serverTimezone=UTC";
-		    String user = "root"; // 사용자의 DB 계정
-		    String password = "asdf1234!"; // 실제 비밀번호로 교체
-
-		    Connection conn = DriverManager.getConnection(url, user, password);
+		    Connection conn = DBUtil.getConnection();
 
 		    String query =
 		        "SELECT opponentId, T.nation, COUNT(*) AS matchCount, AVG(goal) AS avgGoals " +
@@ -156,7 +153,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		    rs.close();
 		    pstmt.close();
 		    conn.close();
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 		    e.printStackTrace();
 		}
 	}
