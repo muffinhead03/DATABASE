@@ -30,6 +30,7 @@ public class player_viewPlayers extends JFrame {
 	private JComboBox<String> comboBoxSort;
 	private JComboBox<String> comboBoxTeam;
 	private int idTeam, idPlayer;
+	private JLabel lblMyPosition;
 
 	/**
 	 * Launch the application.
@@ -141,16 +142,22 @@ public class player_viewPlayers extends JFrame {
 		comboBoxTeam.setBounds(159, 69, 117, 27);
 		contentPane.add(comboBoxTeam);
 		
-		JLabel lblNewLabel_4 = new JLabel("나의 포지션: AM");
+		JLabel lblNewLabel_4 = new JLabel("나의 포지션: ");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_4.setBounds(288, 6, 156, 16);
+		lblNewLabel_4.setBounds(200, 6, 90, 16);
 		contentPane.add(lblNewLabel_4);
+		
+		lblMyPosition = new JLabel("불러오는 중...");
+		lblMyPosition.setHorizontalAlignment(SwingConstants.LEFT);
+		lblMyPosition.setBounds(290,6,100,16);
+		contentPane.add(lblMyPosition);
 		
 		comboBoxPosition.addActionListener(e -> loadPlayerData());
 		comboBoxSort.addActionListener(e -> loadPlayerData());
 		comboBoxTeam.addActionListener(e -> loadPlayerData());
 		
 		loadPlayerData();
+		loadMyPosition();
 	}
 	
 	private void loadPlayerData() {
@@ -202,4 +209,24 @@ public class player_viewPlayers extends JFrame {
 	        e.printStackTrace();
 	    }
 	}
+	private void loadMyPosition(){
+		try(Connection conn = DBUtil.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement("SELECT position FROM db2025_player WHERE idPlayer = ?")){
+			
+			pstmt.setInt(1, idPlayer);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				String position = rs.getString("position");
+				lblMyPosition.setText(position);
+			} else {
+				lblMyPosition.setText("알수 없음");
+			}
+			rs.close();
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		lblMyPosition.setText("오류");
+	}
+		}
 }
