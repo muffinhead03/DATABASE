@@ -15,7 +15,7 @@ public class player_myGameDetail extends JFrame {
 	private JLabel lblGameId, lblDate, lblOpponent, lblGoalFor, lblGoalAgainst;
 	private JLabel lblShots, lblOnTarget, lblAccPass, lblAttackPass, lblIntercept, lblBlocking;
 	private int idTeam, idPlayer, idGame;
-
+	//테스트용 메인 함수입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -28,6 +28,9 @@ public class player_myGameDetail extends JFrame {
 	}
 
 	public player_myGameDetail(int idTeam, int idPlayer, int idGame) {
+		//선수 메뉴
+		//2. 경기 기록 조회
+		//2-2내가 출전한 경기의 상세 기록 조회
 		this.idGame = idGame;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -41,7 +44,7 @@ public class player_myGameDetail extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 34, 438, 28);
 		contentPane.add(lblNewLabel);
-
+		//뒤로 가기 버튼, player_myGameOne 으로 이동합니다.
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -113,6 +116,10 @@ public class player_myGameDetail extends JFrame {
 	}
 
 	private void loadGameDetail() {
+		
+		//출전 경기 세부 통계를 쿼리를 통해 불러오는 메서드 입니다.
+		//2-2 내가 출전한 경기의 상세 기록 조회
+		
 		String sql = """
 		    SELECT GIA.*, T.nation AS opponentTeamName
 		    FROM DB2025_Game_Info_All GIA

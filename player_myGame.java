@@ -31,6 +31,7 @@ public class player_myGame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	// 테스트용 메인 함수 입니다
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,6 +50,11 @@ public class player_myGame extends JFrame {
 	 * Create the frame.
 	 */
 	private void loadGameData() {
+		
+		//선수 메뉴
+		//2. 경기 기록 조회
+		//2-1. 내가 출전한 경기 목록 조회
+		//테이블에 내가 풀전한 경기의 목록을 불러오는 메서드입니다.
 		
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 데이터 초기화
@@ -84,6 +90,8 @@ public class player_myGame extends JFrame {
 	
 	public player_myGame(int idTeam, int idPlayer) {
 		
+		//UI창 코드입니다.
+		
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,6 +108,7 @@ public class player_myGame extends JFrame {
 		lblNewLabel.setBounds(5, 37, 440, 31);
 		contentPane.add(lblNewLabel);
 		
+		//뒤로 가기 버튼, 선수 메뉴 고르기 창으로 이동합니다.
 		JButton btnNewButton_4 = new JButton("Back");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,28 +131,28 @@ public class player_myGame extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uACBD\uAE30ID", "\uACBD\uAE30 \uB0A0\uC9DC", "\uC0C1\uB300 \uD300", "\uB4DD\uC810", "\uC2E4\uC810"
+				"\uACBD\uAE30ID", "\uACBD\uAE30 \uB0A0\uC9DC", "\uC0C1\uB300 \uD300", "\uB4DD\uC810", "\uC2E4\uC810" // 경기ID, 경기 날짜, 상대 팀, 득점, 실점
 			}
 		));
 		scrollPane.setViewportView(table);
 		loadGameData();
 		
-		// "경기 상세 정보" 버튼 추가
+		// "경기 상세 정보" 버튼 추가 , 내가 출전한 경기의 상세 정보를 위한 창으로 이동합니다.
 		JButton btnDetail = new JButton("경기 상세 정보");
 		btnDetail.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = table.getSelectedRow();
 				if (selectedRow != -1) {
 					int idGame = (int) table.getValueAt(selectedRow, 0); 
-					//System.out.println(idGame);
+					
 					new player_myGameOne(idTeam, idPlayer, idGame).setVisible(true);
-					dispose(); // 현재 창 닫기 (선택 사항)
+					dispose(); // 현재 창 닫기
 				} else {
 					System.out.println("행을 선택하세요.");
 				}
 			}
 		});
-		btnDetail.setBounds(160, 280, 150, 30); // 위치는 필요에 따라 조정 가능
+		btnDetail.setBounds(160, 280, 150, 30); 
 		contentPane.add(btnDetail);
 
 		

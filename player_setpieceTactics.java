@@ -14,7 +14,7 @@ public class player_setpieceTactics extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private int idTeam, idPlayer;
-
+//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -27,6 +27,10 @@ public class player_setpieceTactics extends JFrame {
 	}
 
 	private void loadTacticsData() {
+		
+		// 공통메뉴
+		//4-2 세트피스 전술 목록
+		// 데이터 쿼리와 로드를 위한 메서드 입니다.
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
 
@@ -55,6 +59,12 @@ public class player_setpieceTactics extends JFrame {
 	}
 
 	public player_setpieceTactics(int idTeam, int idPlayer) {
+		
+		//공통 메뉴
+		//4. 전술 정보 조회
+		//4-2. 세트 피스 전술 목록
+		//우리팀의 전체 세트피스 전술 목록, 전술의 상세 정보를 조회한다.
+		
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 

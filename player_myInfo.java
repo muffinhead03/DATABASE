@@ -23,6 +23,7 @@ public class player_myInfo extends JFrame {
 	private JRadioButton rdbtnNewRadioButton_1;
 	private int idTeam, idPlayer;
 
+	// 테스트용 메인 함수, 실제 프로그램 실행시에는 작동은 하지 않습니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -35,6 +36,12 @@ public class player_myInfo extends JFrame {
 	}
 
 	public player_myInfo(int idTeam, int idPlayer) {
+		
+		//나의 정보 창입니다.
+		//이용자가 선택한 선수의 이름, 생년월일, 포지션, 소속팀, 액션, 출전가능여부를 나타내고 수정합니다.
+		//선수 메뉴
+		//1. 내 정보 관리, 1-1 내 인적 사항 조회, 1-2 내 인적 사항 수정 기능을 구현합니다 
+		
 		this.idTeam=idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,54 +53,54 @@ public class player_myInfo extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("이름:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(211, 68, 48, 16);
+		lblNewLabel.setBounds(191, 68, 48, 16);
 		contentPane.add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel("생년월일:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBounds(211, 96, 48, 16);
+		lblNewLabel_1.setBounds(191, 96, 68, 16);
 		contentPane.add(lblNewLabel_1);
 
 		JLabel lblNewLabel_2 = new JLabel("포지션:");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setBounds(211, 124, 48, 16);
+		lblNewLabel_2.setBounds(191, 124, 48, 16);
 		contentPane.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_3 = new JLabel("소속 팀:");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setBounds(211, 152, 48, 16);
+		lblNewLabel_3.setBounds(191, 152, 48, 16);
 		contentPane.add(lblNewLabel_3);
 
 		JLabel lblNewLabel_5 = new JLabel("액션:");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setBounds(221, 180, 38, 16);
+		lblNewLabel_5.setBounds(191, 180, 38, 16);
 		contentPane.add(lblNewLabel_5);
 
 		JLabel lblNewLabel_7 = new JLabel("출전 가능 여부:");
-		lblNewLabel_7.setBounds(179, 208, 80, 16);
+		lblNewLabel_7.setBounds(179, 208, 100, 16);
 		contentPane.add(lblNewLabel_7);
 
 		textField = new JTextField();
-		textField.setBounds(260, 63, 112, 26);
+		textField.setBounds(260, 63, 132, 26);
 		contentPane.add(textField);
 		textField.setColumns(10);
 
 		textField_1 = new JTextField();
-		textField_1.setBounds(260, 91, 112, 26);
+		textField_1.setBounds(260, 91, 132, 26);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(260, 119, 112, 26);
+		textField_2.setBounds(260, 119, 132, 26);
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 
 		labelTeam = new JLabel();
-		labelTeam.setBounds(260, 147, 112, 26);
+		labelTeam.setBounds(260, 147, 132, 26);
 		contentPane.add(labelTeam);
 
 		textField_4 = new JTextField();
-		textField_4.setBounds(260, 175, 112, 26);
+		textField_4.setBounds(260, 175, 132, 26);
 		contentPane.add(textField_4);
 		textField_4.setColumns(10);
 
@@ -113,7 +120,7 @@ public class player_myInfo extends JFrame {
 		rdbtnNewRadioButton_1.setBounds(323, 204, 72, 23);
 		buttonGroup.add(rdbtnNewRadioButton_1);
 		contentPane.add(rdbtnNewRadioButton_1);
-
+		//선수 메뉴 고르기 창으로 이동합니다
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(e -> {
 			new player(idTeam, idPlayer).setVisible(true);
@@ -129,6 +136,10 @@ public class player_myInfo extends JFrame {
 	
 
 	private void addUpdateButton() {
+		
+		//수정 버튼을 추가하고 수정 버튼의 기능을 구현하는 메서드 입니다.
+		//1-2 내 인적 사항 수정
+		
 	    JButton btnUpdate = new JButton("수정");
 	    btnUpdate.setBounds(159, 240, 117, 26);
 	    contentPane.add(btnUpdate);
@@ -160,7 +171,7 @@ public class player_myInfo extends JFrame {
 	            if (!birthdateStr.isEmpty()) {
 	                sql.append("birthday=?, ");
 	                LocalDate birthdate = LocalDate.parse(birthdateStr);
-	                birthdate = birthdate.plusDays(1);//하루 추가
+	                
 	                params.add(Date.valueOf(birthdate));
 	            }
 	            if (!position.isEmpty()) {
@@ -218,6 +229,9 @@ public class player_myInfo extends JFrame {
 	
 	
 	private void loadPlayerInfo() {
+		
+		//텍스트 필드와 라벨에 사용자 정보를 불러오는 메서드입니다.
+		// 1-1 내 인적 사항 조회
 	    try (Connection conn = DBUtil.getConnection()) {
 	        String sql = "SELECT playerName, birthday, position, idTeam, playerAction , ableToPlay FROM DB2025_Player WHERE idPlayer = ?";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -236,7 +250,7 @@ public class player_myInfo extends JFrame {
 	                    textField_1.setText(birthday != null ? birthday.toString() : "");
 	                    textField_2.setText(position);
 	                    labelTeam.setText(team);
-	                    textField_4.setText(action);  // Optional: Keep this if needed
+	                    textField_4.setText(action);  
 
 	                    // 출전 가능 여부 라디오 버튼 설정
 	                    if (able == 1) {

@@ -27,6 +27,7 @@ public class player_myTacticsTeam extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인함수입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -48,6 +49,11 @@ public class player_myTacticsTeam extends JFrame {
 	
 	
 	public player_myTacticsTeam(int idTeam, int idPlayer) {
+		
+		// 선수 메뉴 
+		// 3. 전술 정보 조회
+		// 3-1 우리팀의 주요 전술 정보 조회
+		// 필드/세트피스 전술 선택을 위한 창입니다.
 		this.iDplayer=iDplayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

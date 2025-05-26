@@ -29,6 +29,7 @@ public class player_viewTeams extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -46,6 +47,11 @@ public class player_viewTeams extends JFrame {
 	 * Create the frame.
 	 */
 	public player_viewTeams(int idTeam, int idPlayer) {
+		
+		//공통메뉴
+		//2. 팀 목록 조회
+		//2-1 팀 목록 조회
+		//전체 팀 목록을 조회한다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -83,9 +89,11 @@ public class player_viewTeams extends JFrame {
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
 		
-		loadTeamData();
+		loadTeamData(); //데이터 로드
 	}
 	private void loadTeamData() {
+		//2-1 팀 목록 조회
+		//쿼리해서 데이터를 로드하는 메서드입니다.
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 행 삭제
 

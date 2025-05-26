@@ -35,6 +35,7 @@ public class player_viewPlayers extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -52,6 +53,9 @@ public class player_viewPlayers extends JFrame {
 	 * Create the frame.
 	 */
 	public player_viewPlayers(int idTeam, int idPlayer) {
+		//공통 메뉴
+		//1. 선수 정보 조회
+		//UI 관련 코드입니다.
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,7 +71,7 @@ public class player_viewPlayers extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 36, 438, 25);
 		contentPane.add(lblNewLabel);
-		
+		//뒤로 가기 버튼
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -107,7 +111,7 @@ public class player_viewPlayers extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		comboBoxSort = new JComboBox<>();
-		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순","가나다순", "최신 등록순", "최장 출전 시간순"}));
+		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순","가나다순", "최장 출전 시간순"}));
 		comboBoxSort.setBounds(313, 69, 131, 27);
 		contentPane.add(comboBoxSort);
 		
@@ -118,7 +122,9 @@ public class player_viewPlayers extends JFrame {
 		comboBoxTeam = new JComboBox<>();
 
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-
+		
+		// 존재하는 팀의 id를 전부 쿼리해서 콤보박스에 넣는 코드
+		
 		try {
 		    Connection conn = DBUtil.getConnection();
 		    Statement stmt = conn.createStatement();
@@ -161,7 +167,7 @@ public class player_viewPlayers extends JFrame {
 	}
 	
 	private void loadPlayerData() {
-		
+		// 1. 선수 정보 조회
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0);
 
@@ -171,24 +177,29 @@ public class player_viewPlayers extends JFrame {
 	    String selectedTeam = comboBoxTeam.getSelectedItem().toString();
 	    
 	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, performance FROM db2025_player WHERE 1=1");
-
+// 전체 선수 목록 조회
 	    if (!selectedPosition.equals("전체")) {
 	        query.append(" AND position = '").append(selectedPosition).append("'");
 	    }
 
 	    if (!selectedTeam.equals("전체")) {
 	        query.append(" AND idTeam = ").append(selectedTeam.replace("팀", ""));
+	        //특정 팀에 해당하는 선수 조회
 	    }
 
 	    // 정렬 조건
 	    if (selectedSort.equals("가나다순")) {
 	        query.append(" ORDER BY playerName ASC");
-	    } else if (selectedSort.equals("최신 등록순")) {
-	        query.append(" ORDER BY idPlayer DESC");
+	        //1-2 이름 순 조회
+	        //전체 선수의 목록을 번호순으로 조회한다.
 	    } else if (selectedSort.equals("최장 출전 시간순")) {
 	        query.append(" ORDER BY performance DESC");
+	        //1-5 평균 최장 출전 시간 순으로 조회
+	        //전체 선수 목록을 열람하는데, 평균 출전 시간이 높은 순으로 목록 열람
 	    } else if(selectedSort.equals("번호 순")){
 	    	query.append(" ORDER BY idPlayer ASC");	
+	    	//1-1 팀의 전체 선수 목록 조회 - 번호 순
+	    	// 전체 선수의 목록을 번호순으로 조회한다.
 	    }
 
 	    try (Connection conn = DBUtil.getConnection();
@@ -210,6 +221,8 @@ public class player_viewPlayers extends JFrame {
 	    }
 	}
 	private void loadMyPosition(){
+		// 1-4 선수 목록을 포지션 별로 조회
+		//포지션 목록에서 포지션 선택 시 포지션에 해당하는 선수들의 상세 정보 목록을 조회한다.
 		try(Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT position FROM db2025_player WHERE idPlayer = ?")){
 			

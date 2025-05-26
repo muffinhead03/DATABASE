@@ -29,6 +29,7 @@ public class player_myTacticsMe_field extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수 입니다
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,6 +46,9 @@ public class player_myTacticsMe_field extends JFrame {
 	
 	//데이터베이스속 데이터 로드
 	private void loadfieldData() {
+		
+		//3-2 내가 동원된 전술 목록 조회 - 필드 전술
+		//쿼리를 통해 데이터를 표시하는 메서드입니다.
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 테이블 초기화
 
@@ -77,6 +81,10 @@ public class player_myTacticsMe_field extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTacticsMe_field(int idTeam, int idPlayer) {
+		// 선수 메뉴
+		// 3. 전술 정보 조회
+		// 3-2 내가 동원된 전술 목록 조회 - 필드 전술
+		// UI를 위한 코드입니다.
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +94,7 @@ public class player_myTacticsMe_field extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		//뒤로 가기 버튼
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

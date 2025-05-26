@@ -27,6 +27,9 @@ public class player_fieldTactics extends JFrame {
 	}
 
 	private void loadTacticsData() {
+		//공통 메뉴
+		//4-1. 필드 전술 목록
+		// 필드 전술 쿼리와 로드를 위한 메서드 입니다.
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
 
@@ -55,6 +58,10 @@ public class player_fieldTactics extends JFrame {
 	}
 
 	public player_fieldTactics(int idTeam, int idPlayer) {
+		//공통 메뉴
+				//4. 전술 정보 조회
+				//4-1. 필드 전술 목록
+				//우리팀의 전체 필드 전술 목록, 전술의 상세 정보를 조회한다.
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 
@@ -112,6 +119,7 @@ public class player_fieldTactics extends JFrame {
 			setOpaque(true);
 		}
 
+		//줄바꿈용 렌더러
 		public Component getTableCellRendererComponent(JTable table, Object value,
 													   boolean isSelected, boolean hasFocus,
 													   int row, int column) {

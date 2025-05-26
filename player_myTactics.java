@@ -31,6 +31,7 @@ public class player_myTactics extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 코드
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -48,6 +49,9 @@ public class player_myTactics extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTactics(int idTeam, int idPlayer) {
+		//선수 메뉴
+		//3. 전술 정보 조회
+		//메뉴 선택을 위한 창입니다.
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +68,7 @@ public class player_myTactics extends JFrame {
 		lblNewLabel.setBounds(6, 30, 438, 36);
 		contentPane.add(lblNewLabel);
 		
+		//뒤로 가기, 선택 시 선수 메뉴 선택창으로 이동합니다.
 		btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -79,6 +84,7 @@ public class player_myTactics extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
+		//3-1 우리 팀의 주요 전술 정보 조회으로 이동
 		btnNewButton_1 = new JButton("우리 팀의 주요 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,6 +93,7 @@ public class player_myTactics extends JFrame {
 		});
 		panel.add(btnNewButton_1);
 		
+		//3-2 내가 동원된 전술 목록 조회로 이동
 		btnNewButton_2 = new JButton("내가 동원된 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -14,7 +14,7 @@ public class player_myTacticsTeam_field extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private int idTeam, idPlayer;
-
+	//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -52,6 +52,12 @@ public class player_myTacticsTeam_field extends JFrame {
 	}
 
 	public player_myTacticsTeam_field(int idTeam, int idPlayer) {
+		//선수 메뉴
+		//3. 전술 정보 조회
+		//3-1 우리 팀의 주요 전술 정보 조회 - 필드 전술
+		// 우리 팀이 자주 사용한 필드 전술을 빈도순으로 상위 3개까지 조회한다.
+		
+		
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 
@@ -94,6 +100,8 @@ public class player_myTacticsTeam_field extends JFrame {
 	}
 
 	public void loadSetpieceTactics(int idPlayer, JTable table) {
+		//3-1 우리 팀의 주요 전술 정보 조회 - 필드 전술
+		//쿼리와 데이터 로드를 위한 메서드
 		String query = "SELECT F.idTactic AS fieldTacticId, F.tacticName AS fieldTacticName, F.tacticFormation AS fieldFormation, F.explainTactics AS fieldDescription,\r\n COUNT(*) AS useCount\r\n"
 				+ "FROM DB2025_view_GameSummary G\r\n"
 				+ "LEFT JOIN DB2025_Tactics F ON G.idField = F.idTactic AND F.tacticType = 'Field' AND F.idTeam = ?\r\n"

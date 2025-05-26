@@ -31,7 +31,7 @@ public class DKicker extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+		// 프로그램의 가장 처음 창 입니다.
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -48,6 +48,8 @@ public class DKicker extends JFrame {
 	 * Create the frame.
 	 */
 	public DKicker() {
+		
+		//창 UI 관련 설정입니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,8 +70,7 @@ public class DKicker extends JFrame {
 			// 이미지 리소스 경로 (src/DB2025Team09/ball.png 기준)
 			URL imageUrl = getClass().getClassLoader().getResource("DB2025Team09/ball.png");
 
-			// 경로가 유효한지 출력
-			//System.out.println("이미지 경로: " + imageUrl);
+			
 
 			if (imageUrl == null) {
 				throw new Exception("⚠ 이미지 리소스를 찾을 수 없습니다.");
@@ -101,7 +102,7 @@ public class DKicker extends JFrame {
 			}
 
 
-			// 콤보박스 생성
+			// 콤보박스 생성, DB2025_Team을 쿼리하여 존재하는 팀 목록이 표시됩니다. 여기서 이용자의 팀을 선택합니다.
 			JComboBox<String> comboBox = new JComboBox<>();
 			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 
@@ -129,7 +130,7 @@ public class DKicker extends JFrame {
 			contentPane.add(comboBox);
 
 
-		// btnNewButton 선언 및 초기화
+		// btnNewButton 선언 및 초기화, 클릭 시 선수 고르기 창으로 이동합니다.
 		JButton btnNewButton = new JButton("선수");
 		btnNewButton.setBounds(96, 207, 117, 29);
 		contentPane.add(btnNewButton);
@@ -138,14 +139,14 @@ public class DKicker extends JFrame {
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedTeam = (String) comboBox.getSelectedItem();  // 선택된 팀명 가져오기
 		        int teamId = Integer.parseInt(selectedTeam.replaceAll("[^0-9]", ""));
-		        new DKicker_player_choose(teamId).setVisible(true);
+		        new DKicker_player_choose(teamId).setVisible(true); // 선수 고르기 창으로 이동
 		        
 		        dispose();
 		    }
 		});
 
 
-		
+		// 클릭 시 스태프 메뉴로 이동합니다.
 		JButton btnNewButton_1 = new JButton("스태프");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -157,6 +158,7 @@ public class DKicker extends JFrame {
 		btnNewButton_1.setBounds(232, 207, 117, 29);
 		contentPane.add(btnNewButton_1);
 		
+		//클릭 시 팀 추가 창으로 이동합니다.
 		JButton btnNewButton_2 = new JButton("팀 추가");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -169,7 +171,7 @@ public class DKicker extends JFrame {
 		contentPane.add(btnNewButton_2);
 
 		
-		
+		// 라벨 설정
 		JLabel lblNewLabel_1 = new JLabel("팀을 선택하세요");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(96, 140, 253, 16);

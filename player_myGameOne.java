@@ -20,6 +20,7 @@ public class player_myGameOne extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -37,7 +38,9 @@ public class player_myGameOne extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myGameOne(int idTeam, int idPlayer, int idGame) {
-		//System.out.println(idGame);
+		//선수 메뉴
+		//2. 경기 기옥 조회
+		//UI 설정입니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -45,7 +48,7 @@ public class player_myGameOne extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		//뒤로 가기 버튼, 선택시 선수 메뉴 창으로 이동합니다.
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -60,6 +63,7 @@ public class player_myGameOne extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
+		//클릭 시, 경기 상세 기록 창으로 이동합니다
 		JButton btnNewButton_1 = new JButton("경기 상세 기록");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -68,6 +72,7 @@ public class player_myGameOne extends JFrame {
 		});
 		panel.add(btnNewButton_1);
 		
+		//클릭 시, 경기에 사용된 전술 정보 창으로 이동합니다.
 		JButton btnNewButton_2 = new JButton("경기에 사용된 전술 정보");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

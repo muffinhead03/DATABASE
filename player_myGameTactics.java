@@ -15,6 +15,8 @@ public class player_myGameTactics extends JFrame {
 	private JLabel lblGameId, lblDate, lblOpponent, lblGoalFor, lblGoalAgainst;
 	private JLabel lblFieldName, lblFieldFormation, lblSetName, lblSetFormation;
 	private int idTeam, idPlayer, idGame;
+	
+	//테스트용 메인 함수입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -27,6 +29,12 @@ public class player_myGameTactics extends JFrame {
 	}
 
 	public player_myGameTactics(int idTeam, int idPlayer, int idGame) {
+		
+		//선수 메뉴
+		//2. 경기 기록 조회
+		//2-2 내가 출전한 경기의 상세 기록 조회
+		//선택한 경기의 세부 통계를 조회합니다.
+		
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		this.idGame = idGame;
@@ -83,6 +91,8 @@ public class player_myGameTactics extends JFrame {
 	}
 
 	private void loadTacticInfo() {
+		
+		//2-2 내가 출전한 경기의 상세 기록 조회
 		String sql = """
 			SELECT GIA.idGame, GIA.dateGame, T.nation AS opponentTeamName,
 			       GIA.goalFor, GIA.goalAgainst,

@@ -20,6 +20,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,6 +35,9 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	}
 
 	private void loadSetpieceTactics() {
+		// 3-1 우리 팀의 주요 전술 정보 조회
+		// 우리 팀이 자주 사용한 세트피스 전술을 빈도 순으로 상위 3개까지 조회합니다.
+		// 쿼리와 정보 로드를 위한 메서드 입니다.
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 데이터 제거
 
@@ -64,6 +68,9 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTacticsTeam_setpiece(int idTeam, int idPlayer) {
+		//선수 메뉴
+		//3. 전술 정보 조회
+		//3-1 우리 팀의 주요 전술 정보 조회 - 세트피스 전술
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 
@@ -107,7 +114,7 @@ public class player_myTacticsTeam_setpiece extends JFrame {
 	    loadSetpieceTactics();
 
 	}
-	
+	//UI를 위한 코드입니다. 줄바꿈용 코드
 	static class TextAreaRenderer extends JTextArea implements TableCellRenderer {
         public TextAreaRenderer() {
             setLineWrap(true);

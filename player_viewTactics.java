@@ -24,6 +24,7 @@ public class player_viewTactics extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수 입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,7 +42,9 @@ public class player_viewTactics extends JFrame {
 	 * Create the frame.
 	 */
 	public player_viewTactics(int idTeam, int idPlayer) {
-		
+		//공통 메뉴
+		//전술 정보 조회
+		//세트 피스 전술과 필드 전술을 선택할 수 있습니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

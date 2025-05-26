@@ -15,7 +15,7 @@ public class player_viewGames extends JFrame {
     private JTable table;
     private JComboBox<String> comboBox;
     private int idTeam, idPlayer;
-
+    // 테스트용 메인 함수 입니다.
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -28,6 +28,10 @@ public class player_viewGames extends JFrame {
     }
 
     public player_viewGames(int idTeam, int idPlayer) {
+    	// 공통 메뉴
+    	// 3. 경기 기록 조회
+    	// 경기 결과 목록을 입력받은 조건에 따라 조회합니다.
+    	
         this.idTeam = idTeam;
         this.idPlayer = idPlayer;
 
@@ -77,6 +81,9 @@ public class player_viewGames extends JFrame {
     }
 
     private void loadAllGames() {
+    	//전체 경기 조회를 선택 시
+    	//경기 데이터를 불러오는 메서드
+    	//전체 경기 결과 목록을 조회한다.
         String sql = "SELECT gr.idGame, gr.dateGame, " +
                 "t1.nation AS team1Name, t2.nation AS team2Name, " +
                 "gs1.goalOurTeam AS team1Goal, gs2.goalOurTeam AS team2Goal, " +
@@ -116,6 +123,9 @@ public class player_viewGames extends JFrame {
     }
 
     private void loadTeamGames() {
+    	//우리팀 경기 조회를 선택시
+    	//우리팀  경기 결과만을 불러오는 메서드
+    	//3-1 우리 팀 경기 결과 목록
         String sql = "SELECT gr.idGame, gr.dateGame, " +
                 "t2.nation AS opponentTeamName, " +
                 "gs.goalOurTeam AS ourScore, " +
