@@ -45,7 +45,7 @@ public class viewTactics_statistics_Achieved extends JFrame {
 	public viewTactics_statistics_Achieved(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 800, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -65,11 +65,11 @@ public class viewTactics_statistics_Achieved extends JFrame {
 		JLabel lblNewLabel = new JLabel("전술별 성과 요약");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(6, 30, 438, 29);
+		lblNewLabel.setBounds(6, 30, 788, 29);
 		contentPane.add(lblNewLabel);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 71, 438, 195);
+		scrollPane.setBounds(6, 71, 788, 195);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();

@@ -129,10 +129,13 @@ public class staff_setpieceTactics extends JFrame {
 	private void loadTacticsData() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
-		String query = "SELECT idTactic, tacticName, tacticFormation, explainTactics, ableToTactic FROM db2025_tactics WHERE tacticType = 'Setpiece'";
-		try (Connection conn = DBUtil.getConnection();
-		     Statement stmt = conn.createStatement();
-		     ResultSet rs = stmt.executeQuery(query)) {
+		String query = "SELECT idTactic, tacticName, tacticFormation, explainTactics, ableToTactic FROM db2025_tactics WHERE tacticType = 'Setpiece' AND idTeam = ?";
+
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query)) { // ✅ PreparedStatement 사용
+
+	        pstmt.setInt(1, idTeam);
+	        ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int able = rs.getInt("ableToTactic");
 				model.addRow(new Object[] {

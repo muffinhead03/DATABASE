@@ -105,17 +105,17 @@ public class viewTactics_statistics_List extends JFrame {
     }
 
     private void loadTacticUsagesByTeam(int idTeam) {
-        loadTacticUsages("WHERE Tac.idTeam = ? OR Tac.idTeam = ?", idTeam, null);
+        loadTacticUsages("WHERE Tac.idTeam = ? AND Tac.idTeam = ?", idTeam, null);
     }
 
     private void loadTacticUsagesByName(String tacticName) {
-        loadTacticUsages("WHERE Tac.tacticName = ? OR Tac.tacticName = ?", 0, tacticName);
+        loadTacticUsages("WHERE Tac.idTeam = ? AND Tac.tacticName = ?", idTeam, tacticName);
     }
 
     private void loadTacticUsages(String whereClause, int idTeam, String tacticName) {
         String[] columnNames = {
             "전술 ID", "전술 이름", "포메이션", "경기 ID", "경기 날짜",
-            "상대 팀", "득점", "실점", "전술 위치"
+            "상대 팀", "득점", "실점", "전술 속성"
         };
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -140,15 +140,15 @@ public class viewTactics_statistics_List extends JFrame {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             if (tacticName != null) {
-                pstmt.setString(1, tacticName);
+            	pstmt.setInt(1, idTeam);
                 pstmt.setString(2, tacticName);
-                pstmt.setString(3, tacticName);
+                pstmt.setInt(3, idTeam);
                 pstmt.setString(4, tacticName);
             } else {
-                pstmt.setInt(1, idTeam);
-                pstmt.setInt(2, idTeam);
-                pstmt.setInt(3, idTeam);
-                pstmt.setInt(4, idTeam);
+            	   pstmt.setInt(1, idTeam);
+                   pstmt.setInt(2, idTeam);
+                   pstmt.setInt(3, idTeam);
+                   pstmt.setInt(4, idTeam);
             }
 
             ResultSet rs = pstmt.executeQuery();

@@ -128,7 +128,7 @@ public class staff_gameWithOtherTeams extends JFrame {
 		contentPane.add(lblNewLabel_1_1);
 		
 		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"승리", "패배", "최신 경기순"}));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"승리", "패배","무승부", "최신 경기순"}));
 		comboBox_1.setBounds(313, 74, 131, 27);
 		contentPane.add(comboBox_1);
 		
@@ -174,7 +174,10 @@ public class staff_gameWithOtherTeams extends JFrame {
 	        sql += " AND goalFor > goalAgainst";
 	    } else if ("패배".equals(sortOption)) {
 	        sql += " AND goalFor < goalAgainst";
-	    } else if ("최신 경기순".equals(sortOption)) {
+	        }else if ("무승부".equals(sortOption)) {
+	        	sql += " AND goalFor = goalAgainst";
+	        }
+	    else if ("최신 경기순".equals(sortOption)) {
 	        sql += " ORDER BY dateGame DESC";
 	    } 
 	    try (Connection conn = DBUtil.getConnection();
