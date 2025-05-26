@@ -14,11 +14,12 @@ public class DKicker_Create_Team extends JFrame {
     private JTextField tfFIFARank;
     private JTextField tfCurrName;
     private JTextField tfCurrPoints;
+    private JTextField tfCRank;
 
     public DKicker_Create_Team() {
         setTitle("Create New Team");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 450, 350);
         contentPane = new JPanel();
         contentPane.setLayout(null);
         setContentPane(contentPane);
@@ -54,22 +55,31 @@ public class DKicker_Create_Team extends JFrame {
         tfCurrName = new JTextField();
         tfCurrName.setBounds(140, 140, 180, 25);
         contentPane.add(tfCurrName);
+        
+        JLabel lblCRank = new JLabel("현재 대회 순위:");
+        lblCRank.setBounds(30, 180, 100, 25);
+        contentPane.add(lblCRank);
 
-        JLabel lblPoints = new JLabel("승점:");
-        lblPoints.setBounds(30, 180, 80, 25);
+        tfCRank = new JTextField();
+        tfCRank.setBounds(140, 180, 180, 25);
+        contentPane.add(tfCRank);
+
+        JLabel lblPoints = new JLabel("현재 대회 승점:");
+        lblPoints.setBounds(30, 220, 100, 25);
         contentPane.add(lblPoints);
 
         tfCurrPoints = new JTextField();
-        tfCurrPoints.setBounds(120, 180, 200, 25);
+        tfCurrPoints.setBounds(140, 220, 200, 25);
         contentPane.add(tfCurrPoints);
 
         JButton btnInsert = new JButton("생성");
-        btnInsert.setBounds(150, 220, 120, 30);
+        btnInsert.setBounds(150, 260, 120, 30);
         contentPane.add(btnInsert);
 
         btnInsert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 insertTeam();
+                new DKicker().setVisible(true); 
             }
         });
         
@@ -107,8 +117,9 @@ public class DKicker_Create_Team extends JFrame {
         int fifaRank = Integer.parseInt(tfFIFARank.getText());
         String currName = tfCurrName.getText();
         int currPoints = Integer.parseInt(tfCurrPoints.getText());
+        int currRank = Integer.parseInt(tfCRank.getText());
 
-        String query = "INSERT INTO DB2025_Team (idTeam, nation, FIFArank, currName, currPoints) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO DB2025_Team (idTeam, nation, FIFArank, currName, currPoints, currRank) VALUES (?, ?, ?, ?, ?,?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -118,6 +129,7 @@ public class DKicker_Create_Team extends JFrame {
             pstmt.setInt(3, fifaRank);
             pstmt.setString(4, currName);
             pstmt.setInt(5, currPoints);
+            pstmt.setInt(6, currRank);
 
             int result = pstmt.executeUpdate();
             if (result > 0) {
