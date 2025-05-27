@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
+//선수 스쿼드 조회 및 관리하는 화면입니다.
 public class staff_playerManage_squad extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -27,6 +28,7 @@ public class staff_playerManage_squad extends JFrame {
         });
     }
 
+    //팀 ID를 받아 UI를 초기화하는 생성자입니다.
     public staff_playerManage_squad(int idTeam) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -35,6 +37,7 @@ public class staff_playerManage_squad extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
+        //경기 ID를 선택할 수 있는 콤보박스입니다. 
         JLabel lblGameId = new JLabel("\uACBD\uAE30 ID");
         lblGameId.setHorizontalAlignment(SwingConstants.CENTER);
         lblGameId.setBounds(320, 6, 60, 24);
@@ -58,12 +61,14 @@ public class staff_playerManage_squad extends JFrame {
         });
         contentPane.add(btnBack);
 
+        //타이틀 라벨입니다. 
         JLabel lblTitle = new JLabel("\uC120\uC218 \uC2A4\uCFE0\uC5B4\uB4DC \uC870\uD68C \uBC0F \uAD00\uB9AC");
         lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setBounds(6, 32, 438, 29);
         contentPane.add(lblTitle);
 
+        //스쿼드 정보 테이블입니다.
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(6, 73, 438, 104);
         contentPane.add(scrollPane);
@@ -72,6 +77,7 @@ public class staff_playerManage_squad extends JFrame {
         table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "\uCD9C\uC804 \uC2DC\uAC04" }));
         scrollPane.setViewportView(table);
 
+        //선수 정보 입력 패널(조회용 필드)입니다.
         JPanel panel = new JPanel();
         panel.setBounds(6, 178, 438, 52);
         contentPane.add(panel);
@@ -93,11 +99,13 @@ public class staff_playerManage_squad extends JFrame {
         textField_3 = new JTextField();
         panel.add(textField_3);
 
+        //하단 버튼 패널입니다. 
         JPanel panel_1 = new JPanel();
         panel_1.setBounds(6, 238, 438, 28);
         contentPane.add(panel_1);
         panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 
+        //조회버튼입니다.
         JButton btnQuery = new JButton("\uC870\uD68C");
         btnQuery.addActionListener(e -> {
             int selectedGameId = (int) gameIdComboBox.getSelectedItem();
@@ -106,6 +114,7 @@ public class staff_playerManage_squad extends JFrame {
         });
         panel_1.add(btnQuery);
 
+        //수정 버튼입니다.
         JButton btnUpdate = new JButton("\uC218\uC815");
         btnUpdate.addActionListener(e -> {
             try {
@@ -128,6 +137,7 @@ public class staff_playerManage_squad extends JFrame {
         });
         panel_1.add(btnUpdate);
 
+        //삭제버튼입니다. 
         JButton btnDelete = new JButton("\uC0AD\uC81C");
         btnDelete.addActionListener(e -> {
             try {
@@ -148,6 +158,7 @@ public class staff_playerManage_squad extends JFrame {
         });
         panel_1.add(btnDelete);
 
+        //추가 버튼입니다. 
         JButton btnAdd = new JButton("\uC2DC\uC791\uC0C1 \uCD94\uAC00 \uC885\uB8CC");
         btnAdd.addActionListener(e -> {
             Integer idGame = (Integer) gameIdComboBox.getSelectedItem();
@@ -159,7 +170,7 @@ public class staff_playerManage_squad extends JFrame {
             }
 
             try (Connection conn = DBUtil.getConnection()) {
-                // 1. 이미 등록된 선수인지 확인
+                // 1. 이미 등록된 선수인지 확인합니니다.
                 String checkSql = "SELECT * FROM DB2025_Squad WHERE idGame = ? AND idPlayer = ?";
                 PreparedStatement checkStmt = conn.prepareStatement(checkSql);
                 checkStmt.setInt(1, idGame);
@@ -175,12 +186,12 @@ public class staff_playerManage_squad extends JFrame {
                 rs.close();
                 checkStmt.close();
 
-                // 2. 출전 시간 입력 받기
+                // 2. 출전 시간 입력 받습니다.
                 String inputTime = JOptionPane.showInputDialog("출전 시간을 입력하세요 (숫자):");
                 if (inputTime == null || inputTime.trim().isEmpty()) return;
                 int playTime = Integer.parseInt(inputTime.trim());
 
-                // 3. INSERT 실행
+                // 3. INSERT 실행합니다.
                 String insertSql = "INSERT INTO DB2025_Squad (idGame, idPlayer, playTime) VALUES (?, ?, ?)";
                 PreparedStatement insertStmt = conn.prepareStatement(insertSql);
                 insertStmt.setInt(1, idGame);
@@ -206,11 +217,13 @@ public class staff_playerManage_squad extends JFrame {
         });
 panel_1.add(btnAdd);
 
+        //초기 데이터 로드합니다. 
         loadSquadData();
         loadPlayerIdsToComboBox(comboBox, idTeam);
         loadGameIdsToComboBox(gameIdComboBox);
     }
 
+    //콤보박스에 모든 경기 ID를 로드합니다.
     private void loadGameIdsToComboBox(JComboBox<Integer> comboBox) {
         String query = "SELECT DISTINCT idGame FROM DB2025_Squad ORDER BY idGame";
         try (Connection conn = DBUtil.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
@@ -222,6 +235,7 @@ panel_1.add(btnAdd);
         }
     }
 
+    //콤보박스에 현재 팀의 선수 ID를 로드합니다. 
     private void loadPlayerIdsToComboBox(JComboBox<Integer> comboBox, int idTeam) {
         comboBox.removeAllItems();  // 기존 항목 초기화
 
@@ -243,6 +257,7 @@ panel_1.add(btnAdd);
     }
 
 
+    //전체 스쿼드 목록을 로딩합니다. 
     private void loadSquadData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -260,6 +275,7 @@ panel_1.add(btnAdd);
             e.printStackTrace();
         }
     }
+    //특정 경기의 스쿼드 목록을 로딩합니다. 
     private void loadSquadData(int idGame) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -288,7 +304,7 @@ panel_1.add(btnAdd);
             e.printStackTrace();
         }
     }
-
+    //특정 경기의 스쿼드목록 오버로딩, gameID랑 playerId를 받고 수행한다. 
     private void loadSquadData(int gameId, int playerId) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
