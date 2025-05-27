@@ -20,24 +20,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import java.sql.*;
 
+//경기 통계 생성 및 수정용 클래스
 public class staff_gameStatisticsCreate extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_6;
-	private JTextField textField_8;
-	private int idTeam;
-	private JComboBox comboBox;
-	private JComboBox fieldbox;
-	private JComboBox setpiecebox;
+	
+	//입력 필드 : 각각 통계 항목을 위한 JTextField입니다
+	private JTextField textField_1;//정확한 패스 수
+	private JTextField textField_2;//전체 슛팅 수
+	private JTextField textField_3;//유효슛팅 수
+	private JTextField textField_4;//공격지역 패스 수
+	private JTextField textField_6;//수비 - 가로채기입니다.
+	private JTextField textField_8;//수비 - 차단입니다.
 
-	/**
-	 * Launch the application.
-	 */
+	private int idTeam;//현재 로그인한 팀의 ID입니다.
+	private JComboBox comboBox;//경기 ID 선택 콤보박스입니다.
+	private JComboBox fieldbox;//필드 전술 선택 콤보박스입니다. 
+	private JComboBox setpiecebox;//세트피스 전술 선택 콤보박스입니다.
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,16 +52,15 @@ public class staff_gameStatisticsCreate extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	//생성자 : 팀 ID를 받아 화면 구성합니다. 
 	public staff_gameStatisticsCreate(int idTeam) {
 		this.idTeam = idTeam;
+
+		//기본 프레임을 설정합니다.
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -72,82 +72,76 @@ public class staff_gameStatisticsCreate extends JFrame {
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
-		
+
+		//타이틀입니다. 
 		JLabel lblNewLabel = new JLabel("경기 통계 데이터 생성");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 34, 438, 29);
 		contentPane.add(lblNewLabel);
-		
+
+		//전술 및 통계 입력 UI 패널입니다. 
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 111, 438, 123);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
-		
+
+		//필드 전술 선택할 수 있습니다. 
 		JLabel lblNewLabel_11 = new JLabel("필드 전술");
 		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_11);
 		
 		fieldbox = new JComboBox();
 		panel.add(fieldbox);
-		//fieldbox.setColumns(10);
-		
+
+
+		//세트피스 전술 선택할수 있는 부분입니다.
 		JLabel lblNewLabel_12 = new JLabel("세트피스 전술");
 		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_12);
-		
 		setpiecebox = new JComboBox();
 		panel.add(setpiecebox);
-		//setpiecebox.setColumns(10);
-		
+
+
+		//통계 입력 필드드
 		JLabel lblNewLabel_3 = new JLabel("전체 슛팅 수");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_3);
-		
 		textField_2 = new JTextField();
 		panel.add(textField_2);
 		textField_2.setColumns(10);
-		
 		JLabel lblNewLabel_5 = new JLabel("유효슛팅 수");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_5);
-		
 		textField_3 = new JTextField();
 		panel.add(textField_3);
 		textField_3.setColumns(10);
-		
 		JLabel lblNewLabel_7 = new JLabel("정확한 패스 수");
 		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_7);
-		
 		textField_1 = new JTextField();
 		panel.add(textField_1);
 		textField_1.setColumns(10);
-		
 		JLabel lblNewLabel_9 = new JLabel("공격지역 패스 수");
 		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_9);
-		
 		textField_4 = new JTextField();
 		panel.add(textField_4);
 		textField_4.setColumns(10);
-		
 		JLabel lblNewLabel_2 = new JLabel("수비-가로채기 수");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2);
-		
 		textField_6 = new JTextField();
 		panel.add(textField_6);
 		textField_6.setColumns(10);
-		
 		JLabel lblNewLabel_4 = new JLabel("수비-차단 수");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_4);
-		
 		textField_8 = new JTextField();
 		panel.add(textField_8);
 		textField_8.setColumns(10);
-		
+
+		//"생성/수정"버튼입니다.
 		JButton btnNewButton_1 = new JButton("생성 / 수정");
 		btnNewButton_1.setBounds(6, 237, 438, 29);
 		contentPane.add(btnNewButton_1);
@@ -158,7 +152,8 @@ public class staff_gameStatisticsCreate extends JFrame {
 			}
 		});
 
-		
+
+		//경기 ID 선택하는 영역입니다. 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(6, 75, 438, 29);
 		contentPane.add(panel_1);
@@ -170,11 +165,13 @@ public class staff_gameStatisticsCreate extends JFrame {
 		
 		comboBox = new JComboBox();
 		panel_1.add(comboBox);
-		loadGameid();
 		
-		loadTacticsFromDatabase();
+		//경기 및 전술 정보 로딩하는 영역입니다. 
+		loadGameid();//DB에서 팀의 경기 목록 로드합니다.
+		loadTacticsFromDatabase();//DB에서 팀의 전술 목록 로드합니다. 
 		
-		
+
+		//통계 보기 버튼입니다. 
 		JButton btnViewStats = new JButton("통계 보기");
 		btnViewStats.setBounds(320, 6, 117, 29);
 		contentPane.add(btnViewStats);
@@ -187,7 +184,8 @@ public class staff_gameStatisticsCreate extends JFrame {
 		});
 
 	}
-	
+
+	//팀이 참가한 경기ID 목록을 comboBox에 로드합니다.
 	public void loadGameid() {
 		try {
 		    Connection conn = DBUtil.getConnection();
@@ -210,7 +208,9 @@ public class staff_gameStatisticsCreate extends JFrame {
 		    e.printStackTrace();
 		}
 	}
+
 	
+	//DB에서 팀의 전술 정보를 불러와 콤보박스에 분류하여 추가합니다. 
 	private void loadTacticsFromDatabase() {
 		try {
 			Connection conn = DBUtil.getConnection();
@@ -238,6 +238,7 @@ public class staff_gameStatisticsCreate extends JFrame {
 		}
 	}
 
+	//전술 이름으로 전술 ID조회합니다. 
 	private int getTacticIdByName(String tacticName, String tacticType) throws SQLException {
 		Connection conn = DBUtil.getConnection();
 		String sql = "SELECT idTactic FROM DB2025_Tactics WHERE tacticName = ? AND tacticType = ? AND idTeam = ?";
@@ -257,6 +258,8 @@ public class staff_gameStatisticsCreate extends JFrame {
 		conn.close();
 		return id;
 	}
+
+	//경기 통계 DB업데이트입니다. 
 	private void insertgamestatic() {
 	    try {
 	        int idField = getTacticIdByName((String) fieldbox.getSelectedItem(), "Field");
@@ -293,6 +296,8 @@ public class staff_gameStatisticsCreate extends JFrame {
 	    }
 	}
 
+
+	//현재 선택한 경기의 통계 데이터를 조회하여 메세지박스로 출력합니다. 
 	private void showGameStatistics() {
 	    try {
 	        int idGame = (Integer) comboBox.getSelectedItem();
