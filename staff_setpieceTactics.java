@@ -6,16 +6,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
+// staff_setpieceTactics 클래스는 코치가 소속 팀의 세트피스(Setpiece) 전술을 추가, 수정, 삭제할 수 있도록 지원하는 전술 관리 화면입니다.
+ 
+
 public class staff_setpieceTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
-	private int idTeam;
+	private JTable table; // 전술 정보를 출력하는 테이블
+	private int idTeam; // 현재 로그인한 팀의 ID
 
+	// 전술 등록/수정/삭제를 위한 입력 필드 및 콤보박스
 	private JTextField txtId, txtName, txtFormation, txtExplain;
 	private JComboBox<String> comboAble;
 
+	// 단독 실행을 위한 진입점입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -27,10 +32,13 @@ public class staff_setpieceTactics extends JFrame {
 		});
 	}
 
+	//생성자에서는 화면의 구성 요소를 초기화하고, 전술 데이터를 불러옵니다.
 	public staff_setpieceTactics(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 370);
+
+		// 메인 패널 설정
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -44,16 +52,19 @@ public class staff_setpieceTactics extends JFrame {
 		});
 		contentPane.add(btnBack);
 
+		// 타이틀 라벨
 		JLabel lblTitle = new JLabel("세트피스 전술 관리");
 		lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setBounds(6, 24, 618, 29);
 		contentPane.add(lblTitle);
 
+		// 전술 정보 테이블을 포함할 스크롤 패널
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 55, 618, 140);
 		contentPane.add(scrollPane);
 
+		// 테이블 구성: 전술 ID, 이름, 포메이션, 설명, 사용 가능 여부 표시
 		table = new JTable();
 		// ableToTactic 컬럼을 테이블에 보여주고 싶으면 아래에 "사용 가능 여부" 컬럼 추가
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
@@ -87,7 +98,7 @@ public class staff_setpieceTactics extends JFrame {
 		panel_1.add(txtExplain);
 		panel_1.add(comboAble);
 
-		// 버튼 패널
+		// 버튼 패널 (신규 추가, 삭제, 수정)
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(6, 280, 618, 35);
 		contentPane.add(panel_2);
@@ -105,7 +116,7 @@ public class staff_setpieceTactics extends JFrame {
 		btnEdit.addActionListener(e -> editTactic());
 		panel_2.add(btnEdit);
 
-		// 테이블 클릭시 텍스트 필드에 값 표시
+		// 테이블 선택 시 각 필드에 자동으로 값이 채워지도록 설정
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
 				int row = table.getSelectedRow();
@@ -123,9 +134,11 @@ public class staff_setpieceTactics extends JFrame {
 			}
 		});
 
+		// 화면 진입 시 전술 데이터를 불러옵니다.
 		loadTacticsData();
 	}
 
+	//세트피스 전술 목록을 데이터베이스에서 불러와 테이블에 표시합니다.
 	private void loadTacticsData() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
@@ -151,6 +164,7 @@ public class staff_setpieceTactics extends JFrame {
 		}
 	}
 
+	//사용자가 입력한 값을 기반으로 새로운 전술을 데이터베이스에 등록합니다.
 	private void addTactic() {
 		String name = txtName.getText().trim();
 		String formation = txtFormation.getText().trim();
@@ -183,6 +197,7 @@ public class staff_setpieceTactics extends JFrame {
 		}
 	}
 
+	//사용자가 입력한 전술 ID에 해당하는 전술을 삭제합니다.
 	private void deleteTactic() {
 		String idText = txtId.getText().trim();
 		if (idText.isEmpty()) {
@@ -218,6 +233,7 @@ public class staff_setpieceTactics extends JFrame {
 		}
 	}
 
+	//기존 전술 정보를 수정합니다. 입력값 중 비어 있지 않은 항목만 업데이트됩니다.
 	private void editTactic() {
 		String idText = txtId.getText().trim();
 		if (idText.isEmpty()) {
@@ -248,6 +264,7 @@ public class staff_setpieceTactics extends JFrame {
 
 		int able = comboAble.getSelectedItem().equals("가능") ? 1 : 0;
 
+		// SQL 업데이트 문 생성
 		StringBuilder sb = new StringBuilder("UPDATE db2025_tactics SET ");
 		boolean first = true;
 		if (!name.isEmpty()) {
@@ -286,6 +303,7 @@ public class staff_setpieceTactics extends JFrame {
 		}
 	}
 
+	//해당 ID의 전술이 존재하는지 확인합니다.
 	private boolean tacticExists(int id) {
 		String query = "SELECT 1 FROM db2025_tactics WHERE idTactic = ? AND tacticType = 'Setpiece'";
 		try (Connection conn = DBUtil.getConnection();
