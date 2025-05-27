@@ -317,6 +317,7 @@ public class staff_setpieceTactics extends JFrame {
 		}
 	}
 
+	//전술 ID의 최대값을 기준으로 다음 ID를 생성합니다.
 	private int getNextTacticId() {
 		String query = "SELECT MAX(idTactic) AS maxId FROM db2025_tactics";
 		try (Connection conn = DBUtil.getConnection();
@@ -329,6 +330,7 @@ public class staff_setpieceTactics extends JFrame {
 		return 1;
 	}
 
+	//입력 필드들을 초기화합니다.
 	private void clearInputs() {
 		txtId.setText("");
 		txtName.setText("");
