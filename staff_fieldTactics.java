@@ -6,16 +6,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
+//필드 전술 관리 창 클래스입니다. 
 public class staff_fieldTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private int idTeam;
+	private int idTeam; //현재 팀ID
 
 	private JTextField txtId, txtName, txtFormation, txtExplain;
 	private JComboBox<String> comboAble;
 
+	//테스트용 메인 함수. 실제로는 이용되지 않습니다. 개발 중 단독 실행시 사용됩니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -36,6 +38,7 @@ public class staff_fieldTactics extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		
 		JButton btnBack = new JButton("Back");
 		btnBack.setBounds(6, 6, 117, 29);
 		btnBack.addActionListener(e -> {
@@ -44,16 +47,19 @@ public class staff_fieldTactics extends JFrame {
 		});
 		contentPane.add(btnBack);
 
+		//타이틀 라벨입니다.
 		JLabel lblTitle = new JLabel("필드 전술 관리");
 		lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setBounds(6, 24, 618, 29);
 		contentPane.add(lblTitle);
 
+		//테이블 표시 패널입니다. 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 55, 618, 140);
 		contentPane.add(scrollPane);
 
+		//테이블을 구성한 부분이다. 
 		table = new JTable();
 		// ableToTactic 컬럼을 테이블에 보여주고 싶으면 아래에 "사용 가능 여부" 컬럼 추가
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
@@ -61,20 +67,20 @@ public class staff_fieldTactics extends JFrame {
 		}));
 		scrollPane.setViewportView(table);
 
-		// 입력 패널 (라벨 + 필드)
+		// 전술 정보를 입력받는 UI 영역을 구성하는 코드입니다.
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(6, 205, 618, 70);
 		contentPane.add(panel_1);
 		panel_1.setLayout(new GridLayout(2, 5, 10, 5));
 
-		// 1행 - 라벨
+		// 전술 추가/수정 시 필요한 데이터를 입력받는 5개의 입력 필드를 구성하는 패널입니다.
 		panel_1.add(new JLabel("전술 ID", SwingConstants.CENTER));
 		panel_1.add(new JLabel("전술 이름", SwingConstants.CENTER));
 		panel_1.add(new JLabel("포메이션", SwingConstants.CENTER));
 		panel_1.add(new JLabel("설명", SwingConstants.CENTER));
 		panel_1.add(new JLabel("사용 가능 여부", SwingConstants.CENTER));
 
-		// 2행 - 입력필드
+		// 위에서 순서대로 전술ID, 전술 이름, 포메이션, 전술 설명, 사용가능 여부를 사용자가 입력하고 설정하는 부분이다. 
 		txtId = new JTextField();
 		txtName = new JTextField();
 		txtFormation = new JTextField();
@@ -87,25 +93,28 @@ public class staff_fieldTactics extends JFrame {
 		panel_1.add(txtExplain);
 		panel_1.add(comboAble);
 
-		// 버튼 패널
+		// 기능 버튼을 배치하는 하단 패널입니다.
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(6, 280, 618, 35);
 		contentPane.add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 3, 10, 0));
 
+		//신규 전술 추가 버튼입니다.
 		JButton btnAdd = new JButton("신규 추가");
 		btnAdd.addActionListener(e -> addTactic());
 		panel_2.add(btnAdd);
 
+		//전술을 삭제하는 버튼입니다. 
 		JButton btnDelete = new JButton("삭제");
 		btnDelete.addActionListener(e -> deleteTactic());
 		panel_2.add(btnDelete);
 
+		//전술 수정하는 버튼입니다. 
 		JButton btnEdit = new JButton("수정");
 		btnEdit.addActionListener(e -> editTactic());
 		panel_2.add(btnEdit);
 
-		// 테이블 클릭시 텍스트 필드에 값 표시
+		// 테이블 클릭시 텍스트 필드에 값 표시, 선택한 행의 값이 입력 필드에 자동 입력되는 것입니다. 
 		table.getSelectionModel().addListSelectionListener(e -> {
 			if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
 				int row = table.getSelectedRow();
@@ -113,7 +122,7 @@ public class staff_fieldTactics extends JFrame {
 				txtName.setText(table.getValueAt(row, 1).toString());
 				txtFormation.setText(table.getValueAt(row, 2).toString());
 				txtExplain.setText(table.getValueAt(row, 3).toString());
-				// 사용 가능 여부는 테이블 4번째 컬럼에 "가능"/"불가능" 텍스트로 표현
+				// 사용 가능 여부는 테이블 4번째 컬럼에 "가능"/"불가능" 텍스트로 표현되며, 문자열로 비교하여 콤보박스를 선택 설정한다. 
 				String ableText = table.getValueAt(row, 4).toString();
 				if (ableText.equals("1") || ableText.equals("가능")) {
 					comboAble.setSelectedItem("가능");
@@ -122,13 +131,14 @@ public class staff_fieldTactics extends JFrame {
 				}
 			}
 		});
-
+		//프로그램 시작 시 전술 데이터 로드한다.
 		loadTacticsData();
 	}
 
+	//DB에서 필드 전술 데이터를 불러와 테이블에 출력합니다.
 	private void loadTacticsData() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
+		model.setRowCount(0);//기존 행을 초기화합니다.
 		String query = "SELECT idTactic, tacticName, tacticFormation, explainTactics, ableToTactic FROM db2025_tactics WHERE tacticType = 'Field' AND idTeam = ?";
 
 	    try (Connection conn = DBUtil.getConnection();
@@ -151,6 +161,7 @@ public class staff_fieldTactics extends JFrame {
 		}
 	}
 
+	//신규 전술을 추가합니다.
 	private void addTactic() {
 		String name = txtName.getText().trim();
 		String formation = txtFormation.getText().trim();
@@ -164,8 +175,8 @@ public class staff_fieldTactics extends JFrame {
 
 
 		int able = comboAble.getSelectedItem().equals("가능") ? 1 : 0;
-
-		int newId = getNextTacticId();
+		int newId = getNextTacticId();//ID 생성합니다.
+		
 		String insertQuery = "INSERT INTO db2025_tactics (idTactic, tacticName, tacticFormation, explainTactics, tacticType, idTeam, ableToTactic) VALUES (?, ?, ?, ?, 'Field', ?, ?)";
 		try (Connection conn = DBUtil.getConnection();
 		     PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
@@ -185,6 +196,7 @@ public class staff_fieldTactics extends JFrame {
 		}
 	}
 
+	//전술을 삭제합니다.
 	private void deleteTactic() {
 		String idText = txtId.getText().trim();
 		if (idText.isEmpty()) {
@@ -220,6 +232,7 @@ public class staff_fieldTactics extends JFrame {
 		}
 	}
 
+	//전술 정보를 수정합니다다
 	private void editTactic() {
 	    String idText = txtId.getText().trim();
 	    if (idText.isEmpty()) {
@@ -245,12 +258,13 @@ public class staff_fieldTactics extends JFrame {
 	    String explain = txtExplain.getText().trim();
 	    int able = comboAble.getSelectedItem().equals("가능") ? 1 : 0;
 
-	    // 아무 항목도 입력되지 않았는지 확인 (가능 여부는 항상 포함되므로 제외)
+	    // 아무 항목도 입력되지 않았는지 확인합니다. (가능 여부는 항상 포함되므로 제외)
 	    if (name.isEmpty() && formation.isEmpty() && explain.isEmpty()) {
 	        int confirm = JOptionPane.showConfirmDialog(this, "사용 가능 여부만 변경하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
 	        if (confirm != JOptionPane.YES_OPTION) return;
 	    }
 
+		//SQL 업데이트 쿼리 구성합니다.
 	    StringBuilder sb = new StringBuilder("UPDATE db2025_tactics SET ");
 	    boolean first = true;
 	    if (!name.isEmpty()) {
@@ -289,7 +303,7 @@ public class staff_fieldTactics extends JFrame {
 	        JOptionPane.showMessageDialog(this, "수정 중 오류");
 	    }
 	}
-
+	//해당 전술 ID가 존재하는지 확인합니다.
 	private boolean tacticExists(int id) {
 		String query = "SELECT 1 FROM db2025_tactics WHERE idTactic = ? AND tacticType = 'Field'";
 		try (Connection conn = DBUtil.getConnection();
@@ -303,6 +317,7 @@ public class staff_fieldTactics extends JFrame {
 		}
 	}
 
+	// 가장 큰 전술 ID를 기준으로 다음 ID 생성합니다. 
 	private int getNextTacticId() {
 		String query = "SELECT MAX(idTactic) AS maxId FROM db2025_tactics";
 		try (Connection conn = DBUtil.getConnection();
@@ -315,6 +330,7 @@ public class staff_fieldTactics extends JFrame {
 		return 1;
 	}
 
+	//입력 필드 초기화합니다. 
 	private void clearInputs() {
 		txtId.setText("");
 		txtName.setText("");
