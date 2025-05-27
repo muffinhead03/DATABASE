@@ -13,13 +13,13 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-//선수 검색 타입 선택 화면입니다. 
+//staff_playerSearchTypes 클래스는 코치가 선수 검색을 다양한 조건(포지션, 출전 가능 여부, 실적)으로 수행할 수 있도록 검색 유형을 선택하는 화면을 구성한 클래스입니다.
 public class staff_playerSearchTypes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	//실행 진입점입니다. 
+	//프로그램 단독 실행 시 진입점입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -33,7 +33,7 @@ public class staff_playerSearchTypes extends JFrame {
 		});
 	}
 
-	//생성자로, 팀 ID를 받아 검색 메뉴 화면을 구성합니다. 
+	//생성자에서는 팀 ID를 인자로 받아 해당 팀의 코치가 사용할 선수 검색 유형 선택 화면을 구성합니다.
 	public staff_playerSearchTypes(int idTeam) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
