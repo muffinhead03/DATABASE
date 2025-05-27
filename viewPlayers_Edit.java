@@ -163,7 +163,64 @@ public class viewPlayers_Edit extends JFrame {
 		
 		JButton btnNewButton_1 = new JButton("저장");
 		panel_1.add(btnNewButton_1);
-		
+		btnNewButton_1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String selected = (String) comboBox.getSelectedItem();
+		        if (selected == null || selected.isEmpty()) {
+		            javax.swing.JOptionPane.showMessageDialog(null, "선수를 선택해주세요.");
+		            return;
+		        }
+
+		        int playerId = Integer.parseInt(selected);
+		        String name = textField_3.getText();
+		        String position = textField_2.getText();
+		        String birthday = textField_4.getText();
+		        String action = textField_5.getText();
+		        String performanceStr = textField.getText();
+		        int ableToPlay = tglbtnNewToggleButton.isSelected() ? 0 : 1;
+
+		        // 입력 유효성 검사
+		        if (name.isEmpty() || position.isEmpty() || birthday.isEmpty() || action.isEmpty() || performanceStr.isEmpty()) {
+		            javax.swing.JOptionPane.showMessageDialog(null, "모든 필드를 입력해주세요.");
+		            return;
+		        }
+
+		        int performance = 0;
+		        try {
+		            performance = Integer.parseInt(performanceStr);
+		        } catch (NumberFormatException ex) {
+		            javax.swing.JOptionPane.showMessageDialog(null, "출전 시간은 숫자로 입력해주세요.");
+		            return;
+		        }
+
+		        try {
+		            Connection conn = DBUtil.getConnection();
+		            String sql = "UPDATE DB2025_Player SET playerName = ?, position = ?, birthday = ?, playerAction = ?, performance = ?, ableToPlay = ? WHERE idPlayer = ?";
+		            PreparedStatement pstmt = conn.prepareStatement(sql);
+		            pstmt.setString(1, name);
+		            pstmt.setString(2, position);
+		            pstmt.setString(3, birthday);
+		            pstmt.setString(4, action);
+		            pstmt.setInt(5, performance);
+		            pstmt.setInt(6, ableToPlay);
+		            pstmt.setInt(7, playerId);
+
+		            int rows = pstmt.executeUpdate();
+		            if (rows > 0) {
+		                javax.swing.JOptionPane.showMessageDialog(null, "선수 정보가 성공적으로 업데이트되었습니다.");
+		            } else {
+		                javax.swing.JOptionPane.showMessageDialog(null, "업데이트 실패: 해당 선수 정보를 찾을 수 없습니다.");
+		            }
+
+		            pstmt.close();
+		            conn.close();
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		            javax.swing.JOptionPane.showMessageDialog(null, "업데이트 중 오류가 발생했습니다.");
+		        }
+		    }
+		});
+
 		loadPlayerid();
 	}
 	
