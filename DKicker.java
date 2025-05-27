@@ -109,12 +109,13 @@ public class DKicker extends JFrame {
 			try {
 			    Connection conn = DBUtil.getConnection();
 			    Statement stmt = conn.createStatement();
-			    ResultSet rs = stmt.executeQuery("SELECT idTeam FROM DB2025_Team");
+			    ResultSet rs = stmt.executeQuery("SELECT idTeam, nation FROM DB2025_Team");
 
 			    while (rs.next()) {
 			        int id = rs.getInt("idTeam");
+			        String nation = rs.getString("nation");
 			       
-			        model.addElement("팀"+id);
+			        model.addElement("팀 "+id+" "+nation);
 			    }
 
 			    rs.close();

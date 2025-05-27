@@ -54,7 +54,7 @@ public class player_myGame extends JFrame {
 		//선수 메뉴
 		//2. 경기 기록 조회
 		//2-1. 내가 출전한 경기 목록 조회
-		//테이블에 내가 풀전한 경기의 목록을 불러오는 메서드입니다.
+		//테이블에 내가 출전한 경기의 목록을 불러오는 메서드입니다.
 		
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0); // 기존 데이터 초기화
