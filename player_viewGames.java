@@ -144,7 +144,7 @@ public class player_viewGames extends JFrame {
             ResultSet rs = pstmt.executeQuery();
 
             DefaultTableModel model = new DefaultTableModel(
-                new String[]{"경기 ID", "경기 날짜", "상대 팀", "우리팀 득점", "우리팀 득점(중복)", "우리팀 실점"}, 0
+                new String[]{"경기 ID", "경기 날짜", "상대 팀", "득점", "실점"}, 0
             );
             table.setModel(model);
 
