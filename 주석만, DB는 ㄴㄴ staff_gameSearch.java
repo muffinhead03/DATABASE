@@ -41,9 +41,7 @@ public class staff_gameSearch extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	// 생성자입니다.
 	public staff_gameSearch() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
