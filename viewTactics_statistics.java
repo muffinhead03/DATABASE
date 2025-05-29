@@ -25,7 +25,7 @@ public class viewTactics_statistics extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewTactics_statistics frame = new viewTactics_statistics();
+					viewTactics_statistics frame = new viewTactics_statistics(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -91,7 +91,7 @@ public class viewPlayers extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "\uCD9C\uC804 \uC2DC\uAC04"
+				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158","액션", "실적"
 			}
 		));
 		scrollPane.setViewportView(table);
@@ -111,7 +111,7 @@ public class viewPlayers extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		comboBoxSort = new JComboBox<>();
-		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순", "가나다순", "최장 출전 시간순"}));
+		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순", "이름 가나다순","액션", "최고 실적순"}));
 		comboBoxSort.setBounds(313, 69, 131, 27);
 		contentPane.add(comboBoxSort);
 		
@@ -215,7 +215,7 @@ private void loadPlayerData() {
 	    String selectedSort = comboBoxSort.getSelectedItem().toString();
 	    String selectedTeam = comboBoxTeam.getSelectedItem().toString();
 	    
-	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, performance FROM db2025_player WHERE 1=1");
+	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, playerAction, performance FROM db2025_player WHERE 1=1");
 
 	    if (!selectedPosition.equals("전체")) {
 	        query.append(" AND position = '").append(selectedPosition).append("'");
@@ -226,14 +226,14 @@ private void loadPlayerData() {
 	    }
 
 	    // 정렬 조건
-	    if (selectedSort.equals("가나다순")) {
+	    if (selectedSort.equals("이름 가나다순")) {
 	        query.append(" ORDER BY playerName ASC");
-	    }/* else if (selectedSort.equals("최신 등록순")) {
-	        query.append(" ORDER BY idPlayer DESC");
-	    }*/ else if (selectedSort.equals("최장 출전 시간순")) {
+	    } else if (selectedSort.equals("최고 실적순")) {
 	        query.append(" ORDER BY performance DESC");
 	    } else if(selectedSort.equals("번호 순")){
 	    	query.append(" ORDER BY idPlayer ASC");	
+	    } else if(selectedSort.equals("액션")){
+	    	query.append(" ORDER BY playerAction ASC");	
 	    }
 
 	    try (Connection conn = DBUtil.getConnection();
@@ -245,6 +245,7 @@ private void loadPlayerData() {
 	                rs.getInt("idPlayer"),
 	                rs.getString("playerName"),
 	                rs.getString("position"),
+	                rs.getString("playerAction"),
 	                rs.getInt("performance")
 	            };
 	            model.addRow(row);

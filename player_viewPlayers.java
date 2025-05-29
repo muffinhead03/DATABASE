@@ -91,8 +91,9 @@ public class player_viewPlayers extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "\uCD9C\uC804 \uC2DC\uAC04"
+				"\uC120\uC218 ID", "\uC774\uB984", "\uD3EC\uC9C0\uC158", "액션","실적"
 			}
+			//테이블 열 이름
 		));
 		scrollPane.setViewportView(table);
 		
@@ -111,7 +112,7 @@ public class player_viewPlayers extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		comboBoxSort = new JComboBox<>();
-		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순","가나다순", "최장 출전 시간순"}));
+		comboBoxSort.setModel(new DefaultComboBoxModel<>(new String[] {"번호 순","이름 가나다순","액션", "최고 실적순"}));
 		comboBoxSort.setBounds(313, 69, 131, 27);
 		contentPane.add(comboBoxSort);
 		
@@ -166,8 +167,8 @@ public class player_viewPlayers extends JFrame {
 		loadMyPosition();
 	}
 	
-	private void loadPlayerData() {
-		// 1. 선수 정보 조회
+private void loadPlayerData() {
+		
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    model.setRowCount(0);
 
@@ -176,30 +177,25 @@ public class player_viewPlayers extends JFrame {
 	    String selectedSort = comboBoxSort.getSelectedItem().toString();
 	    String selectedTeam = comboBoxTeam.getSelectedItem().toString();
 	    
-	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, performance FROM db2025_player WHERE 1=1");
-// 전체 선수 목록 조회
+	    StringBuilder query = new StringBuilder("SELECT idPlayer, playerName, position, playerAction, performance FROM db2025_player WHERE 1=1");
+
 	    if (!selectedPosition.equals("전체")) {
 	        query.append(" AND position = '").append(selectedPosition).append("'");
 	    }
 
 	    if (!selectedTeam.equals("전체")) {
 	        query.append(" AND idTeam = ").append(selectedTeam.replace("팀", ""));
-	        //특정 팀에 해당하는 선수 조회
 	    }
 
 	    // 정렬 조건
-	    if (selectedSort.equals("가나다순")) {
+	    if (selectedSort.equals("이름 가나다순")) {
 	        query.append(" ORDER BY playerName ASC");
-	        //1-2 이름 순 조회
-	        //전체 선수의 목록을 번호순으로 조회한다.
-	    } else if (selectedSort.equals("최장 출전 시간순")) {
+	    } else if (selectedSort.equals("최고 실적순")) {
 	        query.append(" ORDER BY performance DESC");
-	        //1-5 평균 최장 출전 시간 순으로 조회
-	        //전체 선수 목록을 열람하는데, 평균 출전 시간이 높은 순으로 목록 열람
 	    } else if(selectedSort.equals("번호 순")){
 	    	query.append(" ORDER BY idPlayer ASC");	
-	    	//1-1 팀의 전체 선수 목록 조회 - 번호 순
-	    	// 전체 선수의 목록을 번호순으로 조회한다.
+	    } else if(selectedSort.equals("액션")){
+	    	query.append(" ORDER BY playerAction ASC");	
 	    }
 
 	    try (Connection conn = DBUtil.getConnection();
@@ -211,6 +207,7 @@ public class player_viewPlayers extends JFrame {
 	                rs.getInt("idPlayer"),
 	                rs.getString("playerName"),
 	                rs.getString("position"),
+	                rs.getString("playerAction"),
 	                rs.getInt("performance")
 	            };
 	            model.addRow(row);
@@ -225,7 +222,7 @@ public class player_viewPlayers extends JFrame {
 		//포지션 목록에서 포지션 선택 시 포지션에 해당하는 선수들의 상세 정보 목록을 조회한다.
 		try(Connection conn = DBUtil.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT position FROM db2025_player WHERE idPlayer = ?")){
-			
+			//바인딩
 			pstmt.setInt(1, idPlayer);
 			ResultSet rs = pstmt.executeQuery();
 			
