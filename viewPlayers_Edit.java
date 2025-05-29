@@ -134,7 +134,7 @@ public class viewPlayers_Edit extends JFrame {
 		panel.add(textField_5);
 		textField_5.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("출전 시간");
+		JLabel lblNewLabel_1 = new JLabel("실적");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_1);
 		

@@ -100,7 +100,7 @@ public class player_viewGames extends JFrame {
              ResultSet rs = pstmt.executeQuery()) {
 
             DefaultTableModel model = new DefaultTableModel(
-                new String[]{"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점", "팀2 득점", "팀2 실점"}, 0
+                new String[]{"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀2 득점" }, 0
             );
             table.setModel(model);
 
@@ -111,9 +111,9 @@ public class player_viewGames extends JFrame {
                     rs.getString("team1Name"),
                     rs.getString("team2Name"),
                     rs.getInt("team1Goal"),
-                    rs.getInt("team1Against"),
-                    rs.getInt("team2Goal"),
-                    rs.getInt("team2Against")
+                    
+                    rs.getInt("team2Goal")
+                    
                 });
             }
 
@@ -144,7 +144,7 @@ public class player_viewGames extends JFrame {
             ResultSet rs = pstmt.executeQuery();
 
             DefaultTableModel model = new DefaultTableModel(
-                new String[]{"경기 ID", "경기 날짜", "상대 팀", "우리팀 득점", "우리팀 득점(중복)", "우리팀 실점", "슛", "패스"}, 0
+                new String[]{"경기 ID", "경기 날짜", "상대 팀", "우리팀 득점", "우리팀 득점(중복)", "우리팀 실점"}, 0
             );
             table.setModel(model);
 
@@ -157,10 +157,9 @@ public class player_viewGames extends JFrame {
                     rs.getDate("dateGame").toString(),
                     rs.getString("opponentTeamName"),
                     ourScore,
-                    ourScore, // 중복 득점 (원하는 방식대로 수정 가능)
+                    
                     opponentScore,
-                    rs.getInt("allShots"),
-                    rs.getInt("accPass")
+                  
                 });
             }
 

@@ -134,7 +134,7 @@ public class viewGames extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점"			}
+					"경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀2 득점"			}
 		));
 		scrollPane.setViewportView(table);
 		
@@ -169,7 +169,7 @@ public class viewGames extends JFrame {
 					loadTeamGames();
 				}
 				if (comboBox.getSelectedIndex() == 0) {
-					String[] columnNames = { "경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀1 실점" };
+					String[] columnNames = { "경기 ID", "경기 날짜", "팀1", "팀2", "팀1 득점", "팀2 득점" };
 		            DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 빈 모델
 		            table.setModel(model); // JTable에 모델 적용
 					loadAllGames();
