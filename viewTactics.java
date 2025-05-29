@@ -15,15 +15,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.GridLayout;
 
+// 전술 관련 화면으로 진입하는 메인 전술 메뉴입니다. 
 public class viewTactics extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
 
-	/**
-	 * Launch the application.
-	 */
+	// 테스트용 main함수로, 작동되지 않습니다. 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -37,9 +36,7 @@ public class viewTactics extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	// idTEam은 현재 로그인한 팀 ID로, 전술 데이터 접근에 사용합니다. 
 	public viewTactics(int idTeam) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +66,8 @@ public class viewTactics extends JFrame {
 		panel.setBounds(6, 76, 438, 190);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
+		//필드 전술 버튼입니다.
 		JButton btnNewButton_1 = new JButton("필드 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -77,7 +75,8 @@ public class viewTactics extends JFrame {
 			}
 		});
 		panel.add(btnNewButton_1);
-		
+
+		//세트피스 전술 버튼입니다. 
 		JButton btnNewButton_2 = new JButton("세트피스 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
