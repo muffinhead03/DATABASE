@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 
+//우리 팀이 가장 많은 득점을 기록한 상대팀 정보를 조회하는 프레임입니다. 
 public class staff_teamManage_scoredMost extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -41,9 +42,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	public staff_teamManage_scoredMost(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,18 +61,21 @@ public class staff_teamManage_scoredMost extends JFrame {
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
-		
+
+		//타이틀 라벨입니다. 
 		JLabel lblNewLabel = new JLabel("우리 팀이 최다 득점한 상태팀");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setBounds(6, 32, 438, 29);
 		contentPane.add(lblNewLabel);
-		
+
+		//결과 표시 채널입니다. 
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 73, 438, 82);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
-		
+
+		//각 라벨의 구조입니다. 
 		JLabel lblNewLabel_1 = new JLabel("상대 팀 ID:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(lblNewLabel_1);
@@ -106,10 +108,9 @@ public class staff_teamManage_scoredMost extends JFrame {
 		lblNewLabel_1_6.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_1_6);
 		
-		
+
+		//DB를 조회해서, 우리 팀이 가장 많은 득점을 기록한 상대 팀 1팀을 분석합니다. 
 		try {
-		   
-		   
 
 		    Connection conn = DBUtil.getConnection();
 
@@ -133,6 +134,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 
 		    ResultSet rs = pstmt.executeQuery();
 
+		//결과가 있으면, 이를 UI에 출력하는 역할을 합니다.
 		    if (rs.next()) {
 		        int opponentId = rs.getInt("opponentId");
 		        String nation = rs.getString("nation");
@@ -144,6 +146,7 @@ public class staff_teamManage_scoredMost extends JFrame {
 		        lblNewLabel_1_4.setText(String.valueOf(matchCount));
 		        lblNewLabel_1_6.setText(String.format("%.2f", avgGoals));
 		    } else {
+			    //결과가 없다면, 해당 else문을 실행합니다. 
 		        lblNewLabel_2.setText("정보 없음");
 		        lblNewLabel_1_2.setText("-");
 		        lblNewLabel_1_4.setText("-");
