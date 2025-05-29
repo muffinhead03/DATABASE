@@ -17,15 +17,15 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
+//전술별 성과 요약 화면 클래스입니다. 각 전술의 평균 득점, 실점, 슈팅 수, 패스 수 등 주요 지표를 테이블로 보여줍니다.
 public class viewTactics_statistics_Achieved extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private int idTeam;
-	/**
-	 * Launch the application.
-	 */
+	private int idTeam;//로그인한 사용자의 팀 ID입니다. 
+	
+	//테스트용 메인 메서드입니다. 실제 배포 시에는 사용되지 않습니다. 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -39,9 +39,7 @@ public class viewTactics_statistics_Achieved extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	// idTema을 매개변수로 받는 생성자입니다. 
 	public viewTactics_statistics_Achieved(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +49,8 @@ public class viewTactics_statistics_Achieved extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
+		//뒤로가기 버튼입니다.
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -61,17 +60,20 @@ public class viewTactics_statistics_Achieved extends JFrame {
 		});
 		btnNewButton.setBounds(6, 6, 117, 29);
 		contentPane.add(btnNewButton);
-		
+
+		//제목 라벨입니다. 
 		JLabel lblNewLabel = new JLabel("전술별 성과 요약");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 30, 788, 29);
 		contentPane.add(lblNewLabel);
-		
+
+		//테이블 영역을 포함하는 스크롤 패널입니다. 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(6, 71, 788, 195);
 		contentPane.add(scrollPane);
-		
+
+		//전술 통계 테이블을 생성하고 초기화합니다. 
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -85,12 +87,15 @@ public class viewTactics_statistics_Achieved extends JFrame {
 		loadAchievedStatisticsToTable(table);
 
 	}
+	//DB에서 전술별 경기 통계 데이터를 불러와 테이블에 표시합니다.
 	public void loadAchievedStatisticsToTable(JTable table) {
 	    String[] columnNames = {"전술 ID", "전술 이름", "사용 횟수", "평균 득점", "평균 실점", "평균 슈팅 수", "평균 패스 수"};
 	    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
 	    try {
 	        Connection conn = DBUtil.getConnection();
+
+		    //전술별 경기 기록 통계 쿼리입니다. 
 	        String sql =
 	            "SELECT T.idTactic, T.tacticName, COUNT(*) AS useCount,\n"
 	            + "       AVG(S.goalOurTeam) AS avgGoals, AVG(O.goalOurTeam) AS avgGoalsAgainst,\n"
@@ -108,6 +113,7 @@ public class viewTactics_statistics_Achieved extends JFrame {
 
 	        ResultSet rs = pstmt.executeQuery();
 
+		    //결과를 테이블에 한줄씩 추가합니다.
 	        while (rs.next()) {
 	            int idTactic = rs.getInt("idTactic");
 	            String tacticName = rs.getString("tacticName");
@@ -132,6 +138,7 @@ public class viewTactics_statistics_Achieved extends JFrame {
 	        pstmt.close();
 	        conn.close();
 
+		    //테이블에 모델을 적용합니다. 
 	        table.setModel(model);
 
 	    } catch (Exception e) {
