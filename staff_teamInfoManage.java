@@ -8,19 +8,20 @@ import java.awt.event.*;
 import java.awt.*;
 import java.sql.*;
 
+//우리 팀의 외부 정보(FIFA 랭킹, 대회 정보 등)를 관리하는 GUI 클래스
 public class staff_teamInfoManage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-
-	// 🔧 텍스트필드를 인스턴스 변수로 선언
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField textField; //FIFA 랭킹
+	private JTextField textField_1; // 현재 진행 중인 대회 이름
+	private JTextField textField_2; // 대회 내 순위
+	private JTextField textField_3; // 대회 내 승점
 	private int idTeam;
 
+
+	//테스트용 메인 메서드(teamId = 1 하드코딩딩)입니다.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -57,12 +58,14 @@ public class staff_teamInfoManage extends JFrame {
 			}
 		});
 
+		//타이틀 라벨입니다. 
 		JLabel lblNewLabel = new JLabel("우리 팀의 대외 정보 관리");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 39, 438, 22);
 		contentPane.add(lblNewLabel);
 
+		//사용자 입력을 위핸 4개의 필드로 구성된 입력 폼입니다. 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(6, 100, 438, 123);
 		contentPane.add(panel_1);
@@ -84,6 +87,7 @@ public class staff_teamInfoManage extends JFrame {
 		textField_3 = new JTextField();
 		panel_1.add(textField_3);
 
+		//저장 버튼 패널입니다. 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(6, 227, 438, 39);
 		contentPane.add(panel_2);
@@ -91,16 +95,18 @@ public class staff_teamInfoManage extends JFrame {
 		JButton btnNewButton_1 = new JButton("생성");
 		panel_2.add(btnNewButton_1);
 
-		// 🔻 DB에서 팀 정보 불러오기
+		//  DB에서 팀 정보 불러오는 부분입니다. 
 		try {
 			Connection conn = DBUtil.getConnection();
 
+			//SELECT 쿼리로, 해당 팀 ID로 외부 정보를 조회합니다. 
 			String sql = "SELECT FIFArank, currName, currRank, currPoints FROM db2025_team WHERE idTeam = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idTeam);
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
+				//입력필드로 DB값을 출력하는 부분입니다. 
 				textField.setText(rs.getString("FIFArank"));
 				textField_1.setText(rs.getString("currName"));
 				textField_2.setText(rs.getString("currRank"));
@@ -112,12 +118,13 @@ public class staff_teamInfoManage extends JFrame {
 			e.printStackTrace();
 		}
 
-		// 🔻 저장 버튼 이벤트: DB 업데이트
+		//  저장 버튼 이벤트로, DB 업데이트 기능을 수행합니다. 
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Connection conn = DBUtil.getConnection();
 
+					//사용자 입력값을 DB에 저장하는 부분입니다. 
 					String sql = "UPDATE db2025_team SET FIFArank = ?, currName = ?, currRank = ?, currPoints = ? WHERE idTeam = ?";
 					PreparedStatement pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, textField.getText());
