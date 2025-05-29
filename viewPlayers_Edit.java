@@ -21,24 +21,23 @@ import javax.swing.JToggleButton;
 import javax.swing.JComboBox;
 import java.sql.*;
 
+//선수 정보를 수정할 수 있는 프레임입니다. 
 public class viewPlayers_Edit extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField textField;//실적 입력칸입니다
+	private JTextField textField_2;//포지션 입력칸입니다.
+	private JTextField textField_3;//이름 입력칸입니다
+	private JTextField textField_4;//생년월일입력칸입니다
+	private JTextField textField_5;//액션 입력칸입니다
 	private JTextField textField_6;
-	private JComboBox comboBox;
-	private JToggleButton tglbtnNewToggleButton;
+	private JComboBox comboBox; //선수 ID를 선택합니다
+	private JToggleButton tglbtnNewToggleButton; // 출전가능여부를 수정할 수 있는 프레임입니다. 
 
 	private int idTeam;
 
-	/**
-	 * Launch the application.
-	 */
+	//실제로는 수행되지 않는 메인함수입니다. 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -52,9 +51,7 @@ public class viewPlayers_Edit extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	//  사용자 팀 id를 받습니다. 
 	public viewPlayers_Edit(int idTeam) {
 		this.idTeam = idTeam;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,12 +76,14 @@ public class viewPlayers_Edit extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 29, 438, 29);
 		contentPane.add(lblNewLabel);
-		
+
+		//입력 패널을 설정하였습니다.
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 70, 438, 154);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
-		
+
+		//선수 ID 콤보박스입니다. 
 		JLabel lblNewLabel_2 = new JLabel("선수 ID");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_2);
@@ -92,8 +91,7 @@ public class viewPlayers_Edit extends JFrame {
 		comboBox = new JComboBox();
 		panel.add(comboBox);
 		
-		
-		
+		//이름, 포지션, 생년월일, 액션, 실적, 출전 가능 여부를 받습니다.
 		JLabel lblNewLabel_4 = new JLabel("이름");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_4);
@@ -156,7 +154,8 @@ public class viewPlayers_Edit extends JFrame {
 			}
 		});
 		panel.add(tglbtnNewToggleButton);
-		
+
+		//저장 버튼입니다. 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(6, 236, 438, 30);
 		contentPane.add(panel_1);
@@ -193,6 +192,7 @@ public class viewPlayers_Edit extends JFrame {
 		            return;
 		        }
 
+			    //DB를 업데이트하는 부분입니다. 
 		        try {
 		            Connection conn = DBUtil.getConnection();
 		            String sql = "UPDATE DB2025_Player SET playerName = ?, position = ?, birthday = ?, playerAction = ?, performance = ?, ableToPlay = ? WHERE idPlayer = ?";
@@ -223,7 +223,8 @@ public class viewPlayers_Edit extends JFrame {
 
 		loadPlayerid();
 	}
-	
+
+	//DB에서 특정 선수 정보를 가져와 텍스트 필드에 출력합니다. 
 	private void loadPlayerInfo(int playerId, JToggleButton toggle) {
 	    try {
 	        Connection conn = DBUtil.getConnection();
@@ -256,6 +257,7 @@ public class viewPlayers_Edit extends JFrame {
 	    }
 	}
 	
+//팀 ID에 해당하는 선수 ID 목록을 불러와 콤보박스에 추가합니다. 
 	private void loadPlayerid() {
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 
@@ -292,7 +294,7 @@ public class viewPlayers_Edit extends JFrame {
 		    }
 		});
 
-		// ✅ 콤보박스에 처음 로딩된 선수가 있을 경우, 자동으로 첫 선수 정보 로드
+		// 콤보박스에 처음 로딩된 선수가 있을 경우, 자동으로 첫 선수 정보 로드합니다
 		if (model.getSize() > 0) {
 		    comboBox.setSelectedIndex(0); // 첫 번째 선수 선택
 		    String selected = (String) comboBox.getSelectedItem();
