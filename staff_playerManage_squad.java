@@ -62,7 +62,7 @@ public class staff_playerManage_squad extends JFrame {
         contentPane.add(btnBack);
 
         //타이틀 라벨입니다. 
-        JLabel lblTitle = new JLabel("\uC120\uC218 \uC2A4\uCFE0\uC5B4\uB4DC \uC870\uD68C \uBC0F \uAD00\uB9AC");
+        JLabel lblTitle = new JLabel("선수 스쿼드 조회 및 관리");
         lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setBounds(6, 32, 438, 29);

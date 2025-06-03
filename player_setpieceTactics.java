@@ -83,7 +83,7 @@ public class player_setpieceTactics extends JFrame {
 		btnBack.setBounds(6, 6, 117, 29);
 		contentPane.add(btnBack);
 
-		JLabel lblTitle = new JLabel("필드 전술");
+		JLabel lblTitle = new JLabel("세트피스 전술");
 		lblTitle.setFont(new Font("Lucida Grande", Font.BOLD, 18));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setBounds(6, 32, 620, 29); // 라벨 너비 줄임

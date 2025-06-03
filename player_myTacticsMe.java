@@ -24,6 +24,7 @@ public class player_myTacticsMe extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//테스트용 메인 함수입니다
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,6 +42,9 @@ public class player_myTacticsMe extends JFrame {
 	 * Create the frame.
 	 */
 	public player_myTacticsMe(int idTeam, int idPlayer) {
+		//선수 메뉴
+		//3. 전술 정보 조회
+		//3-2 내가 동원된 전술 목록 조회
 		this.idTeam = idTeam;
 		this.idPlayer = idPlayer;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +54,7 @@ public class player_myTacticsMe extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		//뒤로 가기 버튼
 		JButton btnNewButton = new JButton("Back");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -71,6 +75,7 @@ public class player_myTacticsMe extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
+		// 3-1 내가 동원된 전술 목록 조회 - 필드 전술
 		JButton btnNewButton_2 = new JButton("필드 전술");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -79,6 +84,7 @@ public class player_myTacticsMe extends JFrame {
 		});
 		panel.add(btnNewButton_2);
 		
+		// 3-1 내가 동원된 전술 목록 조회 - 세트피스 전술
 		JButton btnNewButton_1 = new JButton("세트피스 전술");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

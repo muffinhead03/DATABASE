@@ -83,9 +83,9 @@ public class player_myGameTactics extends JFrame {
 		lblGoalAgainst = new JLabel(); lblGoalAgainst.setBounds(120, 180, 100, 16); contentPane.add(lblGoalAgainst);
 
 		lblFieldName = new JLabel(); lblFieldName.setBounds(400, 68, 100, 16); contentPane.add(lblFieldName);
-		lblFieldFormation = new JLabel(); lblFieldFormation.setBounds(400, 96, 100, 16); contentPane.add(lblFieldFormation);
+		lblFieldFormation = new JLabel(); lblFieldFormation.setBounds(400, 96, 150, 16); contentPane.add(lblFieldFormation);
 		lblSetName = new JLabel(); lblSetName.setBounds(400, 124, 100, 16); contentPane.add(lblSetName);
-		lblSetFormation = new JLabel(); lblSetFormation.setBounds(400, 152, 100, 16); contentPane.add(lblSetFormation);
+		lblSetFormation = new JLabel(); lblSetFormation.setBounds(400, 152, 150, 16); contentPane.add(lblSetFormation);
 
 		loadTacticInfo();
 	}
@@ -93,6 +93,7 @@ public class player_myGameTactics extends JFrame {
 	private void loadTacticInfo() {
 		
 		//2-2 내가 출전한 경기의 상세 기록 조회
+		//쿼리를 통해 값을 불러오는 메서드
 		String sql = """
 			SELECT GIA.idGame, GIA.dateGame, T.nation AS opponentTeamName,
 			       GIA.goalFor, GIA.goalAgainst,
